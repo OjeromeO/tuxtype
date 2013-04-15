@@ -159,6 +159,7 @@ void ChooseTheme(void)
       switch (event.type)
       {
         case SDL_QUIT:
+        Cleanup();
         exit(0);
         break;
 

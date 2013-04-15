@@ -99,6 +99,7 @@ int Pause(void)
 		while (SDL_PollEvent(&event)) 
 			switch (event.type) {
 				case SDL_QUIT: 
+  				Cleanup();
 					exit(0);
 					break;
 				case SDL_KEYUP:

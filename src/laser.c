@@ -170,6 +170,7 @@ int PlayLaserGame(int diff_level)
 
 			if (event.type == SDL_QUIT) {
 				/* Window close event - quit! */
+				Cleanup();
 				exit(0);
 	      
 			} else if (event.type == SDL_KEYDOWN) {

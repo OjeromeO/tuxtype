@@ -248,6 +248,7 @@ void ChooseListToEdit(void)
       switch (event.type)
       {
         case SDL_QUIT:
+          Cleanup();
           exit(0);
           break;
 
@@ -638,6 +639,7 @@ void EditWordList(char* words_file)
       {
         case SDL_QUIT:
         {
+          Cleanup();
           exit(0);
           break;
         }

@@ -267,6 +267,7 @@ int PlayCascade(int diflevel)
       {
         if ( event.type == SDL_QUIT )
         {
+          Cleanup();
           exit(0); /* FIXME does memory get cleaned up properly if we do this? */
         }
         else

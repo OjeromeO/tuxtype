@@ -1164,6 +1164,7 @@ static void not_implemented(void)
         switch (event.type)
         {
           case SDL_QUIT:
+            Cleanup();
             exit(0);
           case SDL_MOUSEBUTTONDOWN:
           case SDL_KEYDOWN:
@@ -1469,6 +1470,7 @@ static int chooseWordlist(void)
       switch (event.type)
       {
         case SDL_QUIT:
+          Cleanup();
           exit(0); /* FIXME may need to cleanup memory and exit more cleanly */
           break;
 

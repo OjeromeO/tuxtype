@@ -291,6 +291,7 @@ SDL_Surface* Blend(SDL_Surface* S1, SDL_Surface* S2, float gamma)
   if (gamma < 0 || gamflip < 0)
   {
     perror("gamma must be between 0 and 1");
+    Cleanup();
     exit(0);
   }
 
