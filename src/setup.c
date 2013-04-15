@@ -641,8 +641,18 @@ static void seticon(void)
 
 void Cleanup(void)
 {
-  SDL_FreeSurface(screen);
-  screen = NULL;
+  /*
+  SDL_FreeSurface() seems useless here ;
+  "screen" is returned by SDL_SetVideoMode, and the SDL doc says "The surface
+  returned is freed by SDL_Quit() and should nt be freed by the caller."
+  */
+  //SDL_FreeSurface(screen);
+  //screen = NULL;
+  if (settings.sys_sound)
+  {
+    Mix_CloseAudio();
+    Mix_Quit();
+  }
   Cleanup_SDL_Text();
   SDL_Quit();
 }
