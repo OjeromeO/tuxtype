@@ -1190,18 +1190,18 @@ void GenerateKeyboard(SDL_Surface* keyboard)
   char buf[8];
 //  TTF_Font* smallfont = NULL;
 
-  DEBUGCODE { printf("Entering GenerateKeyboard\n"); }
+  DEBUGCODE { fprintf(stderr, "Entering GenerateKeyboard\n"); }
 
   if(!keyboard)
   {
-    DEBUGCODE { printf("Error - keyboard SDL_Surface ptr null\n"); }
+    DEBUGCODE { fprintf(stderr, "Error - keyboard SDL_Surface ptr null\n"); }
     return;
   }
 
 //   smallfont = LoadFont(settings.theme_font_name, 15);
 //   if(!smallfont)
 //   {
-//     DEBUGCODE { printf("Error loading font\n"); }
+//     DEBUGCODE { fprintf(stderr, "Error loading font\n"); }
 //     return;
 //   }
 
@@ -1247,7 +1247,7 @@ void GenerateKeyboard(SDL_Surface* keyboard)
         new.y -= 9;
     }
 
-    DEBUGCODE { printf("Making %d : %C\n",i,keyboard_list[i].unicode_value); }
+    DEBUGCODE { fprintf(stderr, "Making %d : %C\n",i,keyboard_list[i].unicode_value); }
     ConvertToUTF8(t, buf, 8);
     tmp = SimpleText(buf, 15, &black);
 //    tmp = TTF_RenderUNICODE_Blended((TTF_Font*)smallfont, t, black);
@@ -1261,7 +1261,7 @@ void GenerateKeyboard(SDL_Surface* keyboard)
   //Know this is safe - if NULL would have returned above:
 //  TTF_CloseFont(smallfont);
 
-  DEBUGCODE { printf("Leaving GenerateKeyboard\n"); }
+  DEBUGCODE { fprintf(stderr, "Leaving GenerateKeyboard\n"); }
 }
 
 

@@ -861,7 +861,7 @@ static int practice_load_media(void)
   int load_failed = 0;
   int labels_ok = 0;
 
-  DEBUGCODE { printf("Entering practice_load_media\n"); }
+  DEBUGCODE { fprintf(stderr, "Entering practice_load_media\n"); }
 
 
   /* load needed SDL_Surfaces: */
@@ -916,7 +916,7 @@ static int practice_load_media(void)
   GenerateKeyboard(keyboard);
 
   LOG("DONE - Loading practice media\n");
-  DEBUGCODE { printf("Leaving practice_load_media\n"); }
+  DEBUGCODE { fprintf(stderr, "Leaving practice_load_media\n"); }
   return 1;
 }
 
@@ -1237,7 +1237,7 @@ static int load_phrases(const char* phrase_file)
     return 0;
   }
 
-  DEBUGCODE { printf("load_phrases(): phrases file is '%s'\n", fn ); }
+  DEBUGCODE { fprintf(stderr, "load_phrases(): phrases file is '%s'\n", fn ); }
 
   /* We know it will open OK because we already ran CheckFile() on it */ 
   fp = fopen(fn, "r");
@@ -1251,7 +1251,7 @@ static int load_phrases(const char* phrase_file)
     if (EOF != fscanf(fp, "%[^\n]\n", buf))
     {
       ConvertFromUTF8(phrases[num_phrases], buf, MAX_PHRASE_LENGTH);
-      DEBUGCODE {printf("phrase %d:\t%S\n", num_phrases, phrases[num_phrases]);}
+      DEBUGCODE { fprintf(stderr, "phrase %d:\t%S\n", num_phrases, phrases[num_phrases]);}
       num_phrases++;
     }
   }

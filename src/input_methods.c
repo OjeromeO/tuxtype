@@ -959,7 +959,7 @@ static int im_event_zh_tw(IM_DATA* im, SDL_keysym ks)
       im_fullreset(im);
 
       #ifdef DEBUG
-      printf("IM: Loaded '%s'\n", lang_file);
+      fprintf(stderr, "IM: Loaded '%s'\n", lang_file);
       #endif
       break;
   }
@@ -1144,7 +1144,7 @@ static int im_event_th(IM_DATA* im, SDL_keysym ks)
       im_fullreset(im);
 
       #ifdef DEBUG
-      printf("IM: Loaded '%s'\n", lang_file);
+      fprintf(stderr, "IM: Loaded '%s'\n", lang_file);
       #endif
       break;
   }
@@ -1330,7 +1330,7 @@ static int im_event_ja(IM_DATA* im, SDL_keysym ks)
       im_fullreset(im);
 
       #ifdef DEBUG
-      printf("IM: Loaded '%s'\n", lang_file);
+      fprintf(stderr, "IM: Loaded '%s'\n", lang_file);
       #endif
       break;
   }
@@ -1541,7 +1541,7 @@ static int im_event_ko(IM_DATA* im, SDL_keysym ks)
       im_fullreset(im);
 
       #ifdef DEBUG
-      printf("IM: Loaded '%s'\n", lang_file);
+      fprintf(stderr, "IM: Loaded '%s'\n", lang_file);
       #endif
       break;
   }
@@ -1792,7 +1792,7 @@ void im_init(IM_DATA* im, int lang)
   assert(0 <= im->lang && im->lang < NUM_LANGS);
   
   if(im_event_fns[im->lang])
-    printf("Initializing IM for %s...\n", lang_prefixes[im->lang]);
+    fprintf(stderr, "Initializing IM for %s...\n", lang_prefixes[im->lang]);
   #endif
 
   /* Initialize the individual IM */

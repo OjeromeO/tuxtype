@@ -206,7 +206,7 @@ int scandir(const char *dirname, struct dirent ***namelist, int (*sdfilter)(stru
   len    = strlen(dirname);
   findIn = (char *)malloc(len+5);
   strcpy(findIn, dirname);
-  printf("scandir : findIn orign=%s\n", findIn);
+  fprintf(stderr, "scandir : findIn orign=%s\n", findIn);
   for (d = findIn; *d; d++)
     if (*d=='/')
       *d='\\';
@@ -234,10 +234,10 @@ int scandir(const char *dirname, struct dirent ***namelist, int (*sdfilter)(stru
     *d = 0;
   }
 
-  printf("scandir : findIn processed=%s\n", findIn);
+  fprintf(stderr, "scandir : findIn processed=%s\n", findIn);
   if ((h=FindFirstFile(findIn, &find))==INVALID_HANDLE_VALUE)
   {
-    printf("scandir : FindFirstFile error\n");
+    fprintf(stderr, "scandir : FindFirstFile error\n");
     ret = GetLastError();
     if (ret != ERROR_NO_MORE_FILES)
     {
@@ -248,7 +248,7 @@ int scandir(const char *dirname, struct dirent ***namelist, int (*sdfilter)(stru
   }
   do
   {
-    printf("scandir : findFile=%s\n", find.cFileName);
+    fprintf(stderr, "scandir : findFile=%s\n", find.cFileName);
     selectDir=(struct dirent*)malloc(sizeof(struct dirent)+strlen(find.cFileName));
     strcpy(selectDir->d_name, find.cFileName);
     if (!sdfilter || (*sdfilter)(selectDir))

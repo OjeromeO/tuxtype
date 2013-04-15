@@ -245,7 +245,7 @@ void LoadSettings(void)
   LOG("WIN32 not defined\n");
 #endif
 
-  DEBUGCODE { printf("LoadSettings: settings file is '%s'\n", fn ); }
+  DEBUGCODE { fprintf(stderr, "LoadSettings: settings file is '%s'\n", fn ); }
 
   LOG("LoadSettings: trying to open settings file\n");
 
@@ -397,14 +397,14 @@ void SaveSettings(void)
 	snprintf( fn, FNLEN-1, (const char*)"%s/settings.txt", settings.user_settings_path );
 
 
-	DEBUGCODE { printf("SaveSettings: settings file is '%s'\n", fn ); }
+	DEBUGCODE { fprintf(stderr, "SaveSettings: settings file is '%s'\n", fn ); }
 	
 	LOG("SaveSettings: trying to open settings file\n");
 	
 	settingsFile = fopen( fn, "w" );
 
 	if (settingsFile == NULL) {
-		printf("SaveSettings: Settings file cannot be created!\n");
+		fprintf(stderr, "SaveSettings: Settings file cannot be created!\n");
 		return;
 	}
 	

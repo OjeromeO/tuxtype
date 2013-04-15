@@ -368,7 +368,7 @@ int LoadBothBkgds(const char* datafile)
 
   DEBUGCODE
   {
-     printf("Scaling %dx%d to: %dx%d, %dx%d\n", 
+     fprintf(stderr, "Scaling %dx%d to: %dx%d, %dx%d\n", 
            orig->w, orig->h, RES_X, RES_Y, fs_res_x, fs_res_y);
   }
 
@@ -397,7 +397,7 @@ int LoadBothBkgds(const char* datafile)
     
   DEBUGCODE
   {
-    printf("%d images scaled\nLeaving LoadBothBkgds()\n", ret);
+    fprintf(stderr, "%d images scaled\nLeaving LoadBothBkgds()\n", ret);
   }
   return ret;
 }
