@@ -1025,13 +1025,13 @@ static int im_event_zh_tw(IM_DATA* im, SDL_keysym ks)
         while(1) {
           const wchar_t* us = charmap_search(&cm, im->buf);
           #ifdef IM_DEBUG
-          wprintf(L"  [%8ls] [%8ls] %2d %2d\n", im->s, im->buf, wcslen(im->s), wcslen(im->buf));
+          fwprintf(stderr, L"  [%8ls] [%8ls] %2d %2d\n", im->s, im->buf, wcslen(im->s), wcslen(im->buf));
           #endif
 
           /* Match was found? */
           if(us && wcslen(us)) {
             #ifdef IM_DEBUG
-            wprintf(L"    1\n");
+            fwprintf(stderr, L"    1\n");
             #endif
 
             wcscat(im->s, us);
@@ -1053,7 +1053,7 @@ static int im_event_zh_tw(IM_DATA* im, SDL_keysym ks)
             /* If the input character has no state, it's its own state */
             if(cm.match_count == 0) {
               #ifdef IM_DEBUG
-              wprintf(L"    2a\n");
+              fwprintf(stderr, L"    2a\n");
               #endif
               wcsncat(im->s, im->buf, 1);
               wcs_lshift(im->buf, 1);
@@ -1062,7 +1062,7 @@ static int im_event_zh_tw(IM_DATA* im, SDL_keysym ks)
             /* If the matched characters didn't consume all, it's own state */
             else if((size_t)cm.match_count != wcslen(im->buf)) {
               #ifdef IM_DEBUG
-              wprintf(L"    2b (%2d)\n", cm.match_count);
+              fwprintf(stderr, L"    2b (%2d)\n", cm.match_count);
               #endif
               wcsncat(im->s, im->buf, 1);
               wcs_lshift(im->buf, 1);
@@ -1071,7 +1071,7 @@ static int im_event_zh_tw(IM_DATA* im, SDL_keysym ks)
             /* Otherwise it's just a part of a future input */
             else {
               #ifdef IM_DEBUG
-              wprintf(L"    2c (%2d)\n", cm.match_count);
+              fwprintf(stderr, L"    2c (%2d)\n", cm.match_count);
               #endif
               wcscat(im->s, im->buf);
               cm.match_is_final = 0;
@@ -1082,7 +1082,7 @@ static int im_event_zh_tw(IM_DATA* im, SDL_keysym ks)
           /* No match and no more data in the buffer */
           else {
             #ifdef IM_DEBUG
-            wprintf(L"    3\n");
+            fwprintf(stderr, L"    3\n");
             #endif
             break;
           }
@@ -1212,13 +1212,13 @@ static int im_event_th(IM_DATA* im, SDL_keysym ks)
         while(1) {
           const wchar_t* us = charmap_search(&cm, im->buf);
           #ifdef IM_DEBUG
-          wprintf(L"  [%8ls] [%8ls] %2d %2d\n", im->s, im->buf, wcslen(im->s), wcslen(im->buf));
+          fwprintf(stderr, L"  [%8ls] [%8ls] %2d %2d\n", im->s, im->buf, wcslen(im->s), wcslen(im->buf));
           #endif
 
           /* Match was found? */
           if(us && wcslen(us)) {
             #ifdef IM_DEBUG
-            wprintf(L"    1\n");
+            fwprintf(stderr, L"    1\n");
             #endif
 
             wcscat(im->s, us);
@@ -1240,7 +1240,7 @@ static int im_event_th(IM_DATA* im, SDL_keysym ks)
             /* If the input character has no state, it's its own state */
             if(cm.match_count == 0) {
               #ifdef IM_DEBUG
-              wprintf(L"    2a\n");
+              fwprintf(stderr, L"    2a\n");
               #endif
               wcsncat(im->s, im->buf, 1);
               wcs_lshift(im->buf, 1);
@@ -1249,7 +1249,7 @@ static int im_event_th(IM_DATA* im, SDL_keysym ks)
             /* If the matched characters didn't consume all, it's own state */
             else if((size_t)cm.match_count != wcslen(im->buf)) {
               #ifdef IM_DEBUG
-              wprintf(L"    2b (%2d)\n", cm.match_count);
+              fwprintf(stderr, L"    2b (%2d)\n", cm.match_count);
               #endif
               wcsncat(im->s, im->buf, 1);
               wcs_lshift(im->buf, 1);
@@ -1258,7 +1258,7 @@ static int im_event_th(IM_DATA* im, SDL_keysym ks)
             /* Otherwise it's just a part of a future input */
             else {
               #ifdef IM_DEBUG
-              wprintf(L"    2c (%2d)\n", cm.match_count);
+              fwprintf(stderr, L"    2c (%2d)\n", cm.match_count);
               #endif
               wcscat(im->s, im->buf);
               cm.match_is_final = 0;
@@ -1269,7 +1269,7 @@ static int im_event_th(IM_DATA* im, SDL_keysym ks)
           /* No match and no more data in the buffer */
           else {
             #ifdef IM_DEBUG
-            wprintf(L"    3\n");
+            fwprintf(stderr, L"    3\n");
             #endif
             break;
           }
@@ -1400,13 +1400,13 @@ static int im_event_ja(IM_DATA* im, SDL_keysym ks)
         while(1) {
           const wchar_t* us = charmap_search(&cm, im->buf);
           #ifdef IM_DEBUG
-          wprintf(L"  [%8ls] [%8ls] %2d %2d\n", im->s, im->buf, wcslen(im->s), wcslen(im->buf));
+          fwprintf(stderr, L"  [%8ls] [%8ls] %2d %2d\n", im->s, im->buf, wcslen(im->s), wcslen(im->buf));
           #endif
 
           /* Match was found? */
           if(us && wcslen(us)) {
             #ifdef IM_DEBUG
-            wprintf(L"    1\n");
+            fwprintf(stderr, L"    1\n");
             #endif
 
             wcscat(im->s, us);
@@ -1428,7 +1428,7 @@ static int im_event_ja(IM_DATA* im, SDL_keysym ks)
             /* If the input character has no state, it's its own state */
             if(cm.match_count == 0) {
               #ifdef IM_DEBUG
-              wprintf(L"    2a\n");
+              fwprintf(stderr, L"    2a\n");
               #endif
               wcsncat(im->s, im->buf, 1);
               wcs_lshift(im->buf, 1);
@@ -1437,7 +1437,7 @@ static int im_event_ja(IM_DATA* im, SDL_keysym ks)
             /* If the matched characters didn't consume all, it's own state */
             else if((size_t)cm.match_count != wcslen(im->buf)) {
               #ifdef IM_DEBUG
-              wprintf(L"    2b (%2d)\n", cm.match_count);
+              fwprintf(stderr, L"    2b (%2d)\n", cm.match_count);
               #endif
               wcsncat(im->s, im->buf, 1);
               wcs_lshift(im->buf, 1);
@@ -1446,7 +1446,7 @@ static int im_event_ja(IM_DATA* im, SDL_keysym ks)
             /* Otherwise it's just a part of a future input */
             else {
               #ifdef IM_DEBUG
-              wprintf(L"    2c (%2d)\n", cm.match_count);
+              fwprintf(stderr, L"    2c (%2d)\n", cm.match_count);
               #endif
               wcscat(im->s, im->buf);
               cm.match_is_final = 0;
@@ -1457,7 +1457,7 @@ static int im_event_ja(IM_DATA* im, SDL_keysym ks)
           /* No match and no more data in the buffer */
           else {
             #ifdef IM_DEBUG
-            wprintf(L"    3\n");
+            fwprintf(stderr, L"    3\n");
             #endif
             break;
           }
@@ -1611,7 +1611,7 @@ static int im_event_ko(IM_DATA* im, SDL_keysym ks)
         while(1) {
           const wchar_t* us = charmap_search(&cm, bp);
           #ifdef IM_DEBUG
-          wprintf(L"  [%8ls] [%8ls] %2d %2d\n", im->s, im->buf, wcslen(im->s), wcslen(im->buf));
+          fwprintf(stderr, L"  [%8ls] [%8ls] %2d %2d\n", im->s, im->buf, wcslen(im->s), wcslen(im->buf));
           #endif
 
           /* Match was found? */
@@ -1625,7 +1625,7 @@ static int im_event_ko(IM_DATA* im, SDL_keysym ks)
                 /* If there is no more buffer, output it */
                 if(cm.match_stats & MATCH_STAT_NOMOBUF) {
                   #ifdef IM_DEBUG
-                  wprintf(L"    1a\n");
+                  fwprintf(stderr, L"    1a\n");
                   #endif
 
                   wcscat(im->s, us);          /* Output */
@@ -1637,7 +1637,7 @@ static int im_event_ko(IM_DATA* im, SDL_keysym ks)
                 /* If there is buffer data but it's not vowel, finalize it */
                 else if(!im_event_ko_isvowel(&cm, next_char)) {
                   #ifdef IM_DEBUG
-                  wprintf(L"    1b\n");
+                  fwprintf(stderr, L"    1b\n");
                   #endif
 
                   wcscat(im->s, us);     /* Output */
@@ -1648,7 +1648,7 @@ static int im_event_ko(IM_DATA* im, SDL_keysym ks)
                 /* If there is buffer and it's vowel, re-eval */
                 else {
                   #ifdef IM_DEBUG
-                  wprintf(L"    1c\n");
+                  fwprintf(stderr, L"    1c\n");
                   #endif
 
                   us = cm.match_state_prev->output;
@@ -1661,7 +1661,7 @@ static int im_event_ko(IM_DATA* im, SDL_keysym ks)
               /* No batchim - this is final */
               else {
                 #ifdef IM_DEBUG
-                wprintf(L"    1d\n");
+                fwprintf(stderr, L"    1d\n");
                 #endif
 
                 wcscat(im->s, us);
@@ -1673,7 +1673,7 @@ static int im_event_ko(IM_DATA* im, SDL_keysym ks)
             /* May need to be overwritten next time */
             else {
               #ifdef IM_DEBUG
-              wprintf(L"    1e\n");
+              fwprintf(stderr, L"    1e\n");
               #endif
 
               wcscat(im->s, us);
@@ -1686,7 +1686,7 @@ static int im_event_ko(IM_DATA* im, SDL_keysym ks)
             /* If the input character has no state, it's its own state */
             if(cm.match_count == 0) {
               #ifdef IM_DEBUG
-              wprintf(L"    2a\n");
+              fwprintf(stderr, L"    2a\n");
               #endif
               wcsncat(im->s, bp, 1);
               wcs_lshift(bp, 1);
@@ -1695,7 +1695,7 @@ static int im_event_ko(IM_DATA* im, SDL_keysym ks)
             /* If the matched characters didn't consume all, it's own state */
             else if((size_t)cm.match_count != wcslen(bp)) {
               #ifdef IM_DEBUG
-              wprintf(L"    2b (%2d)\n", cm.match_count);
+              fwprintf(stderr, L"    2b (%2d)\n", cm.match_count);
               #endif
               wcsncat(im->s, bp, 1);
               wcs_lshift(bp, 1);
@@ -1704,7 +1704,7 @@ static int im_event_ko(IM_DATA* im, SDL_keysym ks)
             /* Otherwise it's just a part of a future input */
             else {
               #ifdef IM_DEBUG
-              wprintf(L"    2c (%2d)\n", cm.match_count);
+              fwprintf(stderr, L"    2c (%2d)\n", cm.match_count);
               #endif
               wcscat(im->s, bp);
               cm.match_is_final = 0;
@@ -1715,7 +1715,7 @@ static int im_event_ko(IM_DATA* im, SDL_keysym ks)
           /* No match and no more data in the buffer */
           else {
             #ifdef IM_DEBUG
-            wprintf(L"    3\n");
+            fwprintf(stderr, L"    3\n");
             #endif
             break;
           }
@@ -1869,7 +1869,7 @@ int im_read(IM_DATA* im, SDL_keysym ks)
     redraw = im_event_c(im, ks);
 
   #ifdef IM_DEBUG
-  wprintf(L"* [%8ls] [%8ls] %2d %2d (%2d)\n", im->s, im->buf, wcslen(im->s), wcslen(im->buf), im->redraw);
+  fwprintf(stderr, L"* [%8ls] [%8ls] %2d %2d (%2d)\n", im->s, im->buf, wcslen(im->s), wcslen(im->buf), im->redraw);
   #endif
 
   return redraw;
