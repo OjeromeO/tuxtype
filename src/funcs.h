@@ -112,6 +112,7 @@ int LoadSettings(void);
 void SaveSettings(void);
 int SetupPaths(const char* theme_dir);
 void Cleanup(void);
+void handle_command_args(int argc, char* argv[]);
 
 /* In theme.c: */
 void ChooseTheme(void);
