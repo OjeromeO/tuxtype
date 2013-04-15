@@ -958,9 +958,10 @@ static int im_event_zh_tw(IM_DATA* im, SDL_keysym ks)
 
       im_fullreset(im);
 
-      #ifdef DEBUG
-      fprintf(stderr, "IM: Loaded '%s'\n", lang_file);
-      #endif
+      DEBUGCODE
+      {
+        fprintf(stderr, "IM: Loaded '%s'\n", lang_file);
+      }
       break;
   }
   if(im->request != IM_REQ_TRANSLATE) return 0;
@@ -1143,9 +1144,10 @@ static int im_event_th(IM_DATA* im, SDL_keysym ks)
 
       im_fullreset(im);
 
-      #ifdef DEBUG
-      fprintf(stderr, "IM: Loaded '%s'\n", lang_file);
-      #endif
+      DEBUGCODE
+      {
+        fprintf(stderr, "IM: Loaded '%s'\n", lang_file);
+      }
       break;
   }
   if(im->request != IM_REQ_TRANSLATE) return 0;
@@ -1329,9 +1331,10 @@ static int im_event_ja(IM_DATA* im, SDL_keysym ks)
 
       im_fullreset(im);
 
-      #ifdef DEBUG
-      fprintf(stderr, "IM: Loaded '%s'\n", lang_file);
-      #endif
+      DEBUGCODE
+      {
+        fprintf(stderr, "IM: Loaded '%s'\n", lang_file);
+      }
       break;
   }
   if(im->request != IM_REQ_TRANSLATE) return 0;
@@ -1540,9 +1543,10 @@ static int im_event_ko(IM_DATA* im, SDL_keysym ks)
 
       im_fullreset(im);
 
-      #ifdef DEBUG
-      fprintf(stderr, "IM: Loaded '%s'\n", lang_file);
-      #endif
+      DEBUGCODE
+      {
+        fprintf(stderr, "IM: Loaded '%s'\n", lang_file);
+      }
       break;
   }
   if(im->request != IM_REQ_TRANSLATE) return 0;
@@ -1788,12 +1792,13 @@ void im_init(IM_DATA* im, int lang)
     im_initialized = 1;
   }
 
-  #ifdef DEBUG
-  assert(0 <= im->lang && im->lang < NUM_LANGS);
+  DEBUGCODE
+  {
+    assert(0 <= im->lang && im->lang < NUM_LANGS);
   
-  if(im_event_fns[im->lang])
-    fprintf(stderr, "Initializing IM for %s...\n", lang_prefixes[im->lang]);
-  #endif
+    if(im_event_fns[im->lang])
+      fprintf(stderr, "Initializing IM for %s...\n", lang_prefixes[im->lang]);
+  }
 
   /* Initialize the individual IM */
   im_request(im, IM_REQ_INIT);
