@@ -1216,11 +1216,16 @@ void Cleanup_SDL_Text(void)
 {
 #ifdef HAVE_LIBSDL_PANGO
   if(context != NULL)
+  {
     SDLPango_FreeContext(context);
-  context = NULL;
+    context = NULL;
+  }
 #else
-  free_font_list();
-  TTF_Quit();
+  if(TTF_WasInit())
+  {
+    free_font_list();
+    TTF_Quit();
+  }
 #endif
 }
 
