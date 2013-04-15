@@ -226,7 +226,7 @@ void LibInit(Uint32 lib_flags)
 /* Load the settings from a file... make sure to update SaveSettings if you change
  *  what can be saved/loaded 
  */
-void LoadSettings(void)
+int LoadSettings(void)
 {
   char fn[FNLEN];
 // 	char setting[FNLEN];
@@ -249,7 +249,13 @@ void LoadSettings(void)
 
   LOG("LoadSettings: trying to open settings file\n");
 
-  load_settings_filename(fn);
+  if (load_settings_filename(fn) != 1)
+  {
+    fprintf(stderr, "LoadSettings: Failed to load settings\n");
+    return 0;
+  }
+ 
+  return 1;
 }
 
 

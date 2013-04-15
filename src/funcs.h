@@ -108,7 +108,7 @@ void InstructLaser(void);
 /* In setup.c: */
 void GraphicsInit(void);
 void LibInit(Uint32 lib_flags);
-void LoadSettings(void);
+int LoadSettings(void);
 void SaveSettings(void);
 int SetupPaths(const char* theme_dir);
 void Cleanup(void);

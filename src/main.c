@@ -55,7 +55,10 @@ int main(int argc, char *argv[])
     fprintf(stderr, "Error - SetupPaths() failed, exiting program.\n");
     return 0;
   }  
-  LoadSettings();    // Second, read saved any saved settings
+  if (!LoadSettings())    // Second, read saved any saved settings
+  {
+    fprintf(stderr, "Warning - LoadSettings() failed, continuing with default settings.\n");
+  }
 
   // Third, check command line args as these should override saved settings
   if (argc > 1) /* FIXME this could go into something like HandleCommandArgs() */
