@@ -54,6 +54,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //#include "im.h"
 #include "input_methods.h"
+#include "globals.h"
 
 
 
