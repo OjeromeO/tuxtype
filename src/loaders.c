@@ -36,7 +36,6 @@ static SDL_Surface* win_bkgd = NULL;
 static SDL_Surface* fullscr_bkgd = NULL;
 
 /* Local function prototypes: */
-static int max(int n1, int n2);
 //static SDL_Surface* flip(SDL_Surface *in, int x, int y);
 
 /* Returns 1 if valid file, 2 if valid dir, 0 if neither: */
@@ -116,12 +115,6 @@ void LoadLang(void)
   }
 
   return;
-}
-
-
-int max(int n1, int n2)
-{
-  return (n1 > n2 ? n1 : n2);
 }
 
 

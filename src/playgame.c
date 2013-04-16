@@ -751,7 +751,6 @@ LoadTuxAnims : Load the Tux graphics and animations
 static int LoadTuxAnims(void)
 {
   int i;
-  int height = 0;                //temp width/height varis to determine max's
 
   LOG("LoadTuxAnims(): Loading Tux Animations\n");
 
@@ -768,7 +767,6 @@ static int LoadTuxAnims(void)
   }
 
   tux_max_width = tux_object.spr[TUX_STANDING][RIGHT]->frame[0]->w;
-  height = tux_object.spr[TUX_STANDING][RIGHT]->frame[0]->h;
 
   LOG("LoadTuxAnims(): END\n");
 

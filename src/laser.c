@@ -81,7 +81,7 @@ int PlayLaserGame(int diff_level)
 	int i, img, done, quit, frame, lowest, lowest_y, 
 	    tux_img, old_tux_img, tux_pressing, tux_anim, tux_anim_frame,
 	    tux_same_counter, level_start_wait, num_cities_alive,
-	    num_comets_alive, paused, picked_comet, 
+	    num_comets_alive, paused, 
 	    gameover;
 
 	Uint16 key_unicode;
@@ -147,7 +147,6 @@ int PlayLaserGame(int diff_level)
   
 	frame = 0;
 	paused = 0;
-	picked_comet = -1;
 	tux_img = IMG_TUX_RELAX1;
 	tux_anim = -1;
 	tux_anim_frame = 0;

@@ -508,7 +508,6 @@ void EditWordList(char* words_file)
   SDL_Rect word_rects[8];
   int stop = 0;
   int loc = 0;
-  int old_loc = 1;
 
   FILE* fp = NULL;
 
@@ -893,7 +892,6 @@ void EditWordList(char* words_file)
         SDL_UpdateRect(screen, 0, 0, 0 ,0);
       }
       SDL_Delay(40);  // I assume throttling so we don't eat all CPU
-      old_loc = loc;
     }  // End of 'while (SDL_PollEvent(&event))' loop
   }  // End of 'while(!stop)' loop
 
@@ -956,7 +954,7 @@ void EditWordList(char* words_file)
     SDL_FreeSurface(right);
   /* the pointers are going out of scope so we don't */
   /* have to worry about setting them to NULL              */
-}              
+}
 
 
 /* "Private" functions */

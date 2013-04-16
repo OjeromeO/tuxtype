@@ -1388,6 +1388,13 @@ SDL_Surface* BlackOutline_w(const wchar_t* t, int font_size, const SDL_Color* c,
   }
 
   i = ConvertToUTF8(wchar_tmp, tmp, 1024);
+  
+  if (i == 0)
+  {
+    fprintf(stderr, "BlackOutline_w(): unable to convert to UTF8, returning.\n");
+    return NULL;
+  }
+  
   //tmp[i] = 0;
 
   DEBUGCODE

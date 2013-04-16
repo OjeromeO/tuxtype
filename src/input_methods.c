@@ -416,7 +416,6 @@ static IM_EVENT_FN im_event_fns[NUM_LANGS] = {NULL};
 * UTILITY FUNCTIONS
 */
 
-#define MIN(a,b)              ((a)<=(b) ? (a) : (b))
 #define IN_RANGE(a,v,b)       ( (a)<=(v) && (v)<(b) )
 #define ARRAYLEN(a)           ( sizeof(a)/sizeof(*(a)) )
 
