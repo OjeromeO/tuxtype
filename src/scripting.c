@@ -156,7 +156,7 @@ int XMLLesson(void)
     sprintf(script_path, "%s/scripts", settings.theme_data_path);
     if (CheckFile(script_path))
     {
-      DEBUGCODE {fprintf(stderr, "Using theme script dir: %s\n", script_path);}
+      DEBUGCODE(debug_all) {fprintf(stderr, "Using theme script dir: %s\n", script_path);}
       found = 1;
     }
   }
@@ -167,7 +167,7 @@ int XMLLesson(void)
     sprintf( script_path, "%s/scripts", settings.default_data_path);
     if (CheckFile(script_path))
     {
-      DEBUGCODE { fprintf(stderr, "Using theme script dir: %s\n", script_path); }
+      DEBUGCODE(debug_all) { fprintf(stderr, "Using theme script dir: %s\n", script_path); }
       found = 1;
     }
   }
@@ -182,7 +182,7 @@ int XMLLesson(void)
   /* If we get to here, we know there is at least a lesson script directory */
   /* but not necessarily any valid files.                              */
 
-  DEBUGCODE { fprintf(stderr, "script_path is: %s\n", script_path); }
+  DEBUGCODE(debug_all) { fprintf(stderr, "script_path is: %s\n", script_path); }
 
 
   /* create a list of all the .xml files */
@@ -205,7 +205,7 @@ int XMLLesson(void)
         strcmp(script_filenames[scripts], "cascade.xml") == 0)
       continue;
 
-    DEBUGCODE
+    DEBUGCODE(debug_all)
     {
       fprintf(stderr, "Found script file %d:\t%s\n", scripts, script_filenames[scripts]);
     }
@@ -214,7 +214,7 @@ int XMLLesson(void)
     scripts++;
   }
 
-//  DEBUGCODE  
+//  DEBUGCODE(debug_all)  
   {
     fprintf(stderr, "Before undesired files screened out:\n");
     for(i = 0; i < num_scripts; i++)
@@ -261,7 +261,7 @@ int XMLLesson(void)
 // 
 //     sprintf(script_filenames[num_scripts], "%s", script_file->d_name);
 //     num_scripts++;
-//     DEBUGCODE { fprintf(stderr, "Adding XML file no. %d: %s\n",
+//     DEBUGCODE(debug_all) { fprintf(stderr, "Adding XML file no. %d: %s\n",
 //                 num_scripts, script_filenames[num_scripts]); }
 // 
 //   } while (1); /* Leave loop when readdir() returns NULL */
@@ -272,7 +272,7 @@ int XMLLesson(void)
 
 
 
-  DEBUGCODE { fprintf(stderr, "Found %d . xml file(s) in script dir\n", num_scripts); }
+  DEBUGCODE(debug_all) { fprintf(stderr, "Found %d . xml file(s) in script dir\n", num_scripts); }
 
 
   /* let the user pick the lesson script */
@@ -492,7 +492,7 @@ int XMLLesson(void)
     return 0; // bail if any errors occur
   }
 
-  DEBUGCODE { fprintf(stderr, "Attempting to run script: %s\n", fn); }
+  DEBUGCODE(debug_all) { fprintf(stderr, "Attempting to run script: %s\n", fn); }
 
   run_script();
   SDL_ShowCursor(1);
@@ -590,7 +590,7 @@ static int load_script(const char* fn)
   char str[FNLEN];
   FILE* f = NULL;
     
-  DEBUGCODE
+  DEBUGCODE(debug_all)
   {
     fprintf(stderr, "\nEnter load_script() - attempt to load '%s'\n", fn);
   }

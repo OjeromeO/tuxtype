@@ -307,7 +307,7 @@ void TitleScreen(void)
               {
                 PlaySound(snd_select);
               }
-              DEBUGCODE
+              DEBUGCODE(debug_all)
               {
                 fprintf(stderr, "->>BUTTON CLICK menu_opt = %d\n", menu_opt);
                 fprintf(stderr, "->J = %d menu_depth=%d\n", j, menu_depth);
@@ -902,7 +902,7 @@ static void load_menu(void)
     max = 0;
     for (i = 1; i <= TITLE_MENU_ITEMS; i++)
     {
-      DEBUGCODE
+      DEBUGCODE(debug_all)
       {
         fprintf(stderr, "i = '%d'\tj = '%d'\ttext = '%s'\n",
                 i, j,  gettext(menu_text[j + 5 * i]));
@@ -1008,7 +1008,7 @@ static void unload_menu(void)
 
 static int load_media(void)
 {
-  DEBUGCODE
+  DEBUGCODE(debug_all)
   {
     fprintf(stderr, "Entering load_media():\n");
     fprintf(stderr, "default_data_path = %s\n", settings.default_data_path);
@@ -1040,7 +1040,7 @@ static int load_media(void)
 //  reg = LoadSprite("menu/reg", IMG_ALPHA);
   Tux = LoadSprite("tux", IMG_ALPHA);
 
-  DEBUGCODE
+  DEBUGCODE(debug_all)
   {
     fprintf(stderr, "titlescreen.c load_media(): settings.theme_font_name is %s\n",
             settings.theme_font_name);
@@ -1254,7 +1254,7 @@ static int chooseWordlist(void)
   /* If we get to here, we know there is at least a wordlist directory */
   /* but not necessarily any valid files.                              */
 
-  DEBUGCODE { fprintf(stderr, "bundled wordPath is: %s\n", wordPath); }
+  DEBUGCODE(debug_all) { fprintf(stderr, "bundled wordPath is: %s\n", wordPath); }
 
 
   /* FIXME looks like a place for scandir() - or our own w32_scandir() */
@@ -1267,7 +1267,7 @@ static int chooseWordlist(void)
     if (!wordsFile)
       break; /* Loop continues until break occurs */
 
-    DEBUGCODE { fprintf(stderr, "wordsFile name is: %s\n", wordsFile->d_name); }
+    DEBUGCODE(debug_all) { fprintf(stderr, "wordsFile name is: %s\n", wordsFile->d_name); }
 
     /* must have at least .txt at the end */
     if (strlen(wordsFile->d_name) < 5)
@@ -1304,14 +1304,14 @@ static int chooseWordlist(void)
   sprintf(wordPath,"%s/words", settings.var_data_path);
   if (!CheckFile(wordPath))
   {
-    DEBUGCODE { fprintf(stderr, "chooseWordList() -  path \"%s\" not found\n", wordPath); }
+    DEBUGCODE(debug_all) { fprintf(stderr, "chooseWordList() -  path \"%s\" not found\n", wordPath); }
   }
   else
   {
     /* If we get to here, we know there is at least a wordlist directory */
     /* but not necessarily any valid files.                              */
 
-    DEBUGCODE { fprintf(stderr, "global custom wordPath is: %s\n", wordPath); }
+    DEBUGCODE(debug_all) { fprintf(stderr, "global custom wordPath is: %s\n", wordPath); }
 
     /* FIXME looks like a place for scandir() - or our own w32_scandir() */
     /* create a list of all the .txt files */
@@ -1322,7 +1322,7 @@ static int chooseWordlist(void)
       if (!wordsFile)
         break; /* Loop continues until break occurs */
 
-      DEBUGCODE { fprintf(stderr, "wordsFile name is: %s\n", wordsFile->d_name); }
+      DEBUGCODE(debug_all) { fprintf(stderr, "wordsFile name is: %s\n", wordsFile->d_name); }
 
       /* must have at least .txt at the end */
       if (strlen(wordsFile->d_name) < 5)
@@ -1358,14 +1358,14 @@ static int chooseWordlist(void)
   sprintf(wordPath,"%s/words", settings.user_settings_path);
   if (!CheckFile(wordPath))
   {
-    DEBUGCODE { fprintf(stderr, "chooseWordList() -  path \"%s\" not found\n", wordPath); }
+    DEBUGCODE(debug_all) { fprintf(stderr, "chooseWordList() -  path \"%s\" not found\n", wordPath); }
   }
   else
   {
     /* If we get to here, we know there is at least a wordlist directory */
     /* but not necessarily any valid files.                              */
 
-    DEBUGCODE { fprintf(stderr, "user-specific wordPath is: %s\n", wordPath); }
+    DEBUGCODE(debug_all) { fprintf(stderr, "user-specific wordPath is: %s\n", wordPath); }
 
     /* FIXME looks like a place for scandir() - or our own w32_scandir() */
     /* create a list of all the .txt files */
@@ -1376,7 +1376,7 @@ static int chooseWordlist(void)
       if (!wordsFile)
         break; /* Loop continues until break occurs */
 
-      DEBUGCODE { fprintf(stderr, "wordsFile name is: %s\n", wordsFile->d_name); }
+      DEBUGCODE(debug_all) { fprintf(stderr, "wordsFile name is: %s\n", wordsFile->d_name); }
 
       /* must have at least .txt at the end */
       if (strlen(wordsFile->d_name) < 5)
@@ -1407,7 +1407,7 @@ static int chooseWordlist(void)
     closedir(wordsDir);
   }
 
-  DEBUGCODE { fprintf(stderr, "Found %d .txt file(s) in words dir\n", lists); }
+  DEBUGCODE(debug_all) { fprintf(stderr, "Found %d .txt file(s) in words dir\n", lists); }
 
   
   /* Done scanning for word lists, now display them for user selection: */
@@ -1607,7 +1607,7 @@ static int chooseWordlist(void)
   SDL_FreeSurface(right);
   left = right = NULL; /* Maybe overkill - about to be destroyed anyway */
 
-  DEBUGCODE { fprintf( stderr, "Leaving chooseWordlist();\n" ); }
+  DEBUGCODE(debug_all) { fprintf( stderr, "Leaving chooseWordlist();\n" ); }
 
   if (stop == 2)
     return 0;

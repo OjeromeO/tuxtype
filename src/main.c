@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
   // Third, check command line args as these should override saved settings
   handle_command_args(argc, argv);
 
-  DEBUGCODE
+  DEBUGCODE(debug_all)
   {
     fprintf(stderr, "\n%s, version %s BEGIN\n", PACKAGE, VERSION);
   }
@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
     s3 = bind_textdomain_codeset(PACKAGE, "UTF-8");
     s4 = textdomain(PACKAGE);
 
-    DEBUGCODE
+    DEBUGCODE(debug_all)
     {
       fprintf(stderr, "PACKAGE = %s\n", PACKAGE);
       fprintf(stderr, "TUXLOCALE = %s\n", TUXLOCALE);

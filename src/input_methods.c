@@ -958,7 +958,7 @@ static int im_event_zh_tw(IM_DATA* im, SDL_keysym ks)
 
       im_fullreset(im);
 
-      DEBUGCODE
+      DEBUGCODE(debug_all)
       {
         fprintf(stderr, "IM: Loaded '%s'\n", lang_file);
       }
@@ -1144,7 +1144,7 @@ static int im_event_th(IM_DATA* im, SDL_keysym ks)
 
       im_fullreset(im);
 
-      DEBUGCODE
+      DEBUGCODE(debug_all)
       {
         fprintf(stderr, "IM: Loaded '%s'\n", lang_file);
       }
@@ -1331,7 +1331,7 @@ static int im_event_ja(IM_DATA* im, SDL_keysym ks)
 
       im_fullreset(im);
 
-      DEBUGCODE
+      DEBUGCODE(debug_all)
       {
         fprintf(stderr, "IM: Loaded '%s'\n", lang_file);
       }
@@ -1543,7 +1543,7 @@ static int im_event_ko(IM_DATA* im, SDL_keysym ks)
 
       im_fullreset(im);
 
-      DEBUGCODE
+      DEBUGCODE(debug_all)
       {
         fprintf(stderr, "IM: Loaded '%s'\n", lang_file);
       }
@@ -1792,7 +1792,7 @@ void im_init(IM_DATA* im, int lang)
     im_initialized = 1;
   }
 
-  DEBUGCODE
+  DEBUGCODE(debug_all)
   {
     assert(0 <= im->lang && im->lang < NUM_LANGS);
   

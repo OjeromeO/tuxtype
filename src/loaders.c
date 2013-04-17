@@ -50,7 +50,7 @@ int CheckFile(const char* file)
     return -1;
   }
 
-  DEBUGCODE {fprintf(stderr, "CheckFile() - checking: %s\n", file);} 
+  DEBUGCODE(debug_all) {fprintf(stderr, "CheckFile() - checking: %s\n", file);} 
 
   dp = opendir(file);
   if (dp)
@@ -86,7 +86,7 @@ void LoadLang(void)
   s3 = bind_textdomain_codeset(PACKAGE, "UTF-8");
   s4 = textdomain(PACKAGE);
 
-  DEBUGCODE
+  DEBUGCODE(debug_all)
   {
     fprintf(stderr, "PACKAGE = %s\n", PACKAGE);
     fprintf(stderr, "TUXLOCALE = %s\n", TUXLOCALE);
@@ -102,7 +102,7 @@ void LoadLang(void)
   /* on some Windows versions, AFAICT                                       */
   snprintf(buf, 30, "%s", settings.theme_locale_name);
   buf[5] = '\0';  //en_US" rather than "en_US.utf8"
-  DEBUGCODE { fprintf(stderr, "buf is: %s\n", buf); }
+  DEBUGCODE(debug_all) { fprintf(stderr, "buf is: %s\n", buf); }
 
   if (my_setenv("LANG", buf) == -1)
   {
@@ -140,7 +140,7 @@ SDL_Surface* LoadSVGOfDimensions(char* filename, int width, int height)
   int bpp = 32;
   Uint32 Rmask, Gmask, Bmask, Amask;
 
-  DEBUGCODE{
+  DEBUGCODE(debug_all){
     fprintf(stderr, "LoadSVGOfDimensions(): looking for %s\n", filename);
   }
 
@@ -149,7 +149,7 @@ SDL_Surface* LoadSVGOfDimensions(char* filename, int width, int height)
   file_handle = rsvg_handle_new_from_file(filename, NULL);
   if(file_handle == NULL)
   {
-    DEBUGCODE{
+    DEBUGCODE(debug_all){
       fprintf(stderr, "LoadSVGOfDimensions(): file %s not found\n", filename);
     }
     rsvg_term();
@@ -157,7 +157,7 @@ SDL_Surface* LoadSVGOfDimensions(char* filename, int width, int height)
   }
 
   rsvg_handle_get_dimensions(file_handle, &dimensions);
-  DEBUGCODE{
+  DEBUGCODE(debug_all){
     fprintf(stderr, "SVG is %d x %d\n", dimensions.width, dimensions.height);
   }
 
@@ -193,7 +193,7 @@ SDL_Surface* LoadSVGOfDimensions(char* filename, int width, int height)
   context = cairo_create(temp_surf);
   if(cairo_status(context) != CAIRO_STATUS_SUCCESS)
   {
-    DEBUGCODE{
+    DEBUGCODE(debug_all){
       fprintf(stderr, "LoadSVGOfDimensions(): error rendering SVG from %s\n", filename);
     }
     g_object_unref(file_handle);
@@ -229,7 +229,7 @@ SDL_Surface* LoadImageFromFile(char *datafile)
   char svgfn[PATH_MAX];
 #endif
 
-  DEBUGCODE{
+  DEBUGCODE(debug_all){
     fprintf(stderr, "LoadImageFromFile(): looking in %s\n", datafile);
   }
 
@@ -274,7 +274,7 @@ SDL_Surface* LoadImage(const char* datafile, int mode)
     if (tmp_pic != NULL)
       {}
     else
-      DEBUGCODE { fprintf(stderr, "Warning: graphics file %s could not be loaded\n", fn);}
+      DEBUGCODE(debug_all) { fprintf(stderr, "Warning: graphics file %s could not be loaded\n", fn);}
   }
 
   /* If we don't have a valid image yet, try the default path: */
@@ -286,7 +286,7 @@ SDL_Surface* LoadImage(const char* datafile, int mode)
     if (tmp_pic != NULL)
       {}
     else
-      DEBUGCODE { fprintf(stderr, "Warning: graphics file %s could not be loaded\n", fn);}
+      DEBUGCODE(debug_all) { fprintf(stderr, "Warning: graphics file %s could not be loaded\n", fn);}
   }
 
   /* NOTE changed this so we just return NULL instead of exiting - DSB   */
@@ -294,7 +294,7 @@ SDL_Surface* LoadImage(const char* datafile, int mode)
   if (!tmp_pic)
   {
     { 
-      DEBUGCODE { fprintf(stderr, "Warning - could not load graphics file %s\n", datafile);}
+      DEBUGCODE(debug_all) { fprintf(stderr, "Warning - could not load graphics file %s\n", datafile);}
       return NULL;
     }
   }
@@ -359,7 +359,7 @@ int LoadBothBkgds(const char* datafile)
 
   orig = LoadImage(datafile, IMG_REGULAR);
 
-  DEBUGCODE
+  DEBUGCODE(debug_all)
   {
      fprintf(stderr, "Scaling %dx%d to: %dx%d, %dx%d\n", 
            orig->w, orig->h, RES_X, RES_Y, fs_res_x, fs_res_y);
@@ -388,7 +388,7 @@ int LoadBothBkgds(const char* datafile)
   if (ret == 2) //orig won't be used at all
     SDL_FreeSurface(orig);
     
-  DEBUGCODE
+  DEBUGCODE(debug_all)
   {
     fprintf(stderr, "%d images scaled\nLeaving LoadBothBkgds()\n", ret);
   }
@@ -453,7 +453,7 @@ sprite* LoadSprite(const char* name, int MODE ) {
 		}
 	}
 
-	DEBUGCODE {
+	DEBUGCODE(debug_all) {
 		fprintf( stderr, "loading sprite %s - contains %d frames\n",
 		        name, new_sprite->num_frames );
 	}

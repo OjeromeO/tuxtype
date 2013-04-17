@@ -129,7 +129,7 @@ int PlayCascade(int diflevel)
   Uint16 key_unicode;
   Uint32 last_time, now_time;
 
-  DEBUGCODE
+  DEBUGCODE(debug_all)
   {
     fprintf(stderr, "->Entering PlayCascade(): level=%i\n", diflevel);
   }
@@ -223,7 +223,7 @@ int PlayCascade(int diflevel)
       if (settings.hidden && curlevel == 3)
         sprintf(filename, "hidden.jpg");
 
-      DEBUGCODE
+      DEBUGCODE(debug_all)
       {
         fprintf(stderr, "->>Loading background: %s\n", filename);
       }
@@ -340,7 +340,7 @@ int PlayCascade(int diflevel)
                 /* See what Unicode value was typed: */
                 key_unicode = event.key.keysym.unicode;
 
-                DEBUGCODE
+                DEBUGCODE(debug_all)
                 {fprintf(stderr, "\nkey_unicode = %d\twchar_t = %lc\t\n", key_unicode, key_unicode);}
 
                 /* For now, the cascade game is case-insensitive for input, */
@@ -351,7 +351,7 @@ int PlayCascade(int diflevel)
                   key_unicode -= 32; //same for non-US Western European chars
 
                 LOG ("After checking for lower case:\n");
-                DEBUGCODE
+                DEBUGCODE(debug_all)
                 {fprintf(stderr, "key_unicode = %d\twchar_t = %lc\\n\n", key_unicode, key_unicode);}
 
                 /* Now update with case-folded value: */
@@ -411,7 +411,7 @@ int PlayCascade(int diflevel)
       /* Pause (keep frame-rate event) */
       now_time = SDL_GetTicks();
 
-      DEBUGCODE
+      DEBUGCODE(debug_all)
       {
         fprintf(stderr, "now_time = %d\tlast_time = %d, elapsed time = %d\n",
                 now_time, last_time, now_time - last_time);
@@ -640,7 +640,7 @@ static void LoadOthers(void)
 	char filename[FNLEN];
 
 	LOG( "=LoadOthers()\n" );
-	DEBUGCODE
+	DEBUGCODE(debug_all)
 	{
 	  fprintf(stderr, "settings.theme_font_name is %s\n",
                   settings.theme_font_name);
@@ -1085,7 +1085,7 @@ static void SpawnFishies(int diflevel, int* fishies, int* frame)
            /
            (fish_object[*fishies].dy);
 
-  DEBUGCODE 
+  DEBUGCODE(debug_all) 
   {
     /* NOTE need %S rather than %s because of wide characters */
     fprintf(stderr, "Spawn fishy with word '%S'\n", fish_object[*fishies].word);

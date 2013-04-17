@@ -47,7 +47,7 @@ void GraphicsInit(void)
   const SDL_VideoInfo* video_info = SDL_GetVideoInfo();
   Uint32 surface_mode = 0;
 
-  DEBUGCODE
+  DEBUGCODE(debug_all)
   { fprintf(stderr, "Entering GraphicsInit()\n"); };
 
   //Set application's icon:
@@ -68,7 +68,7 @@ void GraphicsInit(void)
 
   // Determine the current resolution: this will be used as the
   // fullscreen resolution, if the user wants fullscreen.
-  DEBUGCODE
+  DEBUGCODE(debug_all)
   {
     fprintf(stderr, "Current resolution: w %d, h %d.\n", 
             video_info->current_w, video_info->current_h);
@@ -113,7 +113,7 @@ void GraphicsInit(void)
 
 
 
-  DEBUGCODE 
+  DEBUGCODE(debug_all) 
   {
     video_info = SDL_GetVideoInfo();
     fprintf(stderr, "-SDL VidMode successfully set to %ix%ix%i\n",
@@ -159,7 +159,7 @@ void LibInit(Uint32 lib_flags)
 
   LOG( "-SDL Library init'd successfully\n" );
 
-  DEBUGCODE
+  DEBUGCODE(debug_all)
   { fprintf(stderr, "settings.sys_sound = %d\n", settings.sys_sound); }
 
   /* FIXME should read settings before we do this: */ 
@@ -247,7 +247,7 @@ int LoadSettings(void)
   LOG("WIN32 not defined\n");
 #endif
 
-  DEBUGCODE { fprintf(stderr, "LoadSettings: settings file is '%s'\n", fn ); }
+  DEBUGCODE(debug_all) { fprintf(stderr, "LoadSettings: settings file is '%s'\n", fn ); }
 
   LOG("LoadSettings: trying to open settings file\n");
 
@@ -309,37 +309,37 @@ static int load_settings_fp(FILE* fp)
     if (EOF == fscanf(fp, "%[^=]=%[^\n]\n", setting, value))
       break;
 
-    DEBUGCODE {fprintf(stderr, "%s = %s", setting, value );}
+    DEBUGCODE(debug_all) {fprintf(stderr, "%s = %s", setting, value );}
       //For now we are not reading or saving the language selection: 
       //MDTTEMP: uncommented the following 8 lines and joined the else to the if on line 259
     if (strncmp( setting, "lang", FNLEN ) == 0 )
     {
-      DEBUGCODE {fprintf(stderr, "LoadSettings: Setting language to %s\n", value);}
+      DEBUGCODE(debug_all) {fprintf(stderr, "LoadSettings: Setting language to %s\n", value);}
       strncpy(settings.lang, value, FNLEN - 1);
       setting_found = 1;
       SetupPaths(value); /* Does this really belong here? */ 
     }
     else if (strncmp( setting, "o_lives", FNLEN ) == 0 )
     {
-      DEBUGCODE {fprintf(stderr, "LoadSettings: Setting lives to %s\n", value);}
+      DEBUGCODE(debug_all) {fprintf(stderr, "LoadSettings: Setting lives to %s\n", value);}
       settings.o_lives = atoi(value);
       setting_found = 1;
     }
     else if (strncmp( setting, "mus_volume", FNLEN ) == 0 )
     {
-      DEBUGCODE {fprintf(stderr, "LoadSettings: Setting music volume to %s\n", value);}
+      DEBUGCODE(debug_all) {fprintf(stderr, "LoadSettings: Setting music volume to %s\n", value);}
       settings.mus_volume = atoi(value);
       setting_found = 1;
     }
     else if (strncmp(setting, "sfx_volume", FNLEN) == 0)
     {
-      DEBUGCODE {fprintf(stderr, "LoadSettings: Setting effects volume to %s\n", value);}
+      DEBUGCODE(debug_all) {fprintf(stderr, "LoadSettings: Setting effects volume to %s\n", value);}
       settings.sfx_volume = atoi(value);
       setting_found = 1;
     }
     else if (strncmp(setting, "menu_music", FNLEN) == 0)
     {
-      DEBUGCODE {fprintf(stderr, "LoadSettings: Setting menu music to %s\n", value);}
+      DEBUGCODE(debug_all) {fprintf(stderr, "LoadSettings: Setting menu music to %s\n", value);}
       settings.menu_music = atoi(value);
       setting_found = 1;
     }
@@ -350,18 +350,18 @@ static int load_settings_fp(FILE* fp)
     }
     else if (strncmp( setting, "theme_font_name", FNLEN ) == 0 )
     {
-      DEBUGCODE {fprintf(stderr, "load_settings_fp(): Setting theme font to %s\n", value);}
+      DEBUGCODE(debug_all) {fprintf(stderr, "load_settings_fp(): Setting theme font to %s\n", value);}
       strncpy(settings.theme_font_name, value, FNLEN - 1);
       setting_found = 1;
     }
     else if (strncmp( setting, "theme_locale_name", FNLEN ) == 0 )
     {
-      DEBUGCODE {fprintf(stderr, "load_settings_fp(): Setting theme locale to %s\n", value);}
+      DEBUGCODE(debug_all) {fprintf(stderr, "load_settings_fp(): Setting theme locale to %s\n", value);}
       strncpy(settings.theme_locale_name, value, FNLEN - 1);
       setting_found = 1;
     }
     else
-      DEBUGCODE {fprintf(stderr, "load_settings_fp(): unrecognized string: %s\n", value);}
+      DEBUGCODE(debug_all) {fprintf(stderr, "load_settings_fp(): unrecognized string: %s\n", value);}
 
   }
 
@@ -405,7 +405,7 @@ void SaveSettings(void)
 	snprintf( fn, FNLEN-1, (const char*)"%s/settings.txt", settings.user_settings_path );
 
 
-	DEBUGCODE { fprintf(stderr, "SaveSettings: settings file is '%s'\n", fn ); }
+	DEBUGCODE(debug_all) { fprintf(stderr, "SaveSettings: settings file is '%s'\n", fn ); }
 	
 	LOG("SaveSettings: trying to open settings file\n");
 	
@@ -449,7 +449,7 @@ void SaveSettings(void)
 
 int SetupPaths(const char* theme_dir)
 {
-  DEBUGCODE
+  DEBUGCODE(debug_all)
   {
     fprintf(stderr, "Entering SetupPaths()\n");
   }
@@ -460,7 +460,7 @@ int SetupPaths(const char* theme_dir)
   if (CheckFile(DATA_PREFIX))
   {
     strncpy(settings.default_data_path, DATA_PREFIX, FNLEN - 1);
-    DEBUGCODE {fprintf(stderr, "path '%s' found, copy to settings.default_data_path\n", DATA_PREFIX);}
+    DEBUGCODE(debug_all) {fprintf(stderr, "path '%s' found, copy to settings.default_data_path\n", DATA_PREFIX);}
   }
   else
   {
@@ -476,7 +476,7 @@ int SetupPaths(const char* theme_dir)
 
     sprintf(full_theme_path, "%s/themes/%s", settings.default_data_path, theme_dir);
 
-    DEBUGCODE
+    DEBUGCODE(debug_all)
     {
       fprintf(stderr, "SetupPaths(): checking for '%s' as theme path\n", full_theme_path);
     }
@@ -485,7 +485,7 @@ int SetupPaths(const char* theme_dir)
     {
       settings.use_english = 0;
       strncpy(settings.theme_data_path, full_theme_path, FNLEN - 1);
-      DEBUGCODE
+      DEBUGCODE(debug_all)
       {
         fprintf(stderr, "settings.theme_data_path is: %s\n", settings.theme_data_path);
       }
@@ -499,7 +499,7 @@ int SetupPaths(const char* theme_dir)
       /* Load fontname or any other theme-specific settings: */
       sprintf(theme_settings_path, "%s/settings.txt", full_theme_path);
 
-      DEBUGCODE
+      DEBUGCODE(debug_all)
       {
         fprintf(stderr, "theme_settings_path is: %s\n", theme_settings_path);
       }
@@ -532,7 +532,7 @@ int SetupPaths(const char* theme_dir)
   if (CheckFile(VAR_PREFIX))
   {
     strncpy(settings.var_data_path, VAR_PREFIX, FNLEN - 1);
-    DEBUGCODE {fprintf(stderr, "path '%s' found, copy to settings.var_data_path\n", VAR_PREFIX);}
+    DEBUGCODE(debug_all) {fprintf(stderr, "path '%s' found, copy to settings.var_data_path\n", VAR_PREFIX);}
   }
   else
   {
@@ -546,7 +546,7 @@ int SetupPaths(const char* theme_dir)
   if (CheckFile(CONF_PREFIX))
   {
     strncpy(settings.global_settings_path, CONF_PREFIX, FNLEN - 1);
-    DEBUGCODE {fprintf(stderr, "path '%s' found, copy to settings.global_settings_path\n", CONF_PREFIX);}
+    DEBUGCODE(debug_all) {fprintf(stderr, "path '%s' found, copy to settings.global_settings_path\n", CONF_PREFIX);}
   }
   else
   {
@@ -567,7 +567,7 @@ int SetupPaths(const char* theme_dir)
   if (CheckFile(fn))
   {
     strncpy(settings.user_settings_path, fn, FNLEN - 1);
-    DEBUGCODE {fprintf(stderr, "path '%s' found, copying to settings.user_settings_path\n", fn);}
+    DEBUGCODE(debug_all) {fprintf(stderr, "path '%s' found, copying to settings.user_settings_path\n", fn);}
   }
   else
   {
@@ -580,7 +580,7 @@ int SetupPaths(const char* theme_dir)
     if (CheckFile(fn))
     {
       strncpy(settings.user_settings_path, fn, FNLEN - 1);
-      DEBUGCODE {fprintf(stderr, "path '%s' successfully created, copy to settings.user_settings_path\n", fn);}
+      DEBUGCODE(debug_all) {fprintf(stderr, "path '%s' successfully created, copy to settings.user_settings_path\n", fn);}
     }
     else
     {
@@ -599,7 +599,7 @@ int SetupPaths(const char* theme_dir)
     }
   }
 
-DEBUGCODE
+DEBUGCODE(debug_all)
   {
     fprintf(stderr, "Leaving SetupPaths():\n");
     fprintf(stderr, "default_data_path: '%s'\n", settings.default_data_path);
@@ -720,7 +720,10 @@ void handle_command_args(int argc, char* argv[])
 
       if (  (strcmp(argv[i], "-d") == 0)
          || (strcmp(argv[i], "--debug") == 0))
+        {
         settings.debug_on = 1;
+        debug_status |= debug_all;
+        }
 
       if (  (strcmp(argv[i], "-s") == 0)
          || (strcmp(argv[i], "--sound") == 0))

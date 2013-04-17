@@ -194,7 +194,7 @@ int PlayLaserGame(int diff_level)
 				key_unicode = event.key.keysym.unicode;
 				//key_unicode = event.key.keysym.unicode & 0xff;
 
-				DEBUGCODE
+				DEBUGCODE(debug_all)
 				{
 				  fprintf(stderr, "key_unicode = %d\n", key_unicode);
 				}
@@ -207,7 +207,7 @@ int PlayLaserGame(int diff_level)
                                   key_unicode -= 32; //same for non-US chars
 
 				LOG ("After checking for lower case:\n");
-				DEBUGCODE
+				DEBUGCODE(debug_all)
 				{
 				  fprintf(stderr,
                                    "key_unicode = %d\n", key_unicode);
@@ -627,7 +627,7 @@ int PlayLaserGame(int diff_level)
 			MusicPlay(musics[MUS_GAME + (rand() % NUM_MUSICS)], 0);
       
 		/* Pause (keep frame-rate event) */
-                DEBUGCODE
+                DEBUGCODE(debug_all)
                 {
                   fprintf(stderr, "now_time = %d\tlast_time = %d, elapsed time = %d\n",
                           now_time, last_time, now_time - last_time);
@@ -784,7 +784,7 @@ static void laser_reset_level(int diff_level)
 
   sprintf(fname, "backgrounds/%d.jpg", i);
 
-  DEBUGCODE { fprintf(stderr, "Will try to load file:\t%s", fname); }
+  DEBUGCODE(debug_all) { fprintf(stderr, "Will try to load file:\t%s", fname); }
 
   FreeBothBkgds(); // LoadBothBkgds() actually does this just in case
 
@@ -828,7 +828,7 @@ static void laser_add_comet(int diff_level)
   int add = (rand() % (diff_level + 2));
 
   LOG ("Entering laser_add_comet()\n");
-  DEBUGCODE { fprintf(stderr, "Adding %d comets \n", add); }
+  DEBUGCODE(debug_all) { fprintf(stderr, "Adding %d comets \n", add); }
 
   if (0 == NUM_CITIES % 2) /* Even number of cities */
 	{
@@ -867,7 +867,7 @@ static void laser_add_comet(int diff_level)
 
               add--;
             }
-            DEBUGCODE {if (location == MAX_COMETS) 
+            DEBUGCODE(debug_all) {if (location == MAX_COMETS) 
 			printf("Location == MAX_COMETS, we have max on screen\n");}
 	  } 
 	}
@@ -886,7 +886,7 @@ static void laser_add_comet(int diff_level)
             return; 
           }
 
-          DEBUGCODE {fprintf(stderr, "word is: %S\tlength is: %d\n", word, (int)wcslen(word));}
+          DEBUGCODE(debug_all) {fprintf(stderr, "word is: %S\tlength is: %d\n", word, (int)wcslen(word));}
           do
           { 
   	    target = rand() % (NUM_CITIES - wcslen(word) + 1);
@@ -919,7 +919,7 @@ static void laser_add_comet(int diff_level)
 				/* Save pointer for next time through: */
                                 prev_comet = &comets[location];
 
-				DEBUGCODE {fprintf(stderr, "Assigning letter to comet: %C\n", word[i]);}
+				DEBUGCODE(debug_all) {fprintf(stderr, "Assigning letter to comet: %C\n", word[i]);}
 			}
 		}
 	}
