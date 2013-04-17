@@ -30,7 +30,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef SDL_EXTRAS_H
 #define SDL_EXTRAS_H
-
+#include <t4k_common.h> // Needed for the transition to t4k_common.h
+                        // because sprite is defined here and in t4k_common.h
 // Need this so the #ifdef HAVE_LIBSDL_PANGO will work:
 #include "../config.h"
 
@@ -50,29 +51,31 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 /* the colors we use throughout the game */
+/* TODO: transition to t4k_common.h ; already defined in t4k_common.h
 static const SDL_Color black 		= {0x00, 0x00, 0x00, 0x00};
 static const SDL_Color gray 		= {0x80, 0x80, 0x80, 0x00};
 static const SDL_Color dark_blue	= {0x00, 0x00, 0x60, 0x00};
 static const SDL_Color red 		= {0xff, 0x00, 0x00, 0x00};
 static const SDL_Color white 		= {0xff, 0xff, 0xff, 0x00};
-static const SDL_Color yellow 		= {0xff, 0xff, 0x00, 0x00};
+static const SDL_Color yellow 		= {0xff, 0xff, 0x00, 0x00};*/
 
 
 
 /* FIXME get rid of these 'evil' macros */
 #define NEXT_FRAME(SPRITE) if ((SPRITE)->num_frames) (SPRITE)->cur = (((SPRITE)->cur)+1) % (SPRITE)->num_frames;
 #define REWIND(SPRITE) (SPRITE)->cur = 0;
-#define MAX_SPRITE_FRAMES 30
+/* TODO: transition to t4k_common.h ; already defined in t4k_common.h
+#define MAX_SPRITE_FRAMES 30 */
 //extra bkgd border around "erased" images.
 #define ERASE_MARGIN 5
 
-
+/* TODO: transition to t4k_common.h ; already defined in t4k_common.h
 typedef struct {
   SDL_Surface* frame[MAX_SPRITE_FRAMES];
   SDL_Surface* default_img;
   int num_frames;
   int cur;
-} sprite;
+} sprite; */
 
 
 /* "Public" function prototypes: */

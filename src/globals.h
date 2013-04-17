@@ -29,7 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef GLOBALS_H
 #define GLOBALS_H
-
+#include <t4k_common.h> // TODO: transition to T4K library
 // Autoheader-derived defs in here:
 #include "config.h"
 
@@ -234,6 +234,7 @@ enum
 
 
 /* For TransWipe(): */
+/* TODO: transition to t4k_common.h ; already defined in t4k_common.h
 enum
 {
   WIPE_BLINDS_VERT,
@@ -241,7 +242,7 @@ enum
   WIPE_BLINDS_BOX,
   RANDOM_WIPE,
   NUM_WIPES
-};
+};*/
 
 #endif
 
