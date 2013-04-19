@@ -165,7 +165,7 @@ int PlayCascade(int diflevel)
 
   /*  --------- Begin outer game loop (cycles once per level): ------------- */
 
-  LOG( " starting game \n ");
+  DEBUGMSG(debug_all,  " starting game \n ");
 
   while (still_playing)
   {
@@ -246,7 +246,7 @@ int PlayCascade(int diflevel)
 
       setup_new_level = 0;
 
-      LOG( "->>PLAYING THE GAME\n" );
+      DEBUGMSG(debug_all,  "->>PLAYING THE GAME\n" );
 
     }
 
@@ -350,7 +350,7 @@ int PlayCascade(int diflevel)
                 if (key_unicode >= 224 && key_unicode <= 255)
                   key_unicode -= 32; //same for non-US Western European chars
 
-                LOG ("After checking for lower case:\n");
+                DEBUGMSG(debug_all, "After checking for lower case:\n");
                 DEBUGCODE(debug_all)
                 {fprintf(stderr, "key_unicode = %d\twchar_t = %lc\\n\n", key_unicode, key_unicode);}
 
@@ -429,7 +429,7 @@ int PlayCascade(int diflevel)
       }
       else
       {
-        LOG("Did not achieve desired frame rate!\n");
+        DEBUGMSG(debug_all, "Did not achieve desired frame rate!\n");
       }
     }  /* End per-frame game loop - level completed */
 
@@ -447,7 +447,7 @@ int PlayCascade(int diflevel)
       {
         if (curlevel < 4)  /* Advance to next level */
         {
-          LOG( "--->NEXT LEVEL!\n" );
+          DEBUGMSG(debug_all,  "--->NEXT LEVEL!\n" );
           done_frames = MAX_END_FRAMES_BETWEEN_LEVELS;
           playing_level = 1;
           xamp = 0;
@@ -456,7 +456,7 @@ int PlayCascade(int diflevel)
         }
         else
         {
-          LOG( "--->WINNER!\n" );
+          DEBUGMSG(debug_all,  "--->WINNER!\n" );
           done_frames = MAX_END_FRAMES_WIN_GAME;
           still_playing = 0;
           xamp = WIN_GAME_XAMP;
@@ -478,7 +478,7 @@ int PlayCascade(int diflevel)
       }
       else  /* Did not win the level  :-(     */
       {
-        LOG( "--->LOST :(\n" );
+        DEBUGMSG(debug_all,  "--->LOST :(\n" );
         done_frames = MAX_END_FRAMES_GAMEOVER;
         xamp = 0;
         yamp = 0;
@@ -501,7 +501,7 @@ int PlayCascade(int diflevel)
       text_rect.y = screen->h - temp_text[0]->h - 1;
       x_not = text_rect.x;
 
-      LOG( "--->Starting Ending Animation\n" );
+      DEBUGMSG(debug_all,  "--->Starting Ending Animation\n" );
 
       for ( i=0; i<= done_frames; i++ ) 
       {
@@ -540,11 +540,11 @@ int PlayCascade(int diflevel)
 
 //  SNOW_on = 0;
 
-  LOG( "->Done with level... cleaning up\n" );
+  DEBUGMSG(debug_all,  "->Done with level... cleaning up\n" );
 
   FreeGame();
 
-  LOG( "->PlayCascade(): END\n" );
+  DEBUGMSG(debug_all,  "->PlayCascade(): END\n" );
 
   return 1;
 }
@@ -607,7 +607,7 @@ static void ResetObjects(void)
 {
   int i;
 
-  LOG("RESETTING OBJECTS\n");
+  DEBUGMSG(debug_all, "RESETTING OBJECTS\n");
 
   for (i = 0; i < MAX_FISHIES_HARD + 1; i++)
   {
@@ -626,7 +626,7 @@ static void ResetObjects(void)
   tux_object.word[0] = 0;
   tux_object.wordlen = 0;
 
-  LOG( "OBJECTS RESET\n" );
+  DEBUGMSG(debug_all,  "OBJECTS RESET\n" );
 }
 
 
@@ -639,7 +639,7 @@ static void LoadOthers(void)
 	int i;
 	char filename[FNLEN];
 
-	LOG( "=LoadOthers()\n" );
+	DEBUGMSG(debug_all,  "=LoadOthers()\n" );
 	DEBUGCODE(debug_all)
 	{
 	  fprintf(stderr, "settings.theme_font_name is %s\n",
@@ -647,7 +647,7 @@ static void LoadOthers(void)
 	}
 
         RenderLetters(FISHY_FONT_SIZE);
-        LOG( " Done rendering letters \n ");
+        DEBUGMSG(debug_all,  " Done rendering letters \n ");
 
 
 	curlev = BlackOutline(gettext("Level"), LABEL_FONT_SIZE, &white);
@@ -676,7 +676,7 @@ static void LoadOthers(void)
 	}
 	
 	if (settings.sys_sound) {
-		LOG( "=Loading Sound FX\n" );
+		DEBUGMSG(debug_all,  "=Loading Sound FX\n" );
 
 		sound[WIN_WAV] = LoadSound( "win.wav" );
 		sound[WINFINAL_WAV] = LoadSound( "winfinal.wav" );
@@ -686,13 +686,13 @@ static void LoadOthers(void)
 		sound[SPLAT_WAV] = LoadSound( "splat.wav" );
 		sound[EXCUSEME_WAV] = LoadSound( "excuseme.wav" );
 
-		LOG( "=Done Loading Sound FX\n" );
+		DEBUGMSG(debug_all,  "=Done Loading Sound FX\n" );
 	} else 
-		LOG( "=NO SOUND FX LOADED (not selected)\n" );
+		DEBUGMSG(debug_all,  "=NO SOUND FX LOADED (not selected)\n" );
 
 //	PauseLoadMedia();
 
-	LOG( "=Setting NULL fish & splat & word\n" );
+	DEBUGMSG(debug_all,  "=Setting NULL fish & splat & word\n" );
 
 	null_fishy.alive = 0;
 	null_fishy.can_eat = 0;
@@ -705,7 +705,7 @@ static void LoadOthers(void)
 	null_splat.y = 0;
 	null_splat.alive = 0;
 
-	LOG( "=LoadOthers() END\n" );
+	DEBUGMSG(debug_all,  "=LoadOthers() END\n" );
 }
 
 static void display_msg(const char* msg, int x, int y)
@@ -731,7 +731,7 @@ static void LoadFishies(void)
 {
 	int i;
 
-	LOG( "=LoadFishies()\n" );
+	DEBUGMSG(debug_all,  "=LoadFishies()\n" );
 
 	fish_sprite = LoadSprite( "fishy", IMG_ALPHA );
 	splat_sprite = LoadSprite( "splat", IMG_ALPHA );
@@ -742,7 +742,7 @@ static void LoadFishies(void)
 		splat_object[i].alive = 0;
 	}
 
-	LOG( "=LoadFishies(): END\n" );
+	DEBUGMSG(debug_all,  "=LoadFishies(): END\n" );
 }
 
 /******************************
@@ -752,7 +752,7 @@ static int LoadTuxAnims(void)
 {
   int i;
 
-  LOG("LoadTuxAnims(): Loading Tux Animations\n");
+  DEBUGMSG(debug_all, "LoadTuxAnims(): Loading Tux Animations\n");
 
   for (i = 0 ; i < TUX_NUM_STATES; i++)
   {
@@ -768,7 +768,7 @@ static int LoadTuxAnims(void)
 
   tux_max_width = tux_object.spr[TUX_STANDING][RIGHT]->frame[0]->w;
 
-  LOG("LoadTuxAnims(): END\n");
+  DEBUGMSG(debug_all, "LoadTuxAnims(): END\n");
 
   return 1;
 }
@@ -780,7 +780,7 @@ below
 *******************************/
 static void DrawNumbers(int num, int x, int y, int places)
 {
-  LOG("\nEntering DrawNumbers()\n");
+  DEBUGMSG(debug_all, "\nEntering DrawNumbers()\n");
 
 //usage:
 //      num    = number to draw onscreen
@@ -815,7 +815,7 @@ static void DrawNumbers(int num, int x, int y, int places)
       DrawObject(number[uddernumber], x, y);
       x += number[uddernumber]->w;
     }
-  LOG("\nLeaving DrawNumbers()\n");
+  DEBUGMSG(debug_all, "\nLeaving DrawNumbers()\n");
 }
 
 
@@ -825,7 +825,7 @@ from the screen. See "usage"
 *****************************/
 static void EraseNumbers(int num, int x, int y, int places)
 {
-  LOG("\nEntering EraseNumbers()\n");
+  DEBUGMSG(debug_all, "\nEntering EraseNumbers()\n");
 //usage:
 //      num    = number to draw onscreen
 //      x, y   = coords to place number (starting upper left)
@@ -855,7 +855,7 @@ static void EraseNumbers(int num, int x, int y, int places)
         x += number[uddernumber]->w;
     }
 
-  LOG("\nLeaving EraseNumbers()\n");
+  DEBUGMSG(debug_all, "\nLeaving EraseNumbers()\n");
 }
 
 /**********************
@@ -868,7 +868,7 @@ static void FreeGame(void)
 
   FreeLetters();
 
-  LOG( "FreeGame():\n-Freeing Tux Animations\n" );
+  DEBUGMSG(debug_all,  "FreeGame():\n-Freeing Tux Animations\n" );
 
   for (i = 0; i < TUX_NUM_STATES; i++ )
   {
@@ -881,7 +881,7 @@ static void FreeGame(void)
     tux_object.spr[i][LEFT] = NULL;
   }
 
-  LOG( "-Freeing fishies\n" );
+  DEBUGMSG(debug_all,  "-Freeing fishies\n" );
 
   if (fish_sprite)
     FreeSprite(fish_sprite);
@@ -889,7 +889,7 @@ static void FreeGame(void)
     FreeSprite(splat_sprite);
   fish_sprite = splat_sprite = NULL;
 
-  LOG( "-Freeing other game graphics\n" );
+  DEBUGMSG(debug_all,  "-Freeing other game graphics\n" );
 
   FreeBothBkgds();
 
@@ -927,7 +927,7 @@ static void FreeGame(void)
   }
   if (settings.sys_sound)
   {
-    LOG( "-Freeing sound\n" );
+    DEBUGMSG(debug_all,  "-Freeing sound\n" );
     for (i = 0; i < NUM_WAVES; ++i)
     {
       if (sound[i])
@@ -938,7 +938,7 @@ static void FreeGame(void)
 
 //  PauseUnloadMedia();
 
-  LOG( "FreeGame(): END\n" );
+  DEBUGMSG(debug_all,  "FreeGame(): END\n" );
 }
 
 /***************************
@@ -955,7 +955,7 @@ static void DrawBackground(void)
 
 // //    struct blit *update;
 // 
-//     LOG("-DrawBackground(): Updating entire background\n");
+//     DEBUGMSG(debug_all, "-DrawBackground(): Updating entire background\n");
 // 
 //     numupdates=0;  // drawing entire background writes over all other stuff, so don't draw them
 // 
@@ -979,7 +979,7 @@ static void SpawnFishies(int diflevel, int* fishies, int* frame)
   int i, spacing, max_length;
   wchar_t* new_word;
 
-  LOG("Enter SpawnFishies()\n");
+  DEBUGMSG(debug_all, "Enter SpawnFishies()\n");
 
   /* Some safety checks: */
 
@@ -1095,7 +1095,7 @@ static void SpawnFishies(int diflevel, int* fishies, int* frame)
 
   *fishies = *fishies + 1;
 
-  LOG( "Leave SpawnFishies()\n" );
+  DEBUGMSG(debug_all,  "Leave SpawnFishies()\n" );
 }
 
 
@@ -1109,7 +1109,7 @@ static void CheckFishies(int* fishies, int* splats)
   struct fishypoo fish_temp;
   struct splatter splat_temp;
 
-  LOG( "Entering CheckFishies()\n" );
+  DEBUGMSG(debug_all,  "Entering CheckFishies()\n" );
 
 	/* move any fish from the rear to fill up gaps in the
 	 * front
@@ -1162,7 +1162,7 @@ static void CheckFishies(int* fishies, int* splats)
 		else
 			break;
 
-  LOG("Leaving CheckFishies()\n");
+  DEBUGMSG(debug_all, "Leaving CheckFishies()\n");
 }
 
 // Restrict x to a value in the range from a ... b
@@ -1186,7 +1186,7 @@ static void AddSplat(int* splats, struct fishypoo* f, int* curlives, int* frame)
 {
   int i;
 
-  LOG("Enterint AddSplat()\n");
+  DEBUGMSG(debug_all, "Enterint AddSplat()\n");
 
   for ( i = 0; i < f->len; i++ )
   {
@@ -1206,7 +1206,7 @@ static void AddSplat(int* splats, struct fishypoo* f, int* curlives, int* frame)
   if (settings.sys_sound) 
     Mix_PlayChannel(SPLAT_WAV, sound[SPLAT_WAV], 0);
 
-  LOG("Enterint AddSplat()\n");
+  DEBUGMSG(debug_all, "Enterint AddSplat()\n");
 }
 
 
@@ -1237,7 +1237,7 @@ static void DrawFish(int which)
   int letter_x = 0;
   int letter_y = 0;
 
-  LOG ("Entering DrawFish()\n\n");
+  DEBUGMSG(debug_all, "Entering DrawFish()\n\n");
 
   SDL_Surface* letter_surface;
 
@@ -1249,7 +1249,7 @@ static void DrawFish(int which)
   }
 	    
 
-  LOG ("DrawFish() - drawing fishies:\n");
+  DEBUGMSG(debug_all, "DrawFish() - drawing fishies:\n");
 
   /* Draw the fishies: */
   for (j = 0; j < fish_object[which].len; j++)
@@ -1259,7 +1259,7 @@ static void DrawFish(int which)
                 fish_object[which].y);
   }
 
-  LOG ("DrawFish() - drawing letters:\n");
+  DEBUGMSG(debug_all, "DrawFish() - drawing letters:\n");
 
   /* Now we draw the letters on top of the fish: */
   /* we only draw the letter if tux cannot eat it yet */
@@ -1268,7 +1268,7 @@ static void DrawFish(int which)
     red_letters = -1;
     j = 0;
 
-    LOG("figure out how many letters are red:\n");
+    DEBUGMSG(debug_all, "figure out how many letters are red:\n");
     while (j < tux_object.wordlen && red_letters == -1)
     {
       int k;
@@ -1285,7 +1285,7 @@ static void DrawFish(int which)
     }
 
 
-    LOG ("Now draw each letter:\n");
+    DEBUGMSG(debug_all, "Now draw each letter:\n");
 
     int length = wcslen(fish_object[which].word);
     for (j = 0; j < length; j++)
@@ -1309,7 +1309,7 @@ static void DrawFish(int which)
         DrawObject(letter_surface, letter_x, letter_y);
     }
   }
-        LOG ("Leaving DrawFish()\n");
+        DEBUGMSG(debug_all, "Leaving DrawFish()\n");
 }
 
 /****************************
@@ -1321,7 +1321,7 @@ static void MoveFishies(int *fishies, int *splats, int *lifes, int *frame)
 {
   int i, j;
 
-  LOG("\nEntering MoveFishies()\n");
+  DEBUGMSG(debug_all, "\nEntering MoveFishies()\n");
 
   for (i = 0; i < *fishies; i++)
   {
@@ -1354,7 +1354,7 @@ static void MoveFishies(int *fishies, int *splats, int *lifes, int *frame)
 					EraseSprite( splat_sprite, splat_object[i].x, splat_object[i].y);
 		}
 
-	LOG("Leaving MoveFishies()\n\n");
+	DEBUGMSG(debug_all, "Leaving MoveFishies()\n\n");
 }
 
 /* UpdateTux : anytime a key is pressed, we need check to
@@ -1407,7 +1407,7 @@ static void CheckCollision(int fishies, int *fish_left, int frame )
 {
   int i, j;
 
-  LOG("\nEntering CheckCollision()\n");
+  DEBUGMSG(debug_all, "\nEntering CheckCollision()\n");
 
 	for (i = 0; i < fishies; i++) {
 		if ((fish_object[i].y >= tux_object.y - fish_sprite->frame[0]->h) &&
@@ -1415,7 +1415,7 @@ static void CheckCollision(int fishies, int *fish_left, int frame )
 		    (fish_object[i].x + (fish_object[i].w+fish_sprite->frame[0]->w)/2 <= tux_object.x + tux_max_width)) {
 
 			if (fish_object[i].can_eat) {
-                		LOG( "**EATING A FISHY** - in CheckCollision()\n" );
+                		DEBUGMSG(debug_all,  "**EATING A FISHY** - in CheckCollision()\n" );
 
 				fish_object[i].alive = 0;
 				fish_object[i].can_eat = 0;
@@ -1433,14 +1433,14 @@ static void CheckCollision(int fishies, int *fish_left, int frame )
 				if (settings.sys_sound) Mix_PlayChannel(BITE_WAV, sound[BITE_WAV], 0);
 
 			} else if (tux_object.state == TUX_STANDING) {
-				LOG( "***EXCUSE ME!** - in CheckCollision()\n" );
+				DEBUGMSG(debug_all,  "***EXCUSE ME!** - in CheckCollision()\n" );
 
 				if (settings.sys_sound && !Mix_Playing(EXCUSEME_WAV))
 					Mix_PlayChannel(EXCUSEME_WAV, sound[EXCUSEME_WAV], 0);
 			}
 		}
 	}
-  LOG("Leaving CheckCollision()\n");
+  DEBUGMSG(debug_all, "Leaving CheckCollision()\n");
 }
 
 
@@ -1466,7 +1466,7 @@ static void MoveTux( int frame, int fishies )
 	int i;
 	int which=-1, time_to_splat=0;
 
-	LOG( "Entering MoveTux()\n" );
+	DEBUGMSG(debug_all,  "Entering MoveTux()\n" );
 
 	EraseSprite( tux_object.spr[tux_object.state][tux_object.facing], tux_object.x, tux_object.y );
 
@@ -1520,7 +1520,7 @@ static void MoveTux( int frame, int fishies )
 		if ((tux_object.facing == RIGHT && tux_object.x >= tux_object.endx) ||
 		    (tux_object.facing == LEFT && tux_object.x <= tux_object.endx)) {
 
-			LOG( "-In MoveTux(): returning tux to standing\n" );
+			DEBUGMSG(debug_all,  "-In MoveTux(): returning tux to standing\n" );
 			tux_object.state = TUX_STANDING;
 			tux_object.dx = 0;
 			tux_object.x = tux_object.endx;
@@ -1531,23 +1531,23 @@ static void MoveTux( int frame, int fishies )
   if ((frame % 3) == 0)
     next_tux_frame();
 
-  LOG( "Leaving MoveTux()\n" );
+  DEBUGMSG(debug_all,  "Leaving MoveTux()\n" );
 }
 
 static void draw_bar(int curlevel, int diflevel, int curlives, int oldlives, int fish_left, int oldfish_left)
 {
-  LOG("Entering draw_bar()\n");
+  DEBUGMSG(debug_all, "Entering draw_bar()\n");
 
   /* --- draw difficulty --- */
   DrawObject(level[diflevel], 1, 1);
 
-  LOG("about to draw level()\n");
+  DEBUGMSG(debug_all, "about to draw level()\n");
 
   /* --- draw level --- */
   DrawObject(curlev, 1 + GRAPHIC_SPACE + level[diflevel]->w, 1);
   DrawNumbers(curlevel + 1, 1 + 2 * GRAPHIC_SPACE + level[diflevel]->w + curlev->w, 1, 0);
 
-  LOG("about to draw lives()\n");
+  DEBUGMSG(debug_all, "about to draw lives()\n");
 
   /* --- draw lives --- */
   DrawObject(lives, 
@@ -1563,24 +1563,24 @@ static void draw_bar(int curlevel, int diflevel, int curlives, int oldlives, int
 
   DrawNumbers(curlives, (screen->w) - (1 + fish->w + ((MAX_FISHIES_DIGITS + 1) * 2 * number_max_w) + GRAPHIC_SPACE), 1, 0);
 
-  LOG("about to draw fish left()\n");
+  DEBUGMSG(debug_all, "about to draw fish left()\n");
 
   /* --- draw fish left --- */ /* Drawing text label "Fish" */
   DrawObject(fish, (screen->w) - (1 + fish->w + (MAX_FISHIES_DIGITS * number_max_w)), 1);
 
   if (oldfish_left != fish_left)
   {
-  LOG("about to erase numbers\n");
+  DEBUGMSG(debug_all, "about to erase numbers\n");
 
     EraseNumbers(oldfish_left, (screen->w) - (1 + (MAX_FISHIES_DIGITS * number_max_w)), 1, MAX_FISHIES_DIGITS);
     oldfish_left = fish_left;
   }
 
-  LOG("about to draw numbers\n");
+  DEBUGMSG(debug_all, "about to draw numbers\n");
 
   DrawNumbers(fish_left, (screen->w) - (1 + (MAX_FISHIES_DIGITS * number[4]->w)), 1, MAX_FISHIES_DIGITS);
 
-  LOG("Leaving draw_bar()\n");
+  DEBUGMSG(debug_all, "Leaving draw_bar()\n");
 }
 
 

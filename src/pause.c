@@ -62,7 +62,7 @@ int Pause(void)
 	int tocks=0;  // used for keeping track of when a tock has happened
 	SDL_Event event;
 
-	LOG( "Entering Pause()\n" );
+	DEBUGMSG(debug_all,  "Entering Pause()\n" );
 
 	pause_load_media();
 	/* --- stop all sounds, play pause noise --- */
@@ -213,7 +213,7 @@ int Pause(void)
 
 	pause_unload_media();
 
-	LOG( "Leaving Pause()\n" );
+	DEBUGMSG(debug_all,  "Leaving Pause()\n" );
 
 	return (quit);
 }
@@ -267,7 +267,7 @@ static void pause_draw(void)
   SDL_Rect s;
   SDL_Surface* t = NULL;
 
-  LOG("Entering pause_draw()\n");
+  DEBUGMSG(debug_all, "Entering pause_draw()\n");
 
   rectLeft.y = rectRight.y = screen->h/2 - 40;
   rectDown.y = rectUp.y = screen->h/2 + 60;
@@ -344,7 +344,7 @@ static void pause_draw(void)
     SDL_FreeSurface(t);
   }
 
-  LOG("Leaving pause_draw()\n");
+  DEBUGMSG(debug_all, "Leaving pause_draw()\n");
 }
 
 

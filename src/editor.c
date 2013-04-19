@@ -177,7 +177,7 @@ void ChooseListToEdit(void)
   left = LoadImage("left.png", IMG_ALPHA);
   right = LoadImage("right.png", IMG_ALPHA);
 
-  LOG( "ChooseFile() - drawing screen\n");
+  DEBUGMSG(debug_all,  "ChooseFile() - drawing screen\n");
 
 
   /* Draw the initial text and images that won't change as list is examined: */
@@ -350,7 +350,7 @@ void ChooseListToEdit(void)
 
       if (!lists_dir)
       {
-        LOG("ChooseListToEdit() - cannot open custom word list directory!\n");
+        DEBUGMSG(debug_all, "ChooseListToEdit() - cannot open custom word list directory!\n");
         return;
       }
 
@@ -805,7 +805,7 @@ void EditWordList(char* words_file)
               if (number_of_words < MAX_WORD_LISTS)
                 listening_for_new_word = 1;
               else
-                LOG("Couldn't add new word, this wordlist is full.\n");	
+                DEBUGMSG(debug_all, "Couldn't add new word, this wordlist is full.\n");	
             case SDLK_CAPSLOCK:
             case SDLK_RALT:
             case SDLK_LALT:
@@ -903,7 +903,7 @@ void EditWordList(char* words_file)
   word list*/
 
   /* Write changes to file, if possible: */
-  LOG("In EditWordList(), about to write changes\n");
+  DEBUGMSG(debug_all, "In EditWordList(), about to write changes\n");
   fp = fopen(fn,"w");
 
   if (fp)
@@ -919,7 +919,7 @@ void EditWordList(char* words_file)
 
     fclose(fp); 
     fp = NULL;
-    LOG("In EditWordList(), changes written successfully\n");
+    DEBUGMSG(debug_all, "In EditWordList(), changes written successfully\n");
   }
   else
   {
@@ -983,7 +983,7 @@ int CreateNewWordList(void)
   wchar_t temp[MAX_WORD_SIZE + 1];
   wordlist[0] = 0;
 
-  LOG("Enter CreateNewWordList()\n");
+  DEBUGMSG(debug_all, "Enter CreateNewWordList()\n");
 
   // get appropriate directory
   sprintf(wordsDir, "%s/words", settings.user_settings_path);
@@ -1053,11 +1053,11 @@ int CreateNewWordList(void)
           {
             if (len == 0)
             {
-              LOG("Word list name needs non-zero length\n");
+              DEBUGMSG(debug_all, "Word list name needs non-zero length\n");
             }
             else
             {
-              LOG("Save the wordlist\n");
+              DEBUGMSG(debug_all, "Save the wordlist\n");
               save = 1;
               stop = 1;	
             }
@@ -1081,7 +1081,7 @@ int CreateNewWordList(void)
               len = ConvertFromUTF8(temp, wordlist, MAX_WORD_SIZE);
               if (len < 1)
               {
-                LOG("There are no letters to delete\n");
+                DEBUGMSG(debug_all, "There are no letters to delete\n");
               }
               else
               {
@@ -1101,11 +1101,11 @@ int CreateNewWordList(void)
             case SDLK_RETURN:  //does same thing as pressing OK
               if (len == 0)
               {
-                LOG("Word list name needs non-zero length\n");
+                DEBUGMSG(debug_all, "Word list name needs non-zero length\n");
               }
               else
               {
-                LOG("Save the wordlist\n");
+                DEBUGMSG(debug_all, "Save the wordlist\n");
                 save = 1;
                 stop = 1;	
               }
@@ -1227,7 +1227,7 @@ int CreateNewWordList(void)
 
 int ChooseRemoveList(char *name, char *filename)
 {
-  LOG("Entering ChooseRemoveList()\n");
+  DEBUGMSG(debug_all, "Entering ChooseRemoveList()\n");
 
   int stop = 0;
   int result = 0;
@@ -1319,7 +1319,7 @@ int RemoveList(char* words_file)
 {
   char fn[FNLEN];
   char wordsDir[FNLEN];
-  LOG("Enter RemoveList()\n");
+  DEBUGMSG(debug_all, "Enter RemoveList()\n");
   // get appropriate directory
   sprintf(wordsDir, "%s/words", settings.user_settings_path);
   if (CheckFile(wordsDir))

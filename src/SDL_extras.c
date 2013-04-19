@@ -616,7 +616,7 @@ int TransWipe(const SDL_Surface* newbkg, int type, int segments, int duration)
   SDL_Rect src;
   SDL_Rect dst;
 
-  LOG("->TransWipe(): START\n");
+  DEBUGMSG(debug_all, "->TransWipe(): START\n");
 
   /* Input validation: ----------------------- */
   if (!newbkg)
@@ -652,7 +652,7 @@ int TransWipe(const SDL_Surface* newbkg, int type, int segments, int duration)
   {
     case WIPE_BLINDS_VERT:
     {
-      LOG("--+ Doing 'WIPE_BLINDS_VERT'\n");
+      DEBUGMSG(debug_all, "--+ Doing 'WIPE_BLINDS_VERT'\n");
 
       step1 = screen->w/segments;
       step2 = step1/duration;
@@ -691,7 +691,7 @@ int TransWipe(const SDL_Surface* newbkg, int type, int segments, int duration)
 
     case WIPE_BLINDS_HORIZ:
     {
-      LOG("--+ Doing 'WIPE_BLINDS_HORIZ'\n");
+      DEBUGMSG(debug_all, "--+ Doing 'WIPE_BLINDS_HORIZ'\n");
 
       step1 = screen->h / segments;
       step2 = step1 / duration;
@@ -730,7 +730,7 @@ int TransWipe(const SDL_Surface* newbkg, int type, int segments, int duration)
 
     case WIPE_BLINDS_BOX:
     {
-      LOG("--+ Doing 'WIPE_BLINDS_BOX'\n");
+      DEBUGMSG(debug_all, "--+ Doing 'WIPE_BLINDS_BOX'\n");
 
       step1 = screen->w/segments;
       step2 = step1/duration;
@@ -900,16 +900,16 @@ int AddRect(SDL_Rect* src, SDL_Rect* dst)
 
 int DrawSprite(sprite* gfx, int x, int y)
 {
-  LOG("Entering DrawSprite()\n");
+  DEBUGMSG(debug_all, "Entering DrawSprite()\n");
 
   if (!gfx || !gfx->frame[gfx->cur])
   {
     fprintf(stderr, "DrawSprite() - 'gfx' arg invalid!\n");
-    LOG("Leaving DrawSprite()\n");
+    DEBUGMSG(debug_all, "Leaving DrawSprite()\n");
     return 0;
   }
 
-  LOG("Leaving DrawSprite()\n");
+  DEBUGMSG(debug_all, "Leaving DrawSprite()\n");
 
   return DrawObject(gfx->frame[gfx->cur], x, y);
 
@@ -925,7 +925,7 @@ int DrawObject(SDL_Surface* surf, int x, int y)
 {
   struct blit *update;
 
-  LOG("Entering DrawObject()\n");
+  DEBUGMSG(debug_all, "Entering DrawObject()\n");
 
   if (!surf)
   {
@@ -960,7 +960,7 @@ int DrawObject(SDL_Surface* surf, int x, int y)
   update->dstrect->h = surf->h;
   update->type = 'D';
 
-  LOG("Leaving DrawObject()\n");
+  DEBUGMSG(debug_all, "Leaving DrawObject()\n");
 
   return 1;
 }
@@ -974,7 +974,7 @@ void UpdateScreen(int* frame)
 {
   int i;
 
-  LOG("Entering UpdateScreen()\n");
+  DEBUGMSG(debug_all, "Entering UpdateScreen()\n");
   DOUT(numupdates);
 
   /* -- First erase everything we need to -- */
@@ -995,7 +995,7 @@ void UpdateScreen(int* frame)
     }
   }
 
-  LOG("Done erasing\n");
+  DEBUGMSG(debug_all, "Done erasing\n");
 
 //  SNOW_erase();
 
@@ -1017,7 +1017,7 @@ void UpdateScreen(int* frame)
     } 
   }
 
-  LOG("Done drawing\n");
+  DEBUGMSG(debug_all, "Done drawing\n");
 
 //  SNOW_draw();
 
@@ -1030,7 +1030,7 @@ void UpdateScreen(int* frame)
   numupdates = 0;
   *frame = *frame + 1;
 
-  LOG("Leaving UpdateScreen()\n");
+  DEBUGMSG(debug_all, "Leaving UpdateScreen()\n");
 }
 
 
@@ -1040,7 +1040,7 @@ int EraseSprite(sprite* img, int x, int y)
 {
 //  struct blit* update;
 
-  LOG("Entering EraseSprite()\n");
+  DEBUGMSG(debug_all, "Entering EraseSprite()\n");
 
   if( !img 
    || img->cur < 0
@@ -1048,11 +1048,11 @@ int EraseSprite(sprite* img, int x, int y)
    || !img->frame[img->cur])
   {
     fprintf(stderr, "EraseSprite() - invalid 'img' arg!\n");
-    LOG("Leaving EraseSprite()\n");
+    DEBUGMSG(debug_all, "Leaving EraseSprite()\n");
     return 0;
   }
 
-  LOG("Leaving EraseSprite()\n");
+  DEBUGMSG(debug_all, "Leaving EraseSprite()\n");
 
   return EraseObject(img->frame[img->cur], x, y);
 }
@@ -1066,7 +1066,7 @@ int EraseObject(SDL_Surface* surf, int x, int y)
 {
   struct blit* update = NULL;
 
-  LOG("Entering EraseObject()\n");
+  DEBUGMSG(debug_all, "Entering EraseObject()\n");
 
   if(!surf)
   {
@@ -1130,7 +1130,7 @@ int EraseObject(SDL_Surface* surf, int x, int y)
   update->dstrect->h = update->srcrect->h; 
   update->type = 'E';
 
-  LOG("Leaving EraseObject()\n");
+  DEBUGMSG(debug_all, "Leaving EraseObject()\n");
 
   return 1;
 }
@@ -1188,7 +1188,7 @@ int Setup_SDL_Text(void)
 {
 
 #ifdef HAVE_LIBSDL_PANGO
-  LOG("Setup_SDL_Text() - using SDL_Pango\n");
+  DEBUGMSG(debug_all, "Setup_SDL_Text() - using SDL_Pango\n");
 
   SDLPango_Init();
   if (!Set_SDL_Pango_Font_Size(DEFAULT_MENU_FONT_SIZE))
@@ -1198,7 +1198,7 @@ int Setup_SDL_Text(void)
   }
 #else
 /* using SDL_ttf: */
-  LOG("Setup_SDL_Text() - using SDL_ttf\n");
+  DEBUGMSG(debug_all, "Setup_SDL_Text() - using SDL_ttf\n");
 
   if (TTF_Init() < 0)
   {
@@ -1270,7 +1270,7 @@ SDL_Surface* BlackOutline(const char* t, int font_size, const SDL_Color* c)
 
   if (t[0] == '\0')
   {
-    LOG("BlackOutline(): empty string, returning\n");
+    DEBUGMSG(debug_all, "BlackOutline(): empty string, returning\n");
     return NULL;
   }
 

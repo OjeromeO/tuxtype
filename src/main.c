@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
   /* Release heap: */
   Cleanup();
 
-  LOG( "---GAME DONE, EXIT---- Thank you.\n" );
+  DEBUGMSG(debug_all,  "---GAME DONE, EXIT---- Thank you.\n" );
 
   return EXIT_SUCCESS;
 }

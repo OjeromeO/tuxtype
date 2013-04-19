@@ -55,7 +55,7 @@ int CheckFile(const char* file)
   dp = opendir(file);
   if (dp)
   {
-    LOG("Opened successfully as DIR\n");
+    DEBUGMSG(debug_all, "Opened successfully as DIR\n");
 
     closedir(dp);
     return 2;
@@ -64,12 +64,12 @@ int CheckFile(const char* file)
   fp = fopen(file, "r");
   if (fp)
   {
-    LOG("Opened successfully as FILE\n");
+    DEBUGMSG(debug_all, "Opened successfully as FILE\n");
     fclose(fp);
     return 1;
   }
 
-  LOG("Unable to open as either FILE or DIR\n");
+  DEBUGMSG(debug_all, "Unable to open as either FILE or DIR\n");
   return 0;
 }
 
@@ -331,11 +331,11 @@ SDL_Surface* LoadImage(const char* datafile, int mode)
 
     default:
     {
-      LOG ("Image mode not recognized\n");
+      DEBUGMSG(debug_all, "Image mode not recognized\n");
     }
   }
 
-//  LOG( "LoadImage(): Done\n" );
+//  DEBUGMSG(debug_all,  "LoadImage(): Done\n" );
 
   return (final_pic);
 }
@@ -355,7 +355,7 @@ int LoadBothBkgds(const char* datafile)
   //Avoid memory leak in case something else already loaded:
   FreeBothBkgds();
 
-  LOG("Entering LoadBothBkgds()\n");
+  DEBUGMSG(debug_all, "Entering LoadBothBkgds()\n");
 
   orig = LoadImage(datafile, IMG_REGULAR);
 

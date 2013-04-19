@@ -915,7 +915,7 @@ static int practice_load_media(void)
   RenderLetters(fontsize);
   GenerateKeyboard(keyboard);
 
-  LOG("DONE - Loading practice media\n");
+  DEBUGMSG(debug_all, "DONE - Loading practice media\n");
   DEBUGCODE(debug_all) { fprintf(stderr, "Leaving practice_load_media\n"); }
   return 1;
 }
@@ -924,40 +924,40 @@ static int practice_load_media(void)
 
 static void print_load_results(void)
 {
-  LOG("\npractice - print_load_results:\n");
+  DEBUGMSG(debug_all, "\npractice - print_load_results:\n");
  /* Get out if anything failed to load: */
   if (!CurrentBkgd())
-    { LOG("CurrentBkgd() did not load\n");}
+    { DEBUGMSG(debug_all, "CurrentBkgd() did not load\n");}
   if (!hands)
-    { LOG("hands did not load\n");}
+    { DEBUGMSG(debug_all, "hands did not load\n");}
   if (!tux_win)
-    { LOG("tux_win did not load\n");}
+    { DEBUGMSG(debug_all, "tux_win did not load\n");}
   if (!tux_stand)
-    { LOG("tux_stand did not load\n");}
+    { DEBUGMSG(debug_all, "tux_stand did not load\n");}
   if (!keyboard)
-    { LOG("keyboard did not load\n");}
+    { DEBUGMSG(debug_all, "keyboard did not load\n");}
   if (!hand_shift[0])
-    { LOG("hand_shift[0] did not load\n");}
+    { DEBUGMSG(debug_all, "hand_shift[0] did not load\n");}
   if (!hand_shift[1])
-    { LOG("hand_shift[1] did not load\n");}
+    { DEBUGMSG(debug_all, "hand_shift[1] did not load\n");}
   if (!hand_shift[2])
-    { LOG("hand_shift[2] did not load\n");}
+    { DEBUGMSG(debug_all, "hand_shift[2] did not load\n");}
   if (!time_label_srfc)
-    { LOG("time_label_srfc did not load\n");}
+    { DEBUGMSG(debug_all, "time_label_srfc did not load\n");}
   if (!chars_label_srfc)
-    { LOG("chars_label_srfc did not load\n");}
+    { DEBUGMSG(debug_all, "chars_label_srfc did not load\n");}
   if (!cpm_label_srfc)
-    { LOG("cpm_label_srfc did not load\n");}
+    { DEBUGMSG(debug_all, "cpm_label_srfc did not load\n");}
   if (!wpm_label_srfc)
-    { LOG("wpm_label_srfc did not load\n");}
+    { DEBUGMSG(debug_all, "wpm_label_srfc did not load\n");}
   if (!time_label_srfc)
-    { LOG("time_label_srfc did not load\n");}
+    { DEBUGMSG(debug_all, "time_label_srfc did not load\n");}
   if (!errors_label_srfc)
-    { LOG("errors_label_srfc did not load\n");}
+    { DEBUGMSG(debug_all, "errors_label_srfc did not load\n");}
   if (!accuracy_label_srfc)
-    { LOG("accuracy_label_srfc did not load\n");}
+    { DEBUGMSG(debug_all, "accuracy_label_srfc did not load\n");}
 
-  LOG("End print_load_results()\n\n");
+  DEBUGMSG(debug_all, "End print_load_results()\n\n");
 }
 
 static void recalc_positions(void)
@@ -1286,7 +1286,7 @@ static int find_next_wrap(const wchar_t* wstr, int font_size, int width)
   int test_w = 0;      /* The width in pixels of the SDL-rendered string */
   /* FIXME get rid of this once overhaul done: */
 
-  LOG("Entering find__next_wrap\n");
+  DEBUGMSG(debug_all, "Entering find__next_wrap\n");
 
   /* Make sure args OK: */
   if (!wstr)

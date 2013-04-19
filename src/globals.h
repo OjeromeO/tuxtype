@@ -161,7 +161,8 @@ extern int fs_res_y;
  *   all over the place!
  */
 
-#define LOG( str ) if (settings.debug_on) fprintf( stderr, str );
+/* TODO: transition to t4k_common.h ; replaced with DEBUGMSD() macro
+#define LOG( str ) if (settings.debug_on) fprintf( stderr, str );*/
 /* TODO: transition to t4k_common.h ; already defined in t4k_common.h
 #define DEBUGCODE if (settings.debug_on) */
 #define DOUT(x) if (settings.debug_on) fprintf(stderr, "%s = %d\n", #x, x);

@@ -148,7 +148,7 @@ int XMLLesson(void)
   int found = 0;
 
 
-  LOG("Entering XMLLesson():\n");
+  DEBUGMSG(debug_all, "Entering XMLLesson():\n");
 
   /* First look in theme path, if desired: */
   if (!settings.use_english)
@@ -497,7 +497,7 @@ int XMLLesson(void)
   run_script();
   SDL_ShowCursor(1);
 
-  LOG("Leave XMLLesson()\n");
+  DEBUGMSG(debug_all, "Leave XMLLesson()\n");
 
   return 1;
 }
@@ -597,7 +597,7 @@ static int load_script(const char* fn)
 
   if (curScript)
   {
-    LOG( "previous script in memory, removing now!\n");
+    DEBUGMSG(debug_all,  "previous script in memory, removing now!\n");
     close_script();
   }
     
@@ -1105,7 +1105,7 @@ static int load_script(const char* fn)
 
   fclose(f);
 
-  LOG("Leave load_script()\n");
+  DEBUGMSG(debug_all, "Leave load_script()\n");
 
   return 0;
 }
@@ -1122,7 +1122,7 @@ static void run_script(void)
   Mix_Chunk* clickWavs[FNLEN] = {NULL};
   SDL_Rect   clickRects[FNLEN];
 
-  LOG("\nEnter run_script()\n");
+  DEBUGMSG(debug_all, "\nEnter run_script()\n");
 
   if (!curScript)
   {
@@ -1571,7 +1571,7 @@ static void run_script(void)
 
   } /* --- End of "while (curPage)" loop ----*/
 
-  LOG("Leave run_script()\n");
+  DEBUGMSG(debug_all, "Leave run_script()\n");
 }
 
 

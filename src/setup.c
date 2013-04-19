@@ -58,12 +58,12 @@ void GraphicsInit(void)
   if (video_info->hw_available)
   {
     surface_mode = SDL_HWSURFACE;
-    LOG("HW mode\n");
+    DEBUGMSG(debug_all, "HW mode\n");
   }
   else
   {
     surface_mode = SDL_SWSURFACE;
-    LOG("SW mode\n");
+    DEBUGMSG(debug_all, "SW mode\n");
   }
 
   // Determine the current resolution: this will be used as the
@@ -122,7 +122,7 @@ void GraphicsInit(void)
             video_info->vfmt->BitsPerPixel);
   }
 
-	LOG( "GraphicsInit():END\n" );
+	DEBUGMSG(debug_all,  "GraphicsInit():END\n" );
 }
 
 /****************************
@@ -133,7 +133,7 @@ void GraphicsInit(void)
 /* should just simplify all this:                                      */
 void LibInit(Uint32 lib_flags)
 {
-  LOG( "LibInit():\n-About to init SDL Library\n" );
+  DEBUGMSG(debug_all,  "LibInit():\n-About to init SDL Library\n" );
 
   /* Initialize video: */
   if (SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -152,12 +152,12 @@ void LibInit(Uint32 lib_flags)
       settings.sys_sound = 0;
     }
     else
-      LOG("SDL_InitSubSystem(SDL_INIT_AUDIO) succeeded\n");
+      DEBUGMSG(debug_all, "SDL_InitSubSystem(SDL_INIT_AUDIO) succeeded\n");
   }
 
 // atexit(SDL_Quit); // fire and forget... 
 
-  LOG( "-SDL Library init'd successfully\n" );
+  DEBUGMSG(debug_all,  "-SDL Library init'd successfully\n" );
 
   DEBUGCODE(debug_all)
   { fprintf(stderr, "settings.sys_sound = %d\n", settings.sys_sound); }
@@ -177,9 +177,9 @@ void LibInit(Uint32 lib_flags)
 
     /* Just give warnings if MP3 or FLAC not supported: */
     if((initted & MIX_INIT_MP3) != MIX_INIT_MP3)
-      LOG("NOTE - MP3 playback not supported\n");
+      DEBUGMSG(debug_all, "NOTE - MP3 playback not supported\n");
     if((initted & MIX_INIT_FLAC) != MIX_INIT_FLAC)
-      LOG("NOTE - MP3 playback not supported\n");
+      DEBUGMSG(debug_all, "NOTE - MP3 playback not supported\n");
 
     /* We must have Ogg and Mod support to have sound: */
     if((initted & (MIX_INIT_OGG | MIX_INIT_MOD)) != (MIX_INIT_OGG | MIX_INIT_MOD))
@@ -190,7 +190,7 @@ void LibInit(Uint32 lib_flags)
       initted = 0;
     }
     else
-      LOG("Mix_Init() succeeded\n");
+      DEBUGMSG(debug_all, "Mix_Init() succeeded\n");
 #endif
 
     DOUT(initted);
@@ -198,7 +198,7 @@ void LibInit(Uint32 lib_flags)
     /* If Mix_Init() succeeded (or wasn't required), set audio parameters: */
     if(initted)
     {
-      LOG("About to call Mix_OpenAudio():\n");
+      DEBUGMSG(debug_all, "About to call Mix_OpenAudio():\n");
 //    if (Mix_OpenAudio(22050, AUDIO_S16, 1, 2048) == -1)
       if(Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 1, 2048) ==
 		      -1)
@@ -207,11 +207,11 @@ void LibInit(Uint32 lib_flags)
         settings.sys_sound = 0;
       }
       else
-        LOG("Mix_OpenAudio() successful\n");
+        DEBUGMSG(debug_all, "Mix_OpenAudio() successful\n");
     }
   }
 
-  LOG( "-about to init SDL text library (SDL_ttf or SDL_Pango\n" );
+  DEBUGMSG(debug_all,  "-about to init SDL text library (SDL_ttf or SDL_Pango\n" );
 
   if (!Setup_SDL_Text())
   {
@@ -221,7 +221,7 @@ void LibInit(Uint32 lib_flags)
   }
 //	atexit(TTF_Quit);
 
-  LOG( "LibInit():END\n" );
+  DEBUGMSG(debug_all,  "LibInit():END\n" );
 }
 
 
@@ -241,15 +241,15 @@ int LoadSettings(void)
   // MDTTEMP: commented out the next line and added the line after
   // snprintf(fn, FNLEN - 1, "userdata/settings.txt");
   snprintf( fn, FNLEN-1, "%s/TuxType/settings.txt", getenv("APPDATA"));
-  LOG("WIN32 defined\n");
+  DEBUGMSG(debug_all, "WIN32 defined\n");
 #else
   snprintf(fn, FNLEN - 1, (const char*)"%s/.tuxtype/settings.txt", getenv("HOME"));
-  LOG("WIN32 not defined\n");
+  DEBUGMSG(debug_all, "WIN32 not defined\n");
 #endif
 
   DEBUGCODE(debug_all) { fprintf(stderr, "LoadSettings: settings file is '%s'\n", fn ); }
 
-  LOG("LoadSettings: trying to open settings file\n");
+  DEBUGMSG(debug_all, "LoadSettings: trying to open settings file\n");
 
   if (load_settings_filename(fn) != 1)
   {
@@ -407,7 +407,7 @@ void SaveSettings(void)
 
 	DEBUGCODE(debug_all) { fprintf(stderr, "SaveSettings: settings file is '%s'\n", fn ); }
 	
-	LOG("SaveSettings: trying to open settings file\n");
+	DEBUGMSG(debug_all, "SaveSettings: trying to open settings file\n");
 	
 	settingsFile = fopen( fn, "w" );
 

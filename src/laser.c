@@ -94,7 +94,7 @@ int PlayLaserGame(int diff_level)
 	/* str[] is a buffer to draw the scores, waves, etc. (don't need wchar_t) */
 	char str[64]; 
 
-	LOG( "starting Comet Zap game\n" );
+	DEBUGMSG(debug_all,  "starting Comet Zap game\n" );
 	DOUT( diff_level );
 
 	SDL_ShowCursor(0);
@@ -206,7 +206,7 @@ int PlayLaserGame(int diff_level)
                                 if (key_unicode >= 224 && key_unicode <= 255)
                                   key_unicode -= 32; //same for non-US chars
 
-				LOG ("After checking for lower case:\n");
+				DEBUGMSG(debug_all, "After checking for lower case:\n");
 				DEBUGCODE(debug_all)
 				{
 				  fprintf(stderr,
@@ -770,7 +770,7 @@ static void laser_reset_level(int diff_level)
     comets[i].alive = 0;
   
   /* Load diffrent random background image: */
-  LOG("Loading background in laser_reset_level()\n");
+  DEBUGMSG(debug_all, "Loading background in laser_reset_level()\n");
 
   do {
     i = rand() % NUM_BKGDS;
@@ -810,11 +810,11 @@ static void laser_reset_level(int diff_level)
     case 1 : speed = 1 + (wave/4); num_attackers=15; break;
     case 2 : speed = 1 + ((wave<<1)/3); num_attackers=(wave<<1); break;
     case 3 : speed = 1 + wave; num_attackers=(wave<<1); break;
-    default: LOG("diff_level not recognized!\n");
+    default: DEBUGMSG(debug_all, "diff_level not recognized!\n");
   }
 
   distanceMoved = 100; // so that we don't have to wait to start the level
-  LOG("Leaving laser_reset_level()\n");
+  DEBUGMSG(debug_all, "Leaving laser_reset_level()\n");
 }
 
 
@@ -827,12 +827,12 @@ static void laser_add_comet(int diff_level)
   int targeted[NUM_CITIES] = { 0 };
   int add = (rand() % (diff_level + 2));
 
-  LOG ("Entering laser_add_comet()\n");
+  DEBUGMSG(debug_all, "Entering laser_add_comet()\n");
   DEBUGCODE(debug_all) { fprintf(stderr, "Adding %d comets \n", add); }
 
   if (0 == NUM_CITIES % 2) /* Even number of cities */
 	{
-          LOG("NUM_CITIES is even\n");
+          DEBUGMSG(debug_all, "NUM_CITIES is even\n");
 	  while ((add > 0) && (location != MAX_COMETS))
 	  {
             /* Look for a free comet slot: */
@@ -873,7 +873,7 @@ static void laser_add_comet(int diff_level)
 	}
 	else /* Odd number of cities (is this a hack that means we are using words?) */
         {
-          LOG("NUM_CITIES is odd\n");
+          DEBUGMSG(debug_all, "NUM_CITIES is odd\n");
           wchar_t* word = GetWord();
           int i = 0;
           comet_type* prev_comet = NULL;
@@ -923,7 +923,7 @@ static void laser_add_comet(int diff_level)
 			}
 		}
 	}
-	LOG ("Leaving laser_add_comet()\n");
+	DEBUGMSG(debug_all, "Leaving laser_add_comet()\n");
 }
 
 

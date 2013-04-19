@@ -172,7 +172,7 @@ void TitleScreen(void)
   * Tux and Title animations *
   ***************************/
 
-  LOG( "->Now Animating Tux and Title onto the screen\n" );
+  DEBUGMSG(debug_all,  "->Now Animating Tux and Title onto the screen\n" );
 
   Tuxdest.x = 0;
   Tuxdest.y = screen->h;
@@ -248,7 +248,7 @@ void TitleScreen(void)
   if (settings.menu_music)
     MusicLoad( "tuxi.ogg", -1 );
 
-  LOG( "Tux and Title are in place now\n" );
+  DEBUGMSG(debug_all,  "Tux and Title are in place now\n" );
 
   SDL_WM_GrabInput(SDL_GRAB_OFF);
 
@@ -679,7 +679,7 @@ void TitleScreen(void)
 
     if (redraw)
     {
-      LOG("TitleScreen() - redraw requested\n");
+      DEBUGMSG(debug_all, "TitleScreen() - redraw requested\n");
       recalc_rects();
 
       SDL_BlitSurface(CurrentBkgd(), NULL, screen, NULL); 
@@ -703,7 +703,7 @@ void TitleScreen(void)
 
     if (update_locs)
     {
-      LOG("TitleScreen() - update_locs requested\n");
+      DEBUGMSG(debug_all, "TitleScreen() - update_locs requested\n");
 
       /* --- erase the last menu --- */
       for (i = 1; i <= TITLE_MENU_ITEMS; i++)
@@ -732,7 +732,7 @@ void TitleScreen(void)
 
       SDL_UpdateRect(screen, 0, 0, 0, 0);
 
-      LOG("TitleScreen() - update_locs completed\n");
+      DEBUGMSG(debug_all, "TitleScreen() - update_locs completed\n");
     }
 
 
@@ -845,11 +845,11 @@ void TitleScreen(void)
 
 
 
-  LOG( "->>Freeing title screen images\n" );
+  DEBUGMSG(debug_all,  "->>Freeing title screen images\n" );
 
   unload_media();
 
-  LOG( "->TitleScreen():END \n" );
+  DEBUGMSG(debug_all,  "->TitleScreen():END \n" );
 }
 
 
@@ -895,7 +895,7 @@ static void load_menu(void)
 
   SDL_ShowCursor(1);
 
-  LOG("loading & parsing menu\n");
+  DEBUGMSG(debug_all, "loading & parsing menu\n");
 
   for (j = 1; j <= TITLE_MENU_DEPTH; j++)  /* Each 'depth' is a different menu */
   {
@@ -1067,7 +1067,7 @@ static int load_media(void)
 
 static void unload_media(void)
 {
-  LOG("Entering unload_media():\n");
+  DEBUGMSG(debug_all, "Entering unload_media():\n");
 
   /* --- unload sounds --- */
   if (snd_move)
@@ -1111,7 +1111,7 @@ static void unload_media(void)
     Tux = NULL;
   }
 
-  LOG("Leaving load_media():\n");
+  DEBUGMSG(debug_all, "Leaving load_media():\n");
 
   unload_menu();
 }
@@ -1124,7 +1124,7 @@ static void not_implemented(void)
   SDL_Rect loc;
   int finished = 0, i;
 
-  LOG( "NotImplemented() - creating text\n" );
+  DEBUGMSG(debug_all,  "NotImplemented() - creating text\n" );
 
   s1 = BlackOutline( _("Work In Progress!"), DEFAULT_MENU_FONT_SIZE, &white);
   s2 = BlackOutline( _("This feature is not ready yet"), DEFAULT_MENU_FONT_SIZE, &white);
@@ -1135,7 +1135,7 @@ static void not_implemented(void)
 
   if (s1 && s2 && s3 && s4 && tux)
   {
-    LOG( "NotImplemented() - drawing screen\n" );
+    DEBUGMSG(debug_all,  "NotImplemented() - drawing screen\n" );
 
     SDL_BlitSurface(CurrentBkgd(), NULL, screen, NULL);
     loc.x = screen->w/2 - (s1->w/2); loc.y = 10;
@@ -1225,7 +1225,7 @@ static int chooseWordlist(void)
   struct dirent* wordsFile = NULL;
   FILE* tempFile = NULL;
 
-  LOG("Entering chooseWordlist():\n");
+  DEBUGMSG(debug_all, "Entering chooseWordlist():\n");
 
   /* find the directory to load wordlists from */
 

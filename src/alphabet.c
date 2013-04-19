@@ -139,7 +139,7 @@ int LoadKeyboard(void)
 
     if (f == NULL)
     {
-      LOG("LoadKeyboard() - could not open keyboard.lst\n");
+      DEBUGMSG(debug_all, "LoadKeyboard() - could not open keyboard.lst\n");
       return 0;
     }
 
@@ -221,7 +221,7 @@ int LoadKeyboard(void)
     } while (!feof(f));
 
     fclose(f);
-    LOG("Leaving LoadKeyboard()\n");
+    DEBUGMSG(debug_all, "Leaving LoadKeyboard()\n");
     return 1;
   }
 }
@@ -463,7 +463,7 @@ wchar_t* GetWord(void)
   static int last_choice = -1;
   int choice;
 
-  LOG("Entering GetWord()\n");
+  DEBUGMSG(debug_all, "Entering GetWord()\n");
 
   /* Safety/sanity checks: */
   /* Count list to make sure num_words is correct: */
@@ -475,7 +475,7 @@ wchar_t* GetWord(void)
 
   if (0 == num_words)
   {
-    LOG("No words in list\n");
+    DEBUGMSG(debug_all, "No words in list\n");
     return NULL;
   }
 
@@ -613,7 +613,7 @@ int GenerateWordList(const char* wordFn)
   /* (we use this to check to make sure all are "typable"); */
   gen_char_list();
 
-  LOG("Leaving GenerateWordList()\n");
+  DEBUGMSG(debug_all, "Leaving GenerateWordList()\n");
 
   return (num_words);
 }
@@ -748,7 +748,7 @@ int CheckNeededGlyphs(void)
     }
     i++;
   }
-  LOG("CheckNeededGlyphs() - all chars found.\n");
+  DEBUGMSG(debug_all, "CheckNeededGlyphs() - all chars found.\n");
   return 1;
 }
 
@@ -1293,7 +1293,7 @@ void savekeyboard(void)
   fp = fopen(fn,"w");
   if (fp == NULL)
   {
-    LOG("savekeyboard() - could not open keyboard.lst for saving\n");
+    DEBUGMSG(debug_all, "savekeyboard() - could not open keyboard.lst for saving\n");
     return;
   }
 
@@ -1429,7 +1429,7 @@ static int add_char(wchar_t uc)
 
   if (i == MAX_UNICODES - 1)            //Because 1 need for null terminator
   {
-    LOG ("Unable to add unicode - list at max capacity");
+    DEBUGMSG(debug_all, "Unable to add unicode - list at max capacity");
     return -1;
   }
   // We never want to get here...
