@@ -79,7 +79,8 @@ typedef struct {
 
 
 /* "Public" function prototypes: */
-void DrawButton(SDL_Rect* target_rect, int radius, Uint8 r, Uint8 g, Uint8 b, Uint8 a);
+/* TODO: transition to t4kcommon functions
+void DrawButton(SDL_Rect* target_rect, int radius, Uint8 r, Uint8 g, Uint8 b, Uint8 a);*/
 /* TODO: transition to t4kcommon functions
 void RoundCorners(SDL_Surface* s, Uint16 radius);*/
 SDL_Surface* Flip(SDL_Surface *in, int x, int y);

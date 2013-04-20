@@ -723,7 +723,7 @@ void TitleScreen(void)
       for (j = 1; j <= TITLE_MENU_ITEMS; j++)
       {
         DOUT(j);
-        DrawButton(&menu_button[j], 10, REG_RGBA);
+        T4K_DrawButton(&menu_button[j], 10, REG_RGBA);
         if (reg_text[j][menu_depth] != NULL)
           SDL_BlitSurface(reg_text[j][menu_depth], NULL, screen, &text_dst[j]);
         if (menu_gfx[j][menu_depth] != NULL)
@@ -786,7 +786,7 @@ void TitleScreen(void)
     if (old_key_menu && (key_menu != old_key_menu))
     {
       SDL_BlitSurface(CurrentBkgd(), &menu_button[old_key_menu], screen, &menu_button[old_key_menu]);
-      DrawButton(&menu_button[old_key_menu], 10, REG_RGBA);
+      T4K_DrawButton(&menu_button[old_key_menu], 10, REG_RGBA);
       SDL_BlitSurface(reg_text[old_key_menu][menu_depth], NULL, screen, &text_dst[old_key_menu]);
       SDL_BlitSurface(menu_gfx[old_key_menu][menu_depth]->default_img, NULL, screen, &menu_gfxdest[old_key_menu]);
     }
@@ -804,7 +804,7 @@ void TitleScreen(void)
       }
 
       SDL_BlitSurface(CurrentBkgd(), &menu_button[key_menu], screen, &menu_button[key_menu]);
-      DrawButton(&menu_button[key_menu], 10, SEL_RGBA);
+      T4K_DrawButton(&menu_button[key_menu], 10, SEL_RGBA);
       SDL_BlitSurface(sel_text[key_menu][menu_depth], NULL, screen, &text_dst[key_menu]);
       SDL_BlitSurface(menu_gfx[key_menu][menu_depth]->frame[menu_gfx[key_menu][menu_depth]->cur], NULL, screen, &menu_gfxdest[key_menu]);
 

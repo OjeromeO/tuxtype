@@ -48,12 +48,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* DrawButton() creates and draws a translucent button with */
 /* rounded ends.  All colors and alpha values are supported.*/
+/* TODO: transition to t4kcommon functions
 void DrawButton(SDL_Rect* target_rect,
                 int radius,
                 Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 {
-  /* NOTE - we use a 32-bit temp surface even if we have a 16-bit */
-  /* screen - it gets converted during blitting.                  */
+  *//* NOTE - we use a 32-bit temp surface even if we have a 16-bit */
+  /* screen - it gets converted during blitting.                  *//*
   SDL_Surface* tmp_surf = SDL_CreateRGBSurface(SDL_SWSURFACE|SDL_SRCALPHA,
                                           target_rect->w,
                                           target_rect->h,
@@ -61,13 +62,13 @@ void DrawButton(SDL_Rect* target_rect,
                                           rmask, gmask, bmask, amask);
   Uint32 color = SDL_MapRGBA(tmp_surf->format, r, g, b, a);
   SDL_FillRect(tmp_surf, NULL, color);
-  /* TODO: transition to t4kcommon functions
-  RoundCorners(tmp_surf, radius);*/
+  *//* TODO: transition to t4kcommon functions
+  RoundCorners(tmp_surf, radius);*//*
   T4K_RoundCorners(tmp_surf, radius);
 
   SDL_BlitSurface(tmp_surf, NULL, screen, target_rect);
   SDL_FreeSurface(tmp_surf);
-}
+}*/
 
 
 /* TODO: transition to t4kcommon functions
