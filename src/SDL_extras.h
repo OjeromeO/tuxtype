@@ -82,7 +82,8 @@ typedef struct {
 void DrawButton(SDL_Rect* target_rect, int radius, Uint8 r, Uint8 g, Uint8 b, Uint8 a);
 void RoundCorners(SDL_Surface* s, Uint16 radius);
 SDL_Surface* Flip(SDL_Surface *in, int x, int y);
-int  inRect(SDL_Rect r, int x, int y);
+/* TODO: transition to t4kcommon functions
+int inRect(SDL_Rect r, int x, int y);*/
 void DarkenScreen(Uint8 bits);
 void SwitchScreenMode(void);
 int WaitForKeypress(void);

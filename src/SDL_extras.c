@@ -379,7 +379,7 @@ SDL_Surface* Blend(SDL_Surface* S1, SDL_Surface* S2, float gamma)
 
 
 
-
+/* TODO: transition to t4kcommon functions
 int inRect( SDL_Rect r, int x, int y)
 {
   if ((x < r.x)
@@ -388,7 +388,7 @@ int inRect( SDL_Rect r, int x, int y)
    || (y > r.y + r.h))
     return 0;
   return 1;
-}
+}*/
 
 
 /* Darkens the screen by a factor of 2^bits */
