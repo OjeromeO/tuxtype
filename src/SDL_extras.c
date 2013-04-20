@@ -61,14 +61,16 @@ void DrawButton(SDL_Rect* target_rect,
                                           rmask, gmask, bmask, amask);
   Uint32 color = SDL_MapRGBA(tmp_surf->format, r, g, b, a);
   SDL_FillRect(tmp_surf, NULL, color);
-  RoundCorners(tmp_surf, radius);
+  /* TODO: transition to t4kcommon functions
+  RoundCorners(tmp_surf, radius);*/
+  T4K_RoundCorners(tmp_surf, radius);
 
   SDL_BlitSurface(tmp_surf, NULL, screen, target_rect);
   SDL_FreeSurface(tmp_surf);
 }
 
 
-
+/* TODO: transition to t4kcommon functions
 void RoundCorners(SDL_Surface* s, Uint16 radius)
 {
   int y = 0;
@@ -86,7 +88,7 @@ void RoundCorners(SDL_Surface* s, Uint16 radius)
   if (bytes_per_pix != 4)
     return;
 
-  /* radius cannot be more than half of width or height: */
+  *//* radius cannot be more than half of width or height: *//*
   if (radius > (s->w)/2)
     radius = (s->w)/2;
   if (radius > (s->h)/2)
@@ -95,8 +97,8 @@ void RoundCorners(SDL_Surface* s, Uint16 radius)
 
   alpha_mask = s->format->Amask;
 
-  /* Now round off corners: */
-  /* upper left:            */
+  *//* Now round off corners: */
+  /* upper left:            *//*
   for (y = 0; y < radius; y++)
   {
     p = (Uint32*)(s->pixels + (y * s->pitch));
@@ -105,17 +107,17 @@ void RoundCorners(SDL_Surface* s, Uint16 radius)
 
     while (((x_dist * x_dist) + (y_dist * y_dist)) > (radius * radius))
     {
-      /* (make pixel (x,y) transparent) */
+      *//* (make pixel (x,y) transparent) *//*
       *p = *p & ~alpha_mask;
       p++;
       x_dist--;
     }
   }
 
-  /* upper right:            */
+  *//* upper right:            *//*
   for (y = 0; y < radius; y++)
   {
-    /* start at end of top row: */
+    *//* start at end of top row: *//*
     p = (Uint32*)(s->pixels + ((y + 1) * s->pitch) - bytes_per_pix);
 
     x_dist = radius;
@@ -123,48 +125,48 @@ void RoundCorners(SDL_Surface* s, Uint16 radius)
 
     while (((x_dist * x_dist) + (y_dist * y_dist)) > (radius * radius))
     {
-      /* (make pixel (x,y) transparent) */
+      *//* (make pixel (x,y) transparent) *//*
       *p = *p & ~alpha_mask;
       p--;
       x_dist--;
     }
   }
 
-  /* bottom left:            */
+  *//* bottom left:            *//*
   for (y = (s->h - 1); y > (s->h - radius); y--)
   {
-    /* start at beginning of bottom row */
+    *//* start at beginning of bottom row *//*
     p = (Uint32*)(s->pixels + (y * s->pitch));
     x_dist = radius;
     y_dist = y - (s->h - radius);
 
     while (((x_dist * x_dist) + (y_dist * y_dist)) > (radius * radius))
     {
-      /* (make pixel (x,y) transparent) */
+      *//* (make pixel (x,y) transparent) *//*
       *p = *p & ~alpha_mask;
       p++;
       x_dist--;
     }
   }
 
-  /* bottom right:            */
+  *//* bottom right:            *//*
   for (y = (s->h - 1); y > (s->h - radius); y--)
   {
-    /* start at end of bottom row */
+    *//* start at end of bottom row *//*
     p = (Uint32*)(s->pixels + ((y + 1) * s->pitch) - bytes_per_pix);
     x_dist = radius;
     y_dist = y - (s->h - radius);
 
     while (((x_dist * x_dist) + (y_dist * y_dist)) > (radius * radius))
     {
-      /* (make pixel (x,y) transparent) */
+      *//* (make pixel (x,y) transparent) *//*
       *p = *p & ~alpha_mask;
       p--;
       x_dist--;
     }
   }
   SDL_UnlockSurface(s);
-}
+}*/
 
 
 /**********************
