@@ -180,18 +180,19 @@ void RoundCorners(SDL_Surface* s, Uint16 radius)
 
      note: you can have it flip both
 **********************/
+/* TODO: transition to t4kcommon functions
 SDL_Surface* Flip( SDL_Surface *in, int x, int y ) {
         SDL_Surface *out, *tmp;
         SDL_Rect from_rect, to_rect;
         Uint32        flags;
         Uint32  colorkey=0;
 
-        /* --- grab the settings for the incoming pixmap --- */
+        *//* --- grab the settings for the incoming pixmap --- *//*
 
         SDL_LockSurface(in);
         flags = in->flags;
 
-        /* --- change in's flags so ignore colorkey & alpha --- */
+        *//* --- change in's flags so ignore colorkey & alpha --- *//*
 
         if (flags & SDL_SRCCOLORKEY) {
                 in->flags &= ~SDL_SRCCOLORKEY;
@@ -203,13 +204,13 @@ SDL_Surface* Flip( SDL_Surface *in, int x, int y ) {
 
         SDL_UnlockSurface(in);
 
-        /* --- create our new surface --- */
+        *//* --- create our new surface --- *//*
 
         out = SDL_CreateRGBSurface(
                 SDL_SWSURFACE,
                 in->w, in->h, 32, rmask, gmask, bmask, amask);
 
-        /* --- flip horizontally if requested --- */
+        *//* --- flip horizontally if requested --- *//*
 
         if (x) {
                 from_rect.h = to_rect.h = in->h;
@@ -225,7 +226,7 @@ SDL_Surface* Flip( SDL_Surface *in, int x, int y ) {
                 } while (to_rect.x >= 0);
         }
 
-        /* --- flip vertically if requested --- */
+        *//* --- flip vertically if requested --- *//*
 
         if (y) {
                 from_rect.h = to_rect.h = 1;
@@ -241,7 +242,7 @@ SDL_Surface* Flip( SDL_Surface *in, int x, int y ) {
                 } while (to_rect.y >= 0);
         }
 
-        /* --- restore colorkey & alpha on in and setup out the same --- */
+        *//* --- restore colorkey & alpha on in and setup out the same --- *//*
 
         SDL_LockSurface(in);
 
@@ -267,7 +268,7 @@ SDL_Surface* Flip( SDL_Surface *in, int x, int y ) {
         SDL_UnlockSurface(in);
 
         return out;
-}
+}*/
 
 /* Blend two surfaces together. The third argument is between 0.0 and
    1.0, and represents the weight assigned to the first surface.  If
