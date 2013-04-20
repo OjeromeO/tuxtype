@@ -36,24 +36,36 @@ static Mix_Music* defaultMusic = NULL; // holds music for audioMusicLoad/unload
 // play sound once
 void PlaySound(Mix_Chunk* snd)
 {
-  PlaySoundLoop(snd, 0);
+  /* TODO: transition to t4kcommon functions
+  PlaySoundLoop(snd, 0);*/
+  if (settings.sys_sound)
+  {
+    T4K_PlaySound(snd);
+  }
 }
 
 // play sound with optional repeats, or -1 for infinite
 void PlaySoundLoop(Mix_Chunk* snd, int loops)
 {
+  /* TODO: transition to t4kcommon functions
   if(!snd)
     return;
   if (!settings.sys_sound)
     return;
 
-  Mix_PlayChannel(-1, snd, loops);
+  Mix_PlayChannel(-1, snd, loops);*/
+  if (settings.sys_sound)
+  {
+    T4K_PlaySoundLoop(snd, loops);
+  }
 }
 
 // halt a channel or -1 for all
 void audioHaltChannel(int channel)
 {
-    Mix_HaltChannel(channel);
+  /* TODO: transition to t4kcommon functions
+  Mix_HaltChannel(channel);*/
+  T4K_AudioHaltChannel(channel);
 }
 
 /* MusicLoad attempts to load and play the music file 
