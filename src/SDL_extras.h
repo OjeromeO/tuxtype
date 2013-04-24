@@ -87,7 +87,8 @@ void RoundCorners(SDL_Surface* s, Uint16 radius);*/
 SDL_Surface* Flip(SDL_Surface *in, int x, int y);*/
 /* TODO: transition to t4kcommon functions
 int inRect(SDL_Rect r, int x, int y);*/
-void DarkenScreen(Uint8 bits);
+/* TODO: transition to t4kcommon functions
+void DarkenScreen(Uint8 bits);*/
 void SwitchScreenMode(void);
 int WaitForKeypress(void);
 /* TODO: transition to t4kcommon functions

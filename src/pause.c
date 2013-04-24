@@ -79,7 +79,7 @@ int Pause(void)
 	SDL_ShowCursor(1);
 
 	// Darken the screen...
-	DarkenScreen(1); 
+	T4K_DarkenScreen(1); 
 
 	pause_draw();
 

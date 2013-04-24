@@ -397,6 +397,7 @@ int inRect( SDL_Rect r, int x, int y)
 
 
 /* Darkens the screen by a factor of 2^bits */
+/* TODO: transition to t4kcommon functions
 void DarkenScreen(Uint8 bits)
 {
 #if BPP == 32
@@ -412,7 +413,7 @@ void DarkenScreen(Uint8 bits)
   Uint32 bm = screen->format->Bmask;
   int x, y;
 
-  /* (realistically, 1 and 2 are the only useful values) */
+  *//* (realistically, 1 and 2 are the only useful values) *//*
   if (bits > 8)
     return;
 
@@ -428,7 +429,7 @@ void DarkenScreen(Uint8 bits)
       p++;
     }
   }
-}
+}*/
 
 
 void SwitchScreenMode(void)
