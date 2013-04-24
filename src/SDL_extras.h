@@ -90,7 +90,8 @@ int inRect(SDL_Rect r, int x, int y);*/
 void DarkenScreen(Uint8 bits);
 void SwitchScreenMode(void);
 int WaitForKeypress(void);
-SDL_Surface* Blend(SDL_Surface *S1, SDL_Surface *S2, float gamma);
+/* TODO: transition to t4kcommon functions
+SDL_Surface* Blend(SDL_Surface *S1, SDL_Surface *S2, float gamma);*/
 SDL_Surface* zoom(SDL_Surface * src, int new_w, int new_h);
 int TransWipe(const SDL_Surface* newbkg, int type, int segments, int duration);
 

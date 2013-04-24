@@ -277,6 +277,7 @@ SDL_Surface* Flip( SDL_Surface *in, int x, int y ) {
    Currently this works only with RGBA images, but this is largely to
    make the (fast) pointer arithmetic work out; it could be easily
    generalized to other image types. */
+   /* TODO: transition to t4kcommon functions
 SDL_Surface* Blend(SDL_Surface* S1, SDL_Surface* S2, float gamma)
 {
   SDL_PixelFormat *fmt1, *fmt2;
@@ -379,7 +380,7 @@ SDL_Surface* Blend(SDL_Surface* S1, SDL_Surface* S2, float gamma)
   SDL_FreeSurface(tmpS);
 
   return ret;
-}
+}*/
 
 
 
