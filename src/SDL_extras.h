@@ -93,7 +93,8 @@ void SwitchScreenMode(void);
 int WaitForKeypress(void);
 /* TODO: transition to t4kcommon functions
 SDL_Surface* Blend(SDL_Surface *S1, SDL_Surface *S2, float gamma);*/
-SDL_Surface* zoom(SDL_Surface * src, int new_w, int new_h);
+/* TODO: transition to t4kcommon functions
+SDL_Surface* zoom(SDL_Surface * src, int new_w, int new_h);*/
 int TransWipe(const SDL_Surface* newbkg, int type, int segments, int duration);
 
 /* Blit queue functions: */

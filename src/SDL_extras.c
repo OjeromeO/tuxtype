@@ -486,13 +486,14 @@ int WaitForKeypress(void)
    Based on code from: http://www.codeproject.com/cs/media/imageprocessing4.asp
    copyright 2002 Christian Graus */
 
+/* TODO: transition to t4kcommon functions
 SDL_Surface* zoom(SDL_Surface* src, int new_w, int new_h)
 {
   SDL_Surface* s;
 
-  /* These function pointers will point to the appropriate */
+  *//* These function pointers will point to the appropriate */
   /* putpixel() and getpixel() variants to be used in the  */
-  /* current colorspace:                                   */
+  /* current colorspace:                                   *//*
   void (*putpixel) (SDL_Surface*, int, int, Uint32);
   Uint32(*getpixel) (SDL_Surface*, int, int);
 
@@ -509,9 +510,9 @@ SDL_Surface* zoom(SDL_Surface* src, int new_w, int new_h)
   Uint8 r4, g4, b4, a4;
   Uint8 r, g, b, a;
 
-  /* Create surface for zoom: */
+  *//* Create surface for zoom: *//*
 
-  s = SDL_CreateRGBSurface(src->flags,        /* SDL_SWSURFACE, */
+  s = SDL_CreateRGBSurface(src->flags,        *//* SDL_SWSURFACE, *//*
                            new_w, new_h, src->format->BitsPerPixel,
                            src->format->Rmask,
                            src->format->Gmask,
@@ -529,8 +530,8 @@ SDL_Surface* zoom(SDL_Surface* src, int new_w, int new_h)
   }
 
 
-  /* Now assign function pointers to correct functions based */
-  /* on data format of original and zoomed surfaces:         */
+  *//* Now assign function pointers to correct functions based */
+  /* on data format of original and zoomed surfaces:         *//*
   getpixel = getpixels[src->format->BytesPerPixel];
   putpixel = putpixels[s->format->BytesPerPixel];
 
@@ -544,11 +545,11 @@ SDL_Surface* zoom(SDL_Surface* src, int new_w, int new_h)
   {
     for (y = 0; y < new_h; y++)
     {
-      /* Here we calculate the new RGBA values for each pixel */
+      *//* Here we calculate the new RGBA values for each pixel */
       /* using a "weighted average" of the four pixels in the */
       /* corresponding location in the orginal surface:       */
 
-      /* figure out which original pixels to use in the calc: */
+      /* figure out which original pixels to use in the calc: *//*
       floor_x = floor((float) x * xscale);
       ceil_x = floor_x + 1;
       if (ceil_x >= src->w)
@@ -565,7 +566,7 @@ SDL_Surface* zoom(SDL_Surface* src, int new_w, int new_h)
       one_minus_x = 1.0 - fraction_x;
       one_minus_y = 1.0 - fraction_y;
 
-      /* Grab their values:  */
+      *//* Grab their values:  *//*
       SDL_GetRGBA(getpixel(src, floor_x, floor_y), src->format,
                   &r1, &g1, &b1, &a1);
       SDL_GetRGBA(getpixel(src, ceil_x,  floor_y), src->format,
@@ -575,7 +576,7 @@ SDL_Surface* zoom(SDL_Surface* src, int new_w, int new_h)
       SDL_GetRGBA(getpixel(src, ceil_x,  ceil_y),  src->format,
                   &r4, &g4, &b4, &a4);
 
-      /* Create the weighted averages: */
+      *//* Create the weighted averages: *//*
       n1 = (one_minus_x * r1 + fraction_x * r2);
       n2 = (one_minus_x * r3 + fraction_x * r4);
       r = (one_minus_y * n1 + fraction_y * n2);
@@ -592,7 +593,7 @@ SDL_Surface* zoom(SDL_Surface* src, int new_w, int new_h)
       n2 = (one_minus_x * a3 + fraction_x * a4);
       a = (one_minus_y * n1 + fraction_y * n2);
 
-      /* and put them into our new surface: */
+      *//* and put them into our new surface: *//*
       putpixel(s, x, y, SDL_MapRGBA(s->format, r, g, b, a));
 
     }
@@ -602,7 +603,7 @@ SDL_Surface* zoom(SDL_Surface* src, int new_w, int new_h)
   SDL_UnlockSurface(src);
 
   return s;
-}
+}*/
 
 
 

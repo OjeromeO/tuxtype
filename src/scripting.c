@@ -1156,7 +1156,7 @@ static void run_script(void)
        * but shouldn't every image scale when in fullscreen? assuming svg is for that... -MDT */
       if (settings.fullscreen)
       {
-        SDL_Surface* fsimg = zoom(img, fs_res_x, fs_res_y);
+        SDL_Surface* fsimg = T4K_zoom(img, fs_res_x, fs_res_y);
         SDL_BlitSurface(fsimg, NULL, screen, NULL);
         SDL_FreeSurface(fsimg);
       }
@@ -1175,7 +1175,7 @@ static void run_script(void)
       /* hack: since this is the background it needs to scale when in fullscreen -MDT */
       if (settings.fullscreen)
       { 
-        SDL_Surface* fsimg = zoom(img, fs_res_x, fs_res_y);
+        SDL_Surface* fsimg = T4K_zoom(img, fs_res_x, fs_res_y);
         SDL_BlitSurface(fsimg, NULL, screen, NULL);
         SDL_FreeSurface(fsimg);
       }
@@ -1262,7 +1262,7 @@ static void run_script(void)
             /* hack: since this is the background it needs to scale when in fullscreen -MDT */
             if (settings.fullscreen)
             {
-              SDL_Surface* fsimg = zoom(img, fs_res_x, fs_res_y);
+              SDL_Surface* fsimg = T4K_zoom(img, fs_res_x, fs_res_y);
               SDL_BlitSurface(fsimg, NULL, screen, NULL);
               SDL_FreeSurface(fsimg);
             }

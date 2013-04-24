@@ -371,7 +371,7 @@ int LoadBothBkgds(const char* datafile)
   }
   else
   {
-    win_bkgd = zoom(orig, RES_X, RES_Y);
+    win_bkgd = T4K_zoom(orig, RES_X, RES_Y);
     ++ret;
   }
   
@@ -381,7 +381,7 @@ int LoadBothBkgds(const char* datafile)
   }
   else
   {
-    fullscr_bkgd = zoom(orig, fs_res_x, fs_res_y);
+    fullscr_bkgd = T4K_zoom(orig, fs_res_x, fs_res_y);
     ++ret;
   }
   
