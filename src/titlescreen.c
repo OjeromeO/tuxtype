@@ -998,7 +998,7 @@ static void unload_menu(void)
       if (sel_text[i][j])
         SDL_FreeSurface(sel_text[i][j]);
       if (menu_gfx[i][j])
-        FreeSprite(menu_gfx[i][j]);
+        T4K_FreeSprite(menu_gfx[i][j]);
       reg_text[i][j] = sel_text[i][j] = NULL;
       menu_gfx[i][j] = NULL;
     }
@@ -1107,7 +1107,7 @@ static void unload_media(void)
 
   if (Tux)
   {
-    FreeSprite(Tux);
+    T4K_FreeSprite(Tux);
     Tux = NULL;
   }
 
@@ -1193,7 +1193,7 @@ static void not_implemented(void)
   SDL_FreeSurface(s3);
   SDL_FreeSurface(s4);
   s1 = s2 = s3 = s4 = NULL;
-  FreeSprite(tux);
+  T4K_FreeSprite(tux);
   tux = NULL;
 }
 

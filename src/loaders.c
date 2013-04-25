@@ -462,6 +462,7 @@ sprite* LoadSprite(const char* name, int MODE ) {
 	return new_sprite;
 }
 
+/* TODO: transition to t4kcommon functions
 void FreeSprite(sprite* gfx )
 {
   int x;
@@ -477,7 +478,7 @@ void FreeSprite(sprite* gfx )
   if (gfx->default_img)
     SDL_FreeSurface(gfx->default_img);
   free(gfx);
-}
+}*/
 
 /***************************
 	LoadSound : Load a sound/music patch from a file.

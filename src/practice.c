@@ -1165,13 +1165,13 @@ static void practice_unload_media(void)
 
   if (tux_stand)
   {
-    FreeSprite(tux_stand);
+    T4K_FreeSprite(tux_stand);
     tux_stand = NULL;
   }
 
   if (tux_win)
   {
-    FreeSprite(tux_win);
+    T4K_FreeSprite(tux_win);
     tux_win = NULL;
   }
 

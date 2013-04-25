@@ -74,7 +74,8 @@ int PlayLaserGame(int diff_level);
 int CheckFile(const char* file);
 /* TODO: transition to t4kcommon functions
 sprite* FlipSprite(sprite* in, int X, int Y);*/
-void FreeSprite(sprite* gfx);
+/* TODO: transition to t4kcommon functions
+void FreeSprite(sprite* gfx);*/
 SDL_Surface* LoadImage(const char* datafile, int mode);
 int LoadBothBkgds(const char* datafile);
 SDL_Surface* CurrentBkgd(void);

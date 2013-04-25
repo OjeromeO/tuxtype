@@ -873,20 +873,20 @@ static void FreeGame(void)
   for (i = 0; i < TUX_NUM_STATES; i++ )
   {
     if (tux_object.spr[i][RIGHT])
-      FreeSprite(tux_object.spr[i][RIGHT]);
+      T4K_FreeSprite(tux_object.spr[i][RIGHT]);
     tux_object.spr[i][RIGHT] = NULL;
 
     if (tux_object.spr[i][LEFT])
-      FreeSprite(tux_object.spr[i][LEFT]);
+      T4K_FreeSprite(tux_object.spr[i][LEFT]);
     tux_object.spr[i][LEFT] = NULL;
   }
 
   DEBUGMSG(debug_all,  "-Freeing fishies\n" );
 
   if (fish_sprite)
-    FreeSprite(fish_sprite);
+    T4K_FreeSprite(fish_sprite);
   if (splat_sprite)
-    FreeSprite(splat_sprite);
+    T4K_FreeSprite(splat_sprite);
   fish_sprite = splat_sprite = NULL;
 
   DEBUGMSG(debug_all,  "-Freeing other game graphics\n" );

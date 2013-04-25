@@ -751,7 +751,7 @@ static void laser_unload_data(void) {
 			Mix_FreeMusic(musics[i]);
 	}
 
-	FreeSprite(shield);
+	T4K_FreeSprite(shield);
         shield = NULL;
 }
 
