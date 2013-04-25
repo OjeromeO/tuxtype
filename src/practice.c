@@ -1333,7 +1333,7 @@ static int find_next_wrap(const wchar_t* wstr, int font_size, int width)
     DEBUGCODE(debug_all){ fprintf(stderr, "buf = %S\n", buf);}
 
     /* Need to convert to UTF8 because couldn't get UNICODE version to work: */
-    ConvertToUTF8(buf, UTF8buf, MAX_PHRASE_LENGTH);
+    T4K_ConvertToUTF8(buf, UTF8buf, MAX_PHRASE_LENGTH);
     /*  Now check width of string: */
     s = SimpleText(UTF8buf, font_size, &white);
     if (!s)

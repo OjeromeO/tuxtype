@@ -1248,7 +1248,7 @@ void GenerateKeyboard(SDL_Surface* keyboard)
     }
 
     DEBUGCODE(debug_all) { fprintf(stderr, "Making %d : %C\n",i,keyboard_list[i].unicode_value); }
-    ConvertToUTF8(t, buf, 8);
+    T4K_ConvertToUTF8(t, buf, 8);
     tmp = SimpleText(buf, 15, &black);
 //    tmp = TTF_RenderUNICODE_Blended((TTF_Font*)smallfont, t, black);
     if(tmp == NULL)

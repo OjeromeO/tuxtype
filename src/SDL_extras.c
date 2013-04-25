@@ -1394,7 +1394,7 @@ SDL_Surface* BlackOutline_w(const wchar_t* t, int font_size, const SDL_Color* c,
     fprintf(stderr, "In BlackOutline_w() - input wchar_t string is: %S\n", wchar_tmp);
   }
 
-  i = ConvertToUTF8(wchar_tmp, tmp, 1024);
+  i = T4K_ConvertToUTF8(wchar_tmp, tmp, 1024);
   
   if (i == 0)
   {

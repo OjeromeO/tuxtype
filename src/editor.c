@@ -682,7 +682,7 @@ void EditWordList(char* words_file)
             {                               
               // remove the last character from the string
               temp[len - 1] = temp[len];
-              len = ConvertToUTF8(temp, words_in_list[loc+1], MAX_WORD_SIZE);
+              len = T4K_ConvertToUTF8(temp, words_in_list[loc+1], MAX_WORD_SIZE);
               white_words[loc] = BlackOutline(words_in_list[loc+1], DEFAULT_MENU_FONT_SIZE, &white );
               yellow_words[loc] = BlackOutline(words_in_list[loc+1], DEFAULT_MENU_FONT_SIZE, &yellow);  
             }
@@ -716,7 +716,7 @@ void EditWordList(char* words_file)
                       fprintf(stderr, "word in list = %s\n", words_in_list[x+2]);
                     }
 
-                    len = ConvertToUTF8(temp, words_in_list[x+1], MAX_WORD_SIZE);
+                    len = T4K_ConvertToUTF8(temp, words_in_list[x+1], MAX_WORD_SIZE);
 
                     DEBUGCODE(debug_all)
                     { fprintf(stderr, "word in list = %s\n", words_in_list[x+1]); }
@@ -846,7 +846,7 @@ void EditWordList(char* words_file)
               // Add the character to the end of the existing string
               temp[len] = toupper(event.key.keysym.unicode);
               temp[len + 1] = 0;
-              ConvertToUTF8(temp, words_in_list[loc + 1], MAX_WORD_SIZE);
+              T4K_ConvertToUTF8(temp, words_in_list[loc + 1], MAX_WORD_SIZE);
 
               // Copy back to the on-screen list
               white_words[loc] = BlackOutline(words_in_list[loc + 1],
@@ -1086,7 +1086,7 @@ int CreateNewWordList(void)
               else
               {
                 temp[len - 1] = temp[len];
-                len = ConvertToUTF8(temp, wordlist, MAX_WORD_SIZE);
+                len = T4K_ConvertToUTF8(temp, wordlist, MAX_WORD_SIZE);
                 NewWordlist = BlackOutline(wordlist, DEFAULT_MENU_FONT_SIZE, &yellow);
                 DEBUGCODE(debug_all){ fprintf(stderr, "Word: %s\n", wordlist); }
               }
@@ -1128,7 +1128,7 @@ int CreateNewWordList(void)
               temp[len] = toupper(event.key.keysym.unicode);
               temp[len + 1] = 0;
             }
-            len = ConvertToUTF8(temp, wordlist, MAX_WORD_SIZE);
+            len = T4K_ConvertToUTF8(temp, wordlist, MAX_WORD_SIZE);
 
             DEBUGCODE(debug_all) { fprintf(stderr, "TEMP 2: %s\n", wordlist); }
 

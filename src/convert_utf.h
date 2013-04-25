@@ -40,6 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* TODO: transition to t4kcommon functions
 int ConvertFromUTF8(wchar_t* wide_word, const char* UTF8_word, int max_length);*/
-int ConvertToUTF8(const wchar_t* wide_word, char* UTF8_word, int max_length);
+/* TODO: transition to t4kcommon functions
+int ConvertToUTF8(const wchar_t* wide_word, char* UTF8_word, int max_length);*/
 
 #endif

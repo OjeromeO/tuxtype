@@ -82,14 +82,15 @@ int ConvertFromUTF8(wchar_t* wide_word, const char* UTF8_word, int max_length)
 
 /******************To be used for savekeyboard*************/
 /***Converts wchar_t string to char string*****************/
+/* TODO: transition to t4kcommon functions
 int ConvertToUTF8(const wchar_t* wide_word, char* UTF8_word, int max_length)
 {
   char temp_UTF8[UTF_BUF_LENGTH];
-  /* NOTE we need this because iconv_open() needs a char**.  We can't   */
+  *//* NOTE we need this because iconv_open() needs a char**.  We can't   */
   /* just pass "&temp_UTF8" because "temp_UTF8" is really a shorthand   */
   /* for "&temp_UTF8[0]", not its own memory location, so it doesn't    */
   /* have its own address. We ought to be able to do this directly into */
-  /* into the argument UTF8_word string, but so far have had errors.    */
+  /* into the argument UTF8_word string, but so far have had errors.    *//*
   char* UTF8_Start = temp_UTF8;
 
   iconv_t conv_descr;
@@ -106,8 +107,8 @@ int ConvertToUTF8(const wchar_t* wide_word, char* UTF8_word, int max_length)
     return 0;
   }
 
-  /* NOTE although we *should* be just able to pass "wchar_t" as the in_type, */
-  /* iconv_open() segfaults on Windows if this is done - grrr....             */
+  *//* NOTE although we *should* be just able to pass "wchar_t" as the in_type, */
+  /* iconv_open() segfaults on Windows if this is done - grrr....             *//*
 #ifdef WIN32
   conv_descr = iconv_open("UTF-8", "UTF-16LE");
 #else
@@ -123,4 +124,4 @@ int ConvertToUTF8(const wchar_t* wide_word, char* UTF8_word, int max_length)
   DEBUGCODE(debug_all) {fprintf(stderr, "ConvertToUTF8(): UTF8_word = %s\n", UTF8_word);}
 
   return strlen(UTF8_word);
-}
+}*/
