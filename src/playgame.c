@@ -763,7 +763,7 @@ static int LoadTuxAnims(void)
       fprintf(stderr, "Warning - image %d failed to load\n", i);
       return 0;
     }
-    tux_object.spr[i][LEFT] = FlipSprite(tux_object.spr[i][RIGHT], 1, 0); 
+    tux_object.spr[i][LEFT] = T4K_FlipSprite(tux_object.spr[i][RIGHT], 1, 0); 
   }
 
   tux_max_width = tux_object.spr[TUX_STANDING][RIGHT]->frame[0]->w;

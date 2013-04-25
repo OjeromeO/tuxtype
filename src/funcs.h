@@ -72,7 +72,8 @@ int PlayLaserGame(int diff_level);
 
 /* In loaders.c: */
 int CheckFile(const char* file);
-sprite* FlipSprite(sprite* in, int X, int Y);
+/* TODO: transition to t4kcommon functions
+sprite* FlipSprite(sprite* in, int X, int Y);*/
 void FreeSprite(sprite* gfx);
 SDL_Surface* LoadImage(const char* datafile, int mode);
 int LoadBothBkgds(const char* datafile);

@@ -418,6 +418,7 @@ void FreeBothBkgds(void)
 }
 
 
+/* TODO: transition to t4kcommon functions
 sprite* FlipSprite(sprite* in, int X, int Y ) {
 	sprite* out;
 
@@ -430,7 +431,7 @@ sprite* FlipSprite(sprite* in, int X, int Y ) {
 		out->frame[out->num_frames] = T4K_Flip( in->frame[out->num_frames], X, Y );
 	out->cur = 0;
 	return out;
-}
+}*/
 
 sprite* LoadSprite(const char* name, int MODE ) {
 	sprite *new_sprite;
