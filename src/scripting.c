@@ -1506,7 +1506,7 @@ static void run_script(void)
         case itemPRAC:
         {
           wchar_t wide_buf[FNLEN];
-          ConvertFromUTF8(wide_buf, curItem->data, FNLEN);
+          T4K_ConvertFromUTF8(wide_buf, curItem->data, FNLEN);
           if (curItem->goal > 0)
           {
             //printf( "goal is %d\n", curItem->goal );

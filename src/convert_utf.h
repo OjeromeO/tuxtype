@@ -38,7 +38,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* Also, "max_length" must be no greater than the buffer length used internally   */
 /* in these functions (i.e. UTF_BUF_LENGTH, currently 1024)                       */
 
-int ConvertFromUTF8(wchar_t* wide_word, const char* UTF8_word, int max_length);
+/* TODO: transition to t4kcommon functions
+int ConvertFromUTF8(wchar_t* wide_word, const char* UTF8_word, int max_length);*/
 int ConvertToUTF8(const wchar_t* wide_word, char* UTF8_word, int max_length);
 
 #endif

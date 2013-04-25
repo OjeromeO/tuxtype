@@ -36,6 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* GNU iconv()-based implementation:   */
 
+/* TODO: transition to t4kcommon functions
 int ConvertFromUTF8(wchar_t* wide_word, const char* UTF8_word, int max_length)
 {
   wchar_t temp_wchar[UTF_BUF_LENGTH];
@@ -55,8 +56,8 @@ int ConvertFromUTF8(wchar_t* wide_word, const char* UTF8_word, int max_length)
 
   DEBUGCODE(debug_all) {fprintf(stderr, "ConvertFromUTF8(): UTF8_word = %s\n", UTF8_word);}
 
-  /* NOTE although we *should* be just able to pass "wchar_t" as the out_type, */
-  /* iconv_open() segfaults on Windows if this is done - grrr....             */
+  *//* NOTE although we *should* be just able to pass "wchar_t" as the out_type, */
+  /* iconv_open() segfaults on Windows if this is done - grrr....             *//*
 #ifdef WIN32
   conv_descr = iconv_open("UTF-16LE", "UTF-8");
 #else
@@ -72,7 +73,7 @@ int ConvertFromUTF8(wchar_t* wide_word, const char* UTF8_word, int max_length)
   DEBUGCODE(debug_all) {fprintf(stderr, "ConvertToUTF8(): wide_word = %S\n", wide_word);}
 
   return wcslen(wide_word);
-}
+}*/
 
 
 /* Now this uses GNU iconv and works correctly!   */

@@ -677,7 +677,7 @@ void EditWordList(char* words_file)
 
           if (event.key.keysym.sym == SDLK_BACKSPACE)
           {
-            len = ConvertFromUTF8(temp, words_in_list[loc+1], MAX_WORD_SIZE); 
+            len = T4K_ConvertFromUTF8(temp, words_in_list[loc+1], MAX_WORD_SIZE); 
             if (len > 1 && number_of_words > 1)
             {                               
               // remove the last character from the string
@@ -707,7 +707,7 @@ void EditWordList(char* words_file)
                 {
                   if(x < number_of_words-1)
                   {
-                    len = ConvertFromUTF8(temp, words_in_list[x+2], MAX_WORD_SIZE);
+                    len = T4K_ConvertFromUTF8(temp, words_in_list[x+2], MAX_WORD_SIZE);
 
                     DEBUGCODE(debug_all)
                     {
@@ -839,7 +839,7 @@ void EditWordList(char* words_file)
             }
             else
             {
-              len = ConvertFromUTF8(temp, words_in_list[loc + 1], MAX_WORD_SIZE);
+              len = T4K_ConvertFromUTF8(temp, words_in_list[loc + 1], MAX_WORD_SIZE);
             }
             if (len < MAX_WORD_SIZE - 1)
             {
@@ -1078,7 +1078,7 @@ int CreateNewWordList(void)
           switch (event.key.keysym.sym)
           {
             case SDLK_BACKSPACE:
-              len = ConvertFromUTF8(temp, wordlist, MAX_WORD_SIZE);
+              len = T4K_ConvertFromUTF8(temp, wordlist, MAX_WORD_SIZE);
               if (len < 1)
               {
                 DEBUGMSG(debug_all, "There are no letters to delete\n");
@@ -1121,7 +1121,7 @@ int CreateNewWordList(void)
           {
             DEBUGCODE(debug_all) { fprintf(stderr, "TEMP 1: %s\n", wordlist); }
 
-            len = ConvertFromUTF8(temp, wordlist, MAX_WORD_SIZE);
+            len = T4K_ConvertFromUTF8(temp, wordlist, MAX_WORD_SIZE);
             if (len < MAX_WORD_SIZE)
             {
               // adds a character to the end of existing string

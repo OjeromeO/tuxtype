@@ -1250,7 +1250,7 @@ static int load_phrases(const char* phrase_file)
     /* inspect return value of fscanf():                       */
     if (EOF != fscanf(fp, "%[^\n]\n", buf))
     {
-      ConvertFromUTF8(phrases[num_phrases], buf, MAX_PHRASE_LENGTH);
+      T4K_ConvertFromUTF8(phrases[num_phrases], buf, MAX_PHRASE_LENGTH);
       DEBUGCODE(debug_all) { fprintf(stderr, "phrase %d:\t%S\n", num_phrases, phrases[num_phrases]);}
       num_phrases++;
     }

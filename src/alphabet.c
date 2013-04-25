@@ -150,7 +150,7 @@ int LoadKeyboard(void)
       if (fscanf_result == EOF)
         break;
       /* Convert to wcs from UTF-8, if needed; */
-      ConvertFromUTF8(wide_str, str, 255);
+      T4K_ConvertFromUTF8(wide_str, str, 255);
 
       /* Line must have 3 chars (if more, rest are ignored) */
       /* Format is: FINGER|Char  e.g   "3|d"                */
@@ -547,7 +547,7 @@ int GenerateWordList(const char* wordFn)
     }
 
     /* Convert from UTF-8 to wcs and make sure word is usable: */
-    length = ConvertFromUTF8(temp_wide_word, temp_word, FNLEN);
+    length = T4K_ConvertFromUTF8(temp_wide_word, temp_word, FNLEN);
 
     DOUT(length);
 
@@ -1379,7 +1379,7 @@ void GenCharListFromString(const char* UTF8_str)
   int i = 0;
   wchar_t wchar_buf[MAX_UNICODES];
 
-  ConvertFromUTF8(wchar_buf, UTF8_str, MAX_UNICODES);
+  T4K_ConvertFromUTF8(wchar_buf, UTF8_str, MAX_UNICODES);
 
   /* FNLEN is max length of phrase (I think) */
   while (wchar_buf[i] != '\0' && i < FNLEN) 
