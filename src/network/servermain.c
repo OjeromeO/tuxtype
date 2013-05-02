@@ -1,11 +1,6 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_net.h>
-
-#define MAX_SERVERS 50
-#define MAX_CLIENTS 4
-#define DEFAULT_PORT 1337
-#define CLIENT_DATA "TuxMaths client"
-#define SERVER_DATA "TuxMaths server"
+#include "network.h"
 
 
 
@@ -18,6 +13,8 @@ int main(int argc, char ** argv)
 {
     int i = 0;
     int ret = 0;
+    int len = -1;
+    char msg[MSG_MAXLEN];
     IPaddress ip = {0, 0};
     //UDPsocket listeningudpsock = NULL;
     TCPsocket listeningtcpsock = NULL;
@@ -249,38 +246,22 @@ int main(int argc, char ** argv)
         {
             if (ret > 0 && SDLNet_SocketReady(clients[i]))
             {
-                int len = -1;
-                char * buf = NULL;
-                
                 ret = SDLNet_TCP_Recv(clients[i], &len, sizeof(len));
                 if (ret <= 0)
                 {
-                    if (SDLNet_GetError() != NULL)
-                    {
-                        if (strlen(SDLNet_GetError()) != 0)
-                            fprintf(stderr, "SDLNet_TCP_Recv: %s\n", SDLNet_GetError());
-                        else
-                            fprintf(stderr, "SDLNet_TCP_Recv: An error occurred.\n");
-                        
-                        SDLNet_FreeSocketSet(set);
-                        SDLNet_TCP_Close(listeningtcpsock);
-                        for (i=0;i<num_clients;i++)
-                            SDLNet_TCP_Close(clients[i]);
-                        SDLNet_Quit();
-                        SDL_Quit();
-                        return EXIT_FAILURE;
-                    }
+                    if (SDLNet_GetError() != NULL && strlen(SDLNet_GetError()) != 0)
+                        fprintf(stderr, "SDLNet_TCP_Recv: %s\n", SDLNet_GetError());
                     else
-                    {
                         fprintf(stderr, "Connexion closed by client.\n");
-                        SDLNet_FreeSocketSet(set);
-                        SDLNet_TCP_Close(listeningtcpsock);
-                        for (i=0;i<num_clients;i++)
-                            SDLNet_TCP_Close(clients[i]);
-                        SDLNet_Quit();
-                        SDL_Quit();
-                        return EXIT_SUCCESS;
-                    }
+                        //TODO change the behaviour for that case, just delete the client
+                    
+                    SDLNet_FreeSocketSet(set);
+                    SDLNet_TCP_Close(listeningtcpsock);
+                    for (i=0;i<num_clients;i++)
+                        SDLNet_TCP_Close(clients[i]);
+                    SDLNet_Quit();
+                    SDL_Quit();
+                    return EXIT_FAILURE;
                 }
                 
                 len = SDLNet_Read32(&len);
@@ -296,10 +277,15 @@ int main(int argc, char ** argv)
                     return EXIT_FAILURE;
                 }
                 
-                buf = malloc(len*sizeof(char));
-                if (buf == NULL)
+                ret = SDLNet_TCP_Recv(clients[i], msg, len);
+                if (ret <= 0)
                 {
-                    fprintf(stderr, "malloc: can't allocate memory for reception buffer.\n");
+                    if (SDLNet_GetError() != NULL && strlen(SDLNet_GetError()) != 0)
+                        fprintf(stderr, "SDLNet_TCP_Recv: %s\n", SDLNet_GetError());
+                    else
+                        fprintf(stderr, "Connexion closed by client.\n");
+                        //TODO change the behaviour for that case, just delete the client
+                    
                     SDLNet_FreeSocketSet(set);
                     SDLNet_TCP_Close(listeningtcpsock);
                     for (i=0;i<num_clients;i++)
@@ -309,41 +295,7 @@ int main(int argc, char ** argv)
                     return EXIT_FAILURE;
                 }
                 
-                ret = SDLNet_TCP_Recv(clients[i], buf, len);
-                if (ret <= 0)
-                {
-                    if (SDLNet_GetError() != NULL)
-                    {
-                        if (strlen(SDLNet_GetError()) != 0)
-                            fprintf(stderr, "SDLNet_TCP_Recv: %s\n", SDLNet_GetError());
-                        else
-                            fprintf(stderr, "SDLNet_TCP_Recv: An error occurred.\n");
-                        
-                        free(buf);
-                        SDLNet_FreeSocketSet(set);
-                        SDLNet_TCP_Close(listeningtcpsock);
-                        for (i=0;i<num_clients;i++)
-                            SDLNet_TCP_Close(clients[i]);
-                        SDLNet_Quit();
-                        SDL_Quit();
-                        return EXIT_FAILURE;
-                    }
-                    else
-                    {
-                        fprintf(stderr, "Connexion closed by client.\n");
-                        free(buf);
-                        SDLNet_FreeSocketSet(set);
-                        SDLNet_TCP_Close(listeningtcpsock);
-                        for (i=0;i<num_clients;i++)
-                            SDLNet_TCP_Close(clients[i]);
-                        SDLNet_Quit();
-                        SDL_Quit();
-                        return EXIT_SUCCESS;
-                    }
-                }
-                
-                fprintf(stderr, "from client: %s\n", buf);
-                free(buf);
+                fprintf(stderr, "=> %s\n", msg);
             }
         }
     }

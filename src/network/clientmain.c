@@ -1,11 +1,6 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_net.h>
-
-#define MAX_SERVERS 50
-#define MAX_CLIENTS 4
-#define DEFAULT_PORT 1337
-#define CLIENT_DATA "TuxMaths client"
-#define SERVER_DATA "TuxMaths server"
+#include "network.h"
 
 
 
@@ -154,7 +149,7 @@ int DetectServers(void)
 int main(int argc, char ** argv)
 {
     int ret = -1;
-    char * buf = NULL;
+    char msg[MSG_MAXLEN];
     Uint32 buflen = -1;
     Uint32 tmplen = -1;
     IPaddress ip = {0, 0};
@@ -254,28 +249,16 @@ int main(int argc, char ** argv)
             ret = SDLNet_TCP_Recv(sock, &tmplen, sizeof(tmplen));
             if (ret <= 0)
             {
-                if (SDLNet_GetError() != NULL)
-                {
-                    if (strlen(SDLNet_GetError()) != 0)
-                        fprintf(stderr, "SDLNet_TCP_Recv: %s\n", SDLNet_GetError());
-                    else
-                        fprintf(stderr, "SDLNet_TCP_Recv: An error occurred.\n");
-                    
-                    SDLNet_FreeSocketSet(set);
-                    SDLNet_TCP_Close(sock);
-                    SDLNet_Quit();
-                    SDL_Quit();
-                    return EXIT_FAILURE;
-                }
+                if (SDLNet_GetError() != NULL && strlen(SDLNet_GetError()) != 0)
+                    fprintf(stderr, "SDLNet_TCP_Recv: %s\n", SDLNet_GetError());
                 else
-                {
                     fprintf(stderr, "Connexion closed by server.\n");
-                    SDLNet_FreeSocketSet(set);
-                    SDLNet_TCP_Close(sock);
-                    SDLNet_Quit();
-                    SDL_Quit();
-                    return EXIT_SUCCESS;
-                }
+                
+                SDLNet_FreeSocketSet(set);
+                SDLNet_TCP_Close(sock);
+                SDLNet_Quit();
+                SDL_Quit();
+                return EXIT_SUCCESS;
             }
             
             buflen = SDLNet_Read32(&tmplen);
@@ -289,10 +272,14 @@ int main(int argc, char ** argv)
                 return EXIT_FAILURE;
             }
             
-            buf = malloc(buflen * sizeof(char));
-            if (buf == NULL)
+            ret = SDLNet_TCP_Recv(sock, msg, buflen);
+            if (ret <= 0)
             {
-                fprintf(stderr, "malloc: can't allocate memory for reception buffer.\n");
+                if (SDLNet_GetError() != NULL && strlen(SDLNet_GetError()) != 0)
+                    fprintf(stderr, "SDLNet_TCP_Recv: %s\n", SDLNet_GetError());
+                else
+                    fprintf(stderr, "Connexion closed by server.\n");
+                
                 SDLNet_FreeSocketSet(set);
                 SDLNet_TCP_Close(sock);
                 SDLNet_Quit();
@@ -300,37 +287,7 @@ int main(int argc, char ** argv)
                 return EXIT_FAILURE;
             }
             
-            ret = SDLNet_TCP_Recv(sock, buf, buflen);
-            if (ret <= 0)
-            {
-                if (SDLNet_GetError() != NULL)
-                {
-                    if (strlen(SDLNet_GetError()) != 0)
-                        fprintf(stderr, "SDLNet_TCP_Recv: %s\n", SDLNet_GetError());
-                    else
-                        fprintf(stderr, "SDLNet_TCP_Recv: An error occurred.\n");
-                    
-                    free(buf);
-                    SDLNet_FreeSocketSet(set);
-                    SDLNet_TCP_Close(sock);
-                    SDLNet_Quit();
-                    SDL_Quit();
-                    return EXIT_FAILURE;
-                }
-                else
-                {
-                    fprintf(stderr, "Connexion closed by server.\n");
-                    free(buf);
-                    SDLNet_FreeSocketSet(set);
-                    SDLNet_TCP_Close(sock);
-                    SDLNet_Quit();
-                    SDL_Quit();
-                    return EXIT_SUCCESS;
-                }
-            }
-            
-            fprintf(stderr, "from server: %s\n", buf);
-            free(buf);
+            fprintf(stderr, "from server: %s\n", msg);
         }
         
         // send to server messages from stdin
@@ -376,7 +333,7 @@ int main(int argc, char ** argv)
                     return EXIT_FAILURE;
 				}
 				
-				printf("Sending: %s\n",message);
+				//printf("Sending: %s\n",message);
 				
 				if (SDLNet_TCP_Send(sock,message,strlen(message)+1) < strlen(message)+1)
 				{

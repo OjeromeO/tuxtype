@@ -13,12 +13,12 @@ all : $(EXEC)
 
 server : servermain.o
 	$(CC) -o $@ $^ $(LIBS) $(LFLAGS)
-servermain.o : servermain.c
+servermain.o : servermain.c network.h
 	$(CC) $(INCS) $(CFLAGS) -c $<
 
 client : clientmain.o
 	$(CC) -o $@ $^ $(LIBS) $(LFLAGS)
-clientmain.o : clientmain.c
+clientmain.o : clientmain.c network.h
 	$(CC) $(INCS) $(CFLAGS) -c $<
 
 clean :
