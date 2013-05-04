@@ -12,6 +12,14 @@
 
 
 
+extern SDLNet_SocketSet serverset;
+extern TCPsocket listeningtcpsock;
+extern TCPsocket clients[];
+extern int num_clients;
+
+
+
+void cleanup_server(void);
 int RecvMessage(TCPsocket sock, char ** buf);
 
 

@@ -4,6 +4,27 @@
 
 
 
+SDLNet_SocketSet serverset = NULL;
+TCPsocket listeningtcpsock = NULL;
+TCPsocket clients[MAX_CLIENTS];
+int num_clients = 0;
+
+
+
+void cleanup_server(void)
+{
+    int i = 0;
+    
+    if (serverset != NULL)
+        SDLNet_FreeSocketSet(serverset);
+    if (listeningtcpsock != NULL)
+        SDLNet_TCP_Close(listeningtcpsock);
+    for (i=0;i<num_clients;i++)
+        SDLNet_TCP_Close(clients[i]);
+    SDLNet_Quit();
+    SDL_Quit();
+}
+
 int RecvMessage(TCPsocket sock, char ** buf)
 {
     Uint32 len = -1;

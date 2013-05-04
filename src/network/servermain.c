@@ -4,11 +4,6 @@
 
 
 
-TCPsocket clients[MAX_CLIENTS];
-int num_clients = 0;
-
-
-
 int main(int argc, char ** argv)
 {
     int i = 0;
@@ -16,9 +11,9 @@ int main(int argc, char ** argv)
     char * msg = NULL;
     IPaddress ip = {0, 0};
     //UDPsocket listeningudpsock = NULL;
-    TCPsocket listeningtcpsock = NULL;
+    //TCPsocket listeningtcpsock = NULL;
     TCPsocket clientsock = NULL;
-    SDLNet_SocketSet set = NULL;
+    //SDLNet_SocketSet set = NULL;
     //UDPpacket * out = NULL;
     //UDPpacket * in = NULL;
     
@@ -43,6 +38,7 @@ int main(int argc, char ** argv)
     if (ret != 0)
     {
         fprintf(stderr, "SDLNet_Init: %s\n", SDLNet_GetError());
+        cleanup_server();
         return EXIT_FAILURE;
     }
     
@@ -52,8 +48,7 @@ int main(int argc, char ** argv)
     if (ret != 0)
     {
         fprintf(stderr, "SDLNet_ResolveHost: %s\n", SDLNet_GetError());
-        SDLNet_Quit();
-        SDL_Quit();
+        cleanup_server();
         return EXIT_FAILURE;
     }
     
@@ -61,31 +56,7 @@ int main(int argc, char ** argv)
     if (listeningtcpsock == NULL)
     {
         fprintf(stderr, "SDLNet_TCP_Open: %s\n", SDLNet_GetError());
-        SDLNet_Quit();
-        SDL_Quit();
-        return EXIT_FAILURE;
-    }
-    
-    // creation of the socket set
-    
-    set = SDLNet_AllocSocketSet(MAX_CLIENTS+2);
-    if (set == NULL)
-    {
-        fprintf(stderr, "SDLNet_AllocSocketSet: %s\n", SDLNet_GetError());
-        SDLNet_TCP_Close(listeningtcpsock);
-        SDLNet_Quit();
-        SDL_Quit();
-        return EXIT_FAILURE;
-    }
-    
-    ret = SDLNet_TCP_AddSocket(set, listeningtcpsock);
-    if (ret == -1)
-    {
-        fprintf(stderr, "SDLNet_TCP_AddSocket: %s\n", SDLNet_GetError());
-        SDLNet_FreeSocketSet(set);
-        SDLNet_TCP_Close(listeningtcpsock);
-        SDLNet_Quit();
-        SDL_Quit();
+        cleanup_server();
         return EXIT_FAILURE;
     }
     
@@ -182,38 +153,44 @@ int main(int argc, char ** argv)
         
         // reset the socket set
         
-        if (set != NULL)
-            SDLNet_FreeSocketSet(set);
+        if (serverset != NULL)
+            SDLNet_FreeSocketSet(serverset);
         
-        set = SDLNet_AllocSocketSet(num_clients+1);
-        if (set == NULL)
+        serverset = SDLNet_AllocSocketSet(MAX_CLIENTS+2);
+        if (serverset == NULL)
         {
             fprintf(stderr, "SDLNet_AllocSocketSet: %s\n", SDLNet_GetError());
-            SDLNet_TCP_Close(listeningtcpsock);
-            for (i=0;i<num_clients;i++)
-                SDLNet_TCP_Close(clients[i]);
-            SDLNet_Quit();
-            SDL_Quit();
+            cleanup_server();
             return EXIT_FAILURE;
         }
         
-        SDLNet_TCP_AddSocket(set, listeningtcpsock);
+        ret = SDLNet_TCP_AddSocket(serverset, listeningtcpsock);
+        if (ret == -1)
+        {
+            fprintf(stderr, "SDLNet_TCP_AddSocket: %s\n", SDLNet_GetError());
+            cleanup_server();
+            return EXIT_FAILURE;
+        }
+        
         for(i=0;i<num_clients;i++)
-            SDLNet_TCP_AddSocket(set, clients[i]);
+        {
+            ret = SDLNet_TCP_AddSocket(serverset, clients[i]);
+            if (ret == -1)
+            {
+                fprintf(stderr, "SDLNet_TCP_AddSocket: %s\n", SDLNet_GetError());
+                cleanup_server();
+                return EXIT_FAILURE;
+            }
+        }
         
         // check sockets activity
         
-        ret = SDLNet_CheckSockets(set, -1);
+        ret = SDLNet_CheckSockets(serverset, -1);
         if (ret == -1)
         {
             fprintf(stderr, "SDLNet_CheckSockets: %s\n", SDLNet_GetError());
             perror("SDLNet_CheckSockets");
-            SDLNet_FreeSocketSet(set);
-            SDLNet_TCP_Close(listeningtcpsock);
-            for (i=0;i<num_clients;i++)
-                SDLNet_TCP_Close(clients[i]);
-            SDLNet_Quit();
-            SDL_Quit();
+            cleanup_server();
             return EXIT_FAILURE;
         }
         
@@ -250,23 +227,13 @@ int main(int argc, char ** argv)
                     case 0:     fprintf(stderr, "=> %s\n", msg);
                                 break;
                                 
-                    case -1:    SDLNet_FreeSocketSet(set);
-                                SDLNet_TCP_Close(listeningtcpsock);
-                                for (i=0;i<num_clients;i++)
-                                    SDLNet_TCP_Close(clients[i]);
-                                SDLNet_Quit();
-                                SDL_Quit();
+                    case -1:    cleanup_server();
                                 return EXIT_FAILURE;
                                 break;
                                 
                     case -2:    //TODO: change the behaviour for that case,
                                 //      just delete the client
-                                SDLNet_FreeSocketSet(set);
-                                SDLNet_TCP_Close(listeningtcpsock);
-                                for (i=0;i<num_clients;i++)
-                                    SDLNet_TCP_Close(clients[i]);
-                                SDLNet_Quit();
-                                SDL_Quit();
+                                cleanup_server();
                                 return EXIT_FAILURE;
                                 break;
                 }
@@ -274,23 +241,13 @@ int main(int argc, char ** argv)
         }
     }
     
-    //TODO: fonction cleanup prenant en arg les trucs pojnteurs et tout...
-    
     // cleanup    
     
     //SDLNet_FreePacket(in);
     //SDLNet_FreePacket(out);
-    
-    SDLNet_FreeSocketSet(set);
-    
-    for (i=0;i<num_clients;i++)
-        SDLNet_TCP_Close(clients[i]);
-    
     //SDLNet_UDP_Close(listeningudpsock);
-    SDLNet_TCP_Close(listeningtcpsock);
     
-    SDLNet_Quit();
-    SDL_Quit();
+    cleanup_server();
     
     return EXIT_SUCCESS;
 }
