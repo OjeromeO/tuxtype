@@ -13,8 +13,7 @@ int main(int argc, char ** argv)
 {
     int i = 0;
     int ret = 0;
-    int len = -1;
-    char msg[MSG_MAXLEN];
+    char * msg = NULL;
     IPaddress ip = {0, 0};
     //UDPsocket listeningudpsock = NULL;
     TCPsocket listeningtcpsock = NULL;
@@ -246,60 +245,36 @@ int main(int argc, char ** argv)
         {
             if (ret > 0 && SDLNet_SocketReady(clients[i]))
             {
-                ret = SDLNet_TCP_Recv(clients[i], &len, sizeof(len));
-                if (ret <= 0)
+                switch (RecvMessage(clients[i], &msg))
                 {
-                    if (SDLNet_GetError() != NULL && strlen(SDLNet_GetError()) != 0)
-                        fprintf(stderr, "SDLNet_TCP_Recv: %s\n", SDLNet_GetError());
-                    else
-                        fprintf(stderr, "Connexion closed by client.\n");
-                        //TODO change the behaviour for that case, just delete the client
-                    
-                    SDLNet_FreeSocketSet(set);
-                    SDLNet_TCP_Close(listeningtcpsock);
-                    for (i=0;i<num_clients;i++)
-                        SDLNet_TCP_Close(clients[i]);
-                    SDLNet_Quit();
-                    SDL_Quit();
-                    return EXIT_FAILURE;
+                    case 0:     fprintf(stderr, "=> %s\n", msg);
+                                break;
+                                
+                    case -1:    SDLNet_FreeSocketSet(set);
+                                SDLNet_TCP_Close(listeningtcpsock);
+                                for (i=0;i<num_clients;i++)
+                                    SDLNet_TCP_Close(clients[i]);
+                                SDLNet_Quit();
+                                SDL_Quit();
+                                return EXIT_FAILURE;
+                                break;
+                                
+                    case -2:    //TODO: change the behaviour for that case,
+                                //      just delete the client
+                                SDLNet_FreeSocketSet(set);
+                                SDLNet_TCP_Close(listeningtcpsock);
+                                for (i=0;i<num_clients;i++)
+                                    SDLNet_TCP_Close(clients[i]);
+                                SDLNet_Quit();
+                                SDL_Quit();
+                                return EXIT_FAILURE;
+                                break;
                 }
-                
-                len = SDLNet_Read32(&len);
-                if (len <= 0)
-                {
-                    fprintf(stderr, "zero length message from the client...\n");
-                    SDLNet_FreeSocketSet(set);
-                    SDLNet_TCP_Close(listeningtcpsock);
-                    for (i=0;i<num_clients;i++)
-                        SDLNet_TCP_Close(clients[i]);
-                    SDLNet_Quit();
-                    SDL_Quit();
-                    return EXIT_FAILURE;
-                }
-                
-                ret = SDLNet_TCP_Recv(clients[i], msg, len);
-                if (ret <= 0)
-                {
-                    if (SDLNet_GetError() != NULL && strlen(SDLNet_GetError()) != 0)
-                        fprintf(stderr, "SDLNet_TCP_Recv: %s\n", SDLNet_GetError());
-                    else
-                        fprintf(stderr, "Connexion closed by client.\n");
-                        //TODO change the behaviour for that case, just delete the client
-                    
-                    SDLNet_FreeSocketSet(set);
-                    SDLNet_TCP_Close(listeningtcpsock);
-                    for (i=0;i<num_clients;i++)
-                        SDLNet_TCP_Close(clients[i]);
-                    SDLNet_Quit();
-                    SDL_Quit();
-                    return EXIT_FAILURE;
-                }
-                
-                fprintf(stderr, "=> %s\n", msg);
             }
         }
     }
     
+    //TODO: fonction cleanup prenant en arg les trucs pojnteurs et tout...
     
     // cleanup    
     

@@ -12,5 +12,9 @@
 
 
 
+int RecvMessage(TCPsocket sock, char ** buf);
+
+
+
 #endif
 

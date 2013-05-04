@@ -333,8 +333,6 @@ int main(int argc, char ** argv)
                     return EXIT_FAILURE;
 				}
 				
-				//printf("Sending: %s\n",message);
-				
 				if (SDLNet_TCP_Send(sock,message,strlen(message)+1) < strlen(message)+1)
 				{
 				    fprintf(stderr, "SDLNet_TCP_Send: %s\n", SDLNet_GetError());
