@@ -9,53 +9,14 @@ int main(int argc, char ** argv)
     int i = 0;
     int ret = 0;
     char * msg = NULL;
-    IPaddress ip = {0, 0};
     //UDPsocket listeningudpsock = NULL;
-    //TCPsocket listeningtcpsock = NULL;
-    TCPsocket clientsock = NULL;
-    //SDLNet_SocketSet set = NULL;
+    TCPsocket tmpsock = NULL;
     //UDPpacket * out = NULL;
     //UDPpacket * in = NULL;
     
-    if (argc != 2)
-    {
-        printf("%s: Invalid arguments\n", argv[0]);
-        printf("    Usage: %s port\n", argv[0]);
-        
-        return EXIT_FAILURE;
-    }
-    
-    // SDL initializations
-    
-    ret = SDL_Init(0);
+    ret = setup_server(argc, argv);
     if (ret != 0)
     {
-        fprintf(stderr, "SDL_Init: %s\n", SDL_GetError());
-        return EXIT_FAILURE;
-    }
-    
-    ret = SDLNet_Init();
-    if (ret != 0)
-    {
-        fprintf(stderr, "SDLNet_Init: %s\n", SDLNet_GetError());
-        cleanup_server();
-        return EXIT_FAILURE;
-    }
-    
-    // creation of the listening TCP socket
-    
-    ret = SDLNet_ResolveHost(&ip, NULL, atoi(argv[1]));
-    if (ret != 0)
-    {
-        fprintf(stderr, "SDLNet_ResolveHost: %s\n", SDLNet_GetError());
-        cleanup_server();
-        return EXIT_FAILURE;
-    }
-    
-    listeningtcpsock = SDLNet_TCP_Open(&ip);
-    if (listeningtcpsock == NULL)
-    {
-        fprintf(stderr, "SDLNet_TCP_Open: %s\n", SDLNet_GetError());
         cleanup_server();
         return EXIT_FAILURE;
     }
@@ -152,35 +113,15 @@ int main(int argc, char ** argv)
         }*/
         
         // reset the socket set
+        //TODO: is it really needed to recreate it each time ? check that later
+        //      when client deco will be supported (maybe it's not like select()
+        //      who modify the sets in arguments)
         
-        if (serverset != NULL)
-            SDLNet_FreeSocketSet(serverset);
-        
-        serverset = SDLNet_AllocSocketSet(MAX_CLIENTS+2);
-        if (serverset == NULL)
+        ret = create_socketset();
+        if (ret != 0)
         {
-            fprintf(stderr, "SDLNet_AllocSocketSet: %s\n", SDLNet_GetError());
             cleanup_server();
             return EXIT_FAILURE;
-        }
-        
-        ret = SDLNet_TCP_AddSocket(serverset, listeningtcpsock);
-        if (ret == -1)
-        {
-            fprintf(stderr, "SDLNet_TCP_AddSocket: %s\n", SDLNet_GetError());
-            cleanup_server();
-            return EXIT_FAILURE;
-        }
-        
-        for(i=0;i<num_clients;i++)
-        {
-            ret = SDLNet_TCP_AddSocket(serverset, clients[i]);
-            if (ret == -1)
-            {
-                fprintf(stderr, "SDLNet_TCP_AddSocket: %s\n", SDLNet_GetError());
-                cleanup_server();
-                return EXIT_FAILURE;
-            }
         }
         
         // check sockets activity
@@ -198,20 +139,19 @@ int main(int argc, char ** argv)
         
         if (ret > 0 && SDLNet_SocketReady(listeningtcpsock))
         {
-            clientsock = SDLNet_TCP_Accept(listeningtcpsock);
-            
-            if (clientsock != NULL)
+            tmpsock = SDLNet_TCP_Accept(listeningtcpsock);
+            if (tmpsock != NULL)
             {
                 if (num_clients < MAX_CLIENTS)
                 {
-                    clients[num_clients] = clientsock;
+                    clients[num_clients] = tmpsock;
                     num_clients++;
                     fprintf(stderr, "New client !\n");
                 }
                 else
                 {
                     fprintf(stderr, "Can't add a new client, max count of clients reached.\n");
-                    SDLNet_TCP_Close(clientsock);
+                    SDLNet_TCP_Close(tmpsock);
                 }
             }
         }
@@ -232,7 +172,7 @@ int main(int argc, char ** argv)
                                 break;
                                 
                     case -2:    //TODO: change the behaviour for that case,
-                                //      just delete the client
+                                //      just delete the client and DelSocket()
                                 cleanup_server();
                                 return EXIT_FAILURE;
                                 break;

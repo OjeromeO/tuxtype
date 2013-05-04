@@ -148,13 +148,14 @@ int DetectServers(void)
 
 int main(int argc, char ** argv)
 {
-    int ret = -1;
-    char msg[MSG_MAXLEN];
-    Uint32 buflen = -1;
-    Uint32 tmplen = -1;
+    int ret = 0;
+    char * msg = NULL;
+    //char tmpmsg[MSG_MAXLEN];
+    //Uint32 buflen = 0;
+    //Uint32 tmplen = 0;
     IPaddress ip = {0, 0};
-    TCPsocket sock = NULL;
-    SDLNet_SocketSet set = NULL;
+    //TCPsocket clientsock = NULL;
+    //SDLNet_SocketSet clientset = NULL;
     
     if (argc != 3)
     {
@@ -193,8 +194,8 @@ int main(int argc, char ** argv)
 		return EXIT_FAILURE;
 	}
 	
-    sock = SDLNet_TCP_Open(&ip);
-    if (sock == NULL)
+    clientsock = SDLNet_TCP_Open(&ip);
+    if (clientsock == NULL)
     {
         fprintf(stderr, "SDLNet_TCP_Open: %s\n", SDLNet_GetError());
         SDLNet_Quit();
@@ -204,23 +205,23 @@ int main(int argc, char ** argv)
     
     // creation of the socket set
     
-    set = SDLNet_AllocSocketSet(1);
-    if (set == NULL)
+    clientset = SDLNet_AllocSocketSet(1);
+    if (clientset == NULL)
     {
         fprintf(stderr, "SDLNet_AllocSocketSet: %s\n", SDLNet_GetError());
-        SDLNet_TCP_Close(sock);
+        SDLNet_TCP_Close(clientsock);
         SDLNet_Quit();
         SDL_Quit();
         return EXIT_FAILURE;
     }
     
-    ret = SDLNet_TCP_AddSocket(set, sock);
+    ret = SDLNet_TCP_AddSocket(clientset, clientsock);
     if (ret == -1)
     {
         fprintf(stderr, "SDLNet_TCP_AddSocket: %s\n", SDLNet_GetError());
         
-        SDLNet_FreeSocketSet(set);
-        SDLNet_TCP_Close(sock);
+        SDLNet_FreeSocketSet(clientset);
+        SDLNet_TCP_Close(clientsock);
         SDLNet_Quit();
         SDL_Quit();
         return EXIT_FAILURE;
@@ -230,13 +231,13 @@ int main(int argc, char ** argv)
     {
         // check sockets activity
         
-        ret = SDLNet_CheckSockets(set, 100);
+        ret = SDLNet_CheckSockets(clientset, 100);
         if (ret == -1)
         {
             fprintf(stderr, "SDLNet_CheckSockets: %s\n", SDLNet_GetError());
             perror("SDLNet_CheckSockets");
-            SDLNet_FreeSocketSet(set);
-            SDLNet_TCP_Close(sock);
+            SDLNet_FreeSocketSet(clientset);
+            SDLNet_TCP_Close(clientsock);
             SDLNet_Quit();
             SDL_Quit();
             return EXIT_FAILURE;
@@ -244,50 +245,21 @@ int main(int argc, char ** argv)
         
         // receive server messages
         
-        if (ret > 0 && SDLNet_SocketReady(sock))
+        if (ret > 0 && SDLNet_SocketReady(clientsock))
         {
-            ret = SDLNet_TCP_Recv(sock, &tmplen, sizeof(tmplen));
-            if (ret <= 0)
+            switch (RecvMessage(clientsock, &msg))
             {
-                if (SDLNet_GetError() != NULL && strlen(SDLNet_GetError()) != 0)
-                    fprintf(stderr, "SDLNet_TCP_Recv: %s\n", SDLNet_GetError());
-                else
-                    fprintf(stderr, "Connexion closed by server.\n");
-                
-                SDLNet_FreeSocketSet(set);
-                SDLNet_TCP_Close(sock);
-                SDLNet_Quit();
-                SDL_Quit();
-                return EXIT_SUCCESS;
+                case 0:     fprintf(stderr, "=> %s\n", msg);
+                            free(msg);
+                            break;
+                            
+                case -1:    // fall through
+                            
+                case -2:    
+                            cleanup_client();
+                            return EXIT_FAILURE;
+                            break;
             }
-            
-            buflen = SDLNet_Read32(&tmplen);
-            if (buflen <= 0)
-            {
-                fprintf(stderr, "Error, zero length message from the server...\n");
-                SDLNet_FreeSocketSet(set);
-                SDLNet_TCP_Close(sock);
-                SDLNet_Quit();
-                SDL_Quit();
-                return EXIT_FAILURE;
-            }
-            
-            ret = SDLNet_TCP_Recv(sock, msg, buflen);
-            if (ret <= 0)
-            {
-                if (SDLNet_GetError() != NULL && strlen(SDLNet_GetError()) != 0)
-                    fprintf(stderr, "SDLNet_TCP_Recv: %s\n", SDLNet_GetError());
-                else
-                    fprintf(stderr, "Connexion closed by server.\n");
-                
-                SDLNet_FreeSocketSet(set);
-                SDLNet_TCP_Close(sock);
-                SDLNet_Quit();
-                SDL_Quit();
-                return EXIT_FAILURE;
-            }
-            
-            fprintf(stderr, "from server: %s\n", msg);
         }
         
         // send to server messages from stdin
@@ -325,7 +297,7 @@ int main(int argc, char ** argv)
 			    len = strlen(message)+1;
 			    len = SDLNet_Write32(len, &len);
 				
-				if (SDLNet_TCP_Send(sock,&len,sizeof(len)) < sizeof(len))
+				if (SDLNet_TCP_Send(clientsock,&len,sizeof(len)) < sizeof(len))
 				{
 				    fprintf(stderr, "SDLNet_TCP_Send: %s\n", SDLNet_GetError());
                     SDLNet_Quit();
@@ -333,7 +305,7 @@ int main(int argc, char ** argv)
                     return EXIT_FAILURE;
 				}
 				
-				if (SDLNet_TCP_Send(sock,message,strlen(message)+1) < strlen(message)+1)
+				if (SDLNet_TCP_Send(clientsock,message,strlen(message)+1) < strlen(message)+1)
 				{
 				    fprintf(stderr, "SDLNet_TCP_Send: %s\n", SDLNet_GetError());
                     SDLNet_Quit();
@@ -374,8 +346,8 @@ int read_stdin_nonblock(char* buf, size_t max_length)
     
     // cleanup
     
-    SDLNet_FreeSocketSet(set);
-    SDLNet_TCP_Close(sock);
+    SDLNet_FreeSocketSet(clientset);
+    SDLNet_TCP_Close(clientsock);
     SDLNet_Quit();
     SDL_Quit();
     
