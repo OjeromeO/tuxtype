@@ -25,11 +25,9 @@ extern TCPsocket clientsock;
 
 
 int setup_server(int argc, char ** argv);
-//TODO: use some arguments like (SDLNet_SocketSet * set,
-//      SDLNet_GenericSocket sockets[] or TCPsocket tcpsock[],UDPsocket udpsock[])
-//      to make it more generic
-int create_socketset(void);
-int RecvMessage(TCPsocket sock, char ** buf);
+//int create_socketset(void);
+int CreateSocketSet(SDLNet_SocketSet * set, TCPsocket tcpsockets[], int tcpcount, UDPsocket udpsockets[], int udpcount);
+int RecvMessage(TCPsocket * sock, char ** buf);
 void cleanup_server(void);
 
 void cleanup_client(void);

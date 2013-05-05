@@ -6,7 +6,7 @@
 
 SDLNet_SocketSet serverset = NULL;
 TCPsocket listeningtcpsock = NULL;
-TCPsocket clients[MAX_CLIENTS];
+TCPsocket clients[MAX_CLIENTS] = {0};
 int num_clients = 0;
 
 SDLNet_SocketSet clientset = NULL;
@@ -23,9 +23,8 @@ int setup_server(int argc, char ** argv)
     
     if (argc != 2)
     {
-        printf("%s: Invalid arguments\n", argv[0]);
-        printf("    Usage: %s port\n", argv[0]);
-        
+        fprintf(stderr, "%s: Invalid arguments\n", argv[0]);
+        fprintf(stderr, "    Usage: %s port\n", argv[0]);
         return -1;
     }
     
@@ -63,7 +62,7 @@ int setup_server(int argc, char ** argv)
     
     return 0;
 }
-
+/*
 int create_socketset(void)
 {
     int i = 0;
@@ -98,8 +97,61 @@ int create_socketset(void)
     
     return 0;
 }
+*/
+int CreateSocketSet(SDLNet_SocketSet * set, TCPsocket tcpsockets[], int tcpcount, UDPsocket udpsockets[], int udpcount)
+{
+    int i = 0;
+    int ret = 0;
+    
+    if (set == NULL
+     || ((tcpsockets == NULL || tcpcount <= 0) && (udpsockets == NULL || udpcount <= 0)))
+    {
+        fprintf(stderr, "create_socketset: Bad argument(s)\n");
+        return EXIT_FAILURE;
+    }
+    
+    if (*set != NULL)
+        SDLNet_FreeSocketSet(*set);
+    
+    *set = SDLNet_AllocSocketSet(tcpcount+udpcount);
+    if (*set == NULL)
+    {
+        fprintf(stderr, "create_socketset: SDLNet_AllocSocketSet: %s\n", SDLNet_GetError());
+        return -1;
+    }
+    
+    for(i=0;i<tcpcount;i++)
+    {
+        if (tcpsockets[i] == NULL)
+            continue;
+        
+        ret = SDLNet_TCP_AddSocket(*set, tcpsockets[i]);
+        if (ret == -1)
+        {
+            fprintf(stderr, "create_socketset: SDLNet_TCP_AddSocket: %s\n", SDLNet_GetError());
+            SDLNet_FreeSocketSet(*set);
+            return -1;
+        }
+    }
+    
+    for(i=0;i<udpcount;i++)
+    {
+        if (udpsockets[i] == NULL)
+            continue;
+        
+        ret = SDLNet_TCP_AddSocket(*set, udpsockets[i]);
+        if (ret == -1)
+        {
+            fprintf(stderr, "create_socketset: SDLNet_TCP_AddSocket: %s\n", SDLNet_GetError());
+            SDLNet_FreeSocketSet(*set);
+            return -1;
+        }
+    }
+    
+    return 0;
+}
 
-int RecvMessage(TCPsocket sock, char ** buf)
+int RecvMessage(TCPsocket * sock, char ** buf)
 {
     Uint32 len = -1;
     Uint32 buflen = -1;
@@ -107,12 +159,11 @@ int RecvMessage(TCPsocket sock, char ** buf)
     
     if (buf == NULL || sock == NULL)
     {
-        fprintf(stderr, "RecvMessage: NULL argument(s)\n");
-        *buf = NULL;
+        fprintf(stderr, "RecvMessage: Bad argument(s)\n");
         return -1;
     }
     
-    ret = SDLNet_TCP_Recv(sock, &buflen, sizeof(buflen));
+    ret = SDLNet_TCP_Recv(*sock, &buflen, sizeof(buflen));
     if (ret <= 0)
     {
         if (SDLNet_GetError() != NULL && strlen(SDLNet_GetError()) != 0)
@@ -144,7 +195,7 @@ int RecvMessage(TCPsocket sock, char ** buf)
         return -1;
     }
     
-    ret = SDLNet_TCP_Recv(sock, *buf, len);
+    ret = SDLNet_TCP_Recv(*sock, *buf, len);
     if (ret <= 0)
     {
         if (SDLNet_GetError() != NULL && strlen(SDLNet_GetError()) != 0)

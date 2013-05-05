@@ -150,18 +150,13 @@ int main(int argc, char ** argv)
 {
     int ret = 0;
     char * msg = NULL;
-    //char tmpmsg[MSG_MAXLEN];
-    //Uint32 buflen = 0;
-    //Uint32 tmplen = 0;
     IPaddress ip = {0, 0};
-    //TCPsocket clientsock = NULL;
-    //SDLNet_SocketSet clientset = NULL;
+    TCPsocket tcpsockets[1];
     
     if (argc != 3)
     {
-        printf("%s: Invalid arguments\n", argv[0]);
-        printf("    Usage: %s host port\n", argv[0]);
-        
+        fprintf(stderr, "%s: Invalid arguments\n", argv[0]);
+        fprintf(stderr, "    Usage: %s host port\n", argv[0]);
         return EXIT_FAILURE;
     }
     
@@ -189,8 +184,7 @@ int main(int argc, char ** argv)
 	if (SDLNet_ResolveHost(&ip, argv[1], atoi(argv[2])) == -1)
 	{
 		fprintf(stderr, "SDLNet_ResolveHost: %s\n", SDLNet_GetError());
-		SDLNet_Quit();
-		SDL_Quit();
+		cleanup_client();
 		return EXIT_FAILURE;
 	}
 	
@@ -198,32 +192,18 @@ int main(int argc, char ** argv)
     if (clientsock == NULL)
     {
         fprintf(stderr, "SDLNet_TCP_Open: %s\n", SDLNet_GetError());
-        SDLNet_Quit();
-        SDL_Quit();
+        cleanup_client();
         return EXIT_FAILURE;
     }
     
     // creation of the socket set
     
-    clientset = SDLNet_AllocSocketSet(1);
-    if (clientset == NULL)
-    {
-        fprintf(stderr, "SDLNet_AllocSocketSet: %s\n", SDLNet_GetError());
-        SDLNet_TCP_Close(clientsock);
-        SDLNet_Quit();
-        SDL_Quit();
-        return EXIT_FAILURE;
-    }
+    tcpsockets[0] = clientsock;
     
-    ret = SDLNet_TCP_AddSocket(clientset, clientsock);
-    if (ret == -1)
+    ret = CreateSocketSet(&clientset, tcpsockets, 1, NULL, 0);
+    if (ret != 0)
     {
-        fprintf(stderr, "SDLNet_TCP_AddSocket: %s\n", SDLNet_GetError());
-        
-        SDLNet_FreeSocketSet(clientset);
-        SDLNet_TCP_Close(clientsock);
-        SDLNet_Quit();
-        SDL_Quit();
+        cleanup_client();
         return EXIT_FAILURE;
     }
     
@@ -236,10 +216,7 @@ int main(int argc, char ** argv)
         {
             fprintf(stderr, "SDLNet_CheckSockets: %s\n", SDLNet_GetError());
             perror("SDLNet_CheckSockets");
-            SDLNet_FreeSocketSet(clientset);
-            SDLNet_TCP_Close(clientsock);
-            SDLNet_Quit();
-            SDL_Quit();
+            cleanup_client();
             return EXIT_FAILURE;
         }
         
@@ -247,7 +224,7 @@ int main(int argc, char ** argv)
         
         if (ret > 0 && SDLNet_SocketReady(clientsock))
         {
-            switch (RecvMessage(clientsock, &msg))
+            switch (RecvMessage(&clientsock, &msg))
             {
                 case 0:     fprintf(stderr, "=> %s\n", msg);
                             free(msg);
@@ -297,25 +274,23 @@ int main(int argc, char ** argv)
 			    len = strlen(message)+1;
 			    len = SDLNet_Write32(len, &len);
 				
-				if (SDLNet_TCP_Send(clientsock,&len,sizeof(len)) < sizeof(len))
+				if (SDLNet_TCP_Send(clientsock,&len,sizeof(len)) < (int)sizeof(len))
 				{
 				    fprintf(stderr, "SDLNet_TCP_Send: %s\n", SDLNet_GetError());
-                    SDLNet_Quit();
-                    SDL_Quit();
+                    cleanup_client();
                     return EXIT_FAILURE;
 				}
 				
-				if (SDLNet_TCP_Send(clientsock,message,strlen(message)+1) < strlen(message)+1)
+				if (SDLNet_TCP_Send(clientsock,message,strlen(message)+1) < (int)strlen(message)+1)
 				{
 				    fprintf(stderr, "SDLNet_TCP_Send: %s\n", SDLNet_GetError());
-                    SDLNet_Quit();
-                    SDL_Quit();
+                    cleanup_client();
                     return EXIT_FAILURE;
 				}
 			}
 		}
 /*
-//XXX: Tux Maths does things in a different way :
+//XXX: Tux Maths read stdin in a different way :
 
 // we must first set stdin to O_NONBLOCK with:
 // fcntl(0, F_SETFL, fcntl(0, F_GETFL, 0) | O_NONBLOCK);
@@ -346,10 +321,7 @@ int read_stdin_nonblock(char* buf, size_t max_length)
     
     // cleanup
     
-    SDLNet_FreeSocketSet(clientset);
-    SDLNet_TCP_Close(clientsock);
-    SDLNet_Quit();
-    SDL_Quit();
+    cleanup_client();
     
     return EXIT_SUCCESS;
 }

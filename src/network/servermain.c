@@ -11,6 +11,8 @@ int main(int argc, char ** argv)
     char * msg = NULL;
     //UDPsocket listeningudpsock = NULL;
     TCPsocket tmpsock = NULL;
+    TCPsocket tcpsockets[MAX_CLIENTS+1];
+    UDPsocket udpsockets[1];
     //UDPpacket * out = NULL;
     //UDPpacket * in = NULL;
     
@@ -53,6 +55,8 @@ int main(int argc, char ** argv)
         SDL_Quit();
         return EXIT_FAILURE;
     }*/
+    
+    udpsockets[0] = NULL;  //TODO: will be replaced by the UDP listening socket
     
     while (1)
     {
@@ -112,12 +116,15 @@ int main(int argc, char ** argv)
             }
         }*/
         
-        // reset the socket set
-        //TODO: is it really needed to recreate it each time ? check that later
-        //      when client deco will be supported (maybe it's not like select()
-        //      who modify the sets in arguments)
+        // update the socket set
+        //TODO: useless to recreate it each time, just do it one time before the
+        //      while, then use new functions like addclient() and delclient()
+        //      to handle clients[]+socketset
         
-        ret = create_socketset();
+        memcpy(tcpsockets, clients, (num_clients)*sizeof(TCPsocket));
+        tcpsockets[num_clients] = listeningtcpsock;
+        
+        ret = CreateSocketSet(&serverset, tcpsockets, num_clients+1, udpsockets, 1);
         if (ret != 0)
         {
             cleanup_server();
@@ -140,6 +147,7 @@ int main(int argc, char ** argv)
         if (ret > 0 && SDLNet_SocketReady(listeningtcpsock))
         {
             tmpsock = SDLNet_TCP_Accept(listeningtcpsock);
+            //TODO: need an addclient(socket, clients[], num_clients, socketset) function
             if (tmpsock != NULL)
             {
                 if (num_clients < MAX_CLIENTS)
@@ -162,7 +170,7 @@ int main(int argc, char ** argv)
         {
             if (ret > 0 && SDLNet_SocketReady(clients[i]))
             {
-                switch (RecvMessage(clients[i], &msg))
+                switch (RecvMessage(&clients[i], &msg))
                 {
                     case 0:     fprintf(stderr, "=> %s\n", msg);
                                 break;
