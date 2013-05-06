@@ -39,12 +39,6 @@ one create_socket_set in client and one in server, each wrapper calling CreateSo
 
 extern int CreateSocketSet(SDLNet_SocketSet * set, TCPsocket tcpsockets[], int tcpcount, UDPsocket udpsockets[], int udpcount);
 extern int RecvMessage(TCPsocket sock, char ** buf);
-//int AddClient(TCPsocket * socket, int * num_clients, TCPsocket clients[], SDLNet_SocketSet socketset);
-
-
-//int create_socketset(void);
-
-
 
 
 

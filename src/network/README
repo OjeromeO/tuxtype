@@ -33,7 +33,7 @@ Run the client with :
     $ ./client HOST PORT
 
 You can then, from the client, write the messages you want to send to the server.
-
+For now, the only way to leave the server is a Ctrl+C.
 
 Here is an example of session :
 

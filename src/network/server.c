@@ -11,12 +11,11 @@ int num_clients = 0;
 
 
 static int setup_server(int argc, char ** argv);
-static int create_socketset(void);
 static int add_client(TCPsocket tmpsock);
 static int remove_client(int i);
 static void cleanup_server(void);
 
-
+//TODO: add commands mangement (quit, connected clients, setname, ...) and response from the server
 
 int main(int argc, char ** argv)
 {
@@ -126,19 +125,6 @@ int main(int argc, char ** argv)
             }
         }*/
         
-        // update the socket set
-        
-        //TODO: useless to recreate it each time, just do it one time before the
-        //      while, then use new functions like addclient() and delclient()
-        //      to handle clients[]+socketset
-        
-        ret = create_socketset();
-        if (ret != 0)
-        {
-            cleanup_server();
-            return EXIT_FAILURE;
-        }
-        
         // check sockets activity
         
         ret = SDLNet_CheckSockets(set, -1);
@@ -192,10 +178,13 @@ int main(int argc, char ** argv)
                                 return EXIT_FAILURE;
                                 break;
                                 
-                    case -2:    //TODO: change the behaviour for that case,
-                                //      just delete the client and DelSocket()
-                                cleanup_server();
-                                return EXIT_FAILURE;
+                    case -2:    ret = remove_client(i);
+                                fprintf(stderr, "========> Client %d disconnected\n", i+1);
+                                if (ret != 0)
+                                {
+                                    cleanup_server();
+                                    return EXIT_FAILURE;
+                                }
                                 break;
                 }
             }
@@ -259,24 +248,23 @@ int setup_server(int argc, char ** argv)
         return -1;
     }
     
-    return 0;
-}
-
-int create_socketset(void)
-{
-    int ret = 0;
-    TCPsocket tcpsockets[MAX_CLIENTS+1] = {0};
-    UDPsocket udpsockets[1] = {0};
+    // creation of the socket set
     
-    memcpy(tcpsockets, clients, (num_clients)*sizeof(TCPsocket));
-    tcpsockets[num_clients] = listeningtcpsock;
-    udpsockets[0] = NULL;  //TODO: will be replaced by the UDP listening socket
-    
-    ret = CreateSocketSet(&set, tcpsockets, num_clients+1, udpsockets, 1);
-    if (ret != 0)
+    set = SDLNet_AllocSocketSet(MAX_CLIENTS+2);
+    if (set == NULL)
     {
+        fprintf(stderr, "setup_server: SDLNet_AllocSocketSet: %s\n", SDLNet_GetError());
         return -1;
     }
+    
+    ret = SDLNet_TCP_AddSocket(set, listeningtcpsock);
+    if (ret == -1)
+    {
+        fprintf(stderr, "setup_server: SDLNet_TCP_AddSocket: %s\n", SDLNet_GetError());
+        return -1;
+    }
+    
+    //TODO: add later the UDP listening socket
     
     return 0;
 }
@@ -312,9 +300,27 @@ int add_client(TCPsocket sock)
 
 int remove_client(int i)
 {
-    //TODO delsocket(client[index])
+    int ret = 0;
     
-    //TODO delete from client[], move other sockets of the array to the right, or just the socket at the end (if it's not it), num--
+    ret = SDLNet_TCP_DelSocket(set, clients[i]);
+    if (ret == -1)
+    {
+        fprintf(stderr, "remove_client: SDLNet_TCP_DelSocket: %s\n", SDLNet_GetError());
+        return -1;
+    }
+    
+    SDLNet_TCP_Close(clients[i]);
+    clients[i] = NULL;
+    
+    // replace the free place with the last client socket
+    
+    if (num_clients > 1 && i != num_clients-1)
+    {
+        clients[i] = clients[num_clients-1];
+        clients[num_clients-1] = NULL;
+    }
+    
+    num_clients--;
      
     return 0;
 }
