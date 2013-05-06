@@ -3,7 +3,7 @@ LFLAGS = -g -W -Wall -Wmissing-declarations -Wmissing-prototypes -Wredundant-dec
 CFLAGS = -g -W -Wall -Wmissing-declarations -Wmissing-prototypes -Wredundant-decls -Wshadow -Wbad-function-cast -Wcast-qual
 LIBS = `sdl-config --libs` -lSDL_net
 INCS = `sdl-config --cflags`
-SRC = servermain.c clientmain.c network.c
+SRC = server.c client.c network.c
 OBJ = $(SRC:.c=.o)
 EXEC = server client
 
@@ -11,16 +11,15 @@ EXEC = server client
 
 all : $(EXEC)
 
-server : servermain.o network.o
+server : server.o network.o
 	$(CC) -o $@ $^ $(LIBS) $(LFLAGS)
-servermain.o : servermain.c network.h
-	$(CC) $(INCS) $(CFLAGS) -c $<
-
-client : clientmain.o network.o
+client : client.o network.o
 	$(CC) -o $@ $^ $(LIBS) $(LFLAGS)
-clientmain.o : clientmain.c network.h
-	$(CC) $(INCS) $(CFLAGS) -c $<
 
+server.o : server.c network.h
+	$(CC) $(INCS) $(CFLAGS) -c $<
+client.o : client.c network.h
+	$(CC) $(INCS) $(CFLAGS) -c $<
 network.o : network.c network.h
 	$(CC) $(INCS) $(CFLAGS) -c $<
 
