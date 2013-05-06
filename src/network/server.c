@@ -13,7 +13,7 @@ int num_clients = 0;
 static int setup_server(int argc, char ** argv);
 static int create_socketset(void);
 static int add_client(TCPsocket tmpsock);
-static int remove_client(TCPsocket sock);
+static int remove_client(int i);
 static void cleanup_server(void);
 
 
@@ -310,7 +310,7 @@ int add_client(TCPsocket sock)
     return 0;
 }
 
-int remove_client(int index)
+int remove_client(int i)
 {
     //TODO delsocket(client[index])
     

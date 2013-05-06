@@ -1,0 +1,71 @@
+--------------------------------------------
+ Little SDLNet client/server for Tux Typing 
+--------------------------------------------
+
+Contents
+--------
+    Compilation
+    Running the program
+
+
+
+Compilation
+-----------
+
+To compile both the client and the server :
+    $ make
+
+To clean the directory (delete object files) :
+    $ make clean
+
+To clean the directory (delete object files and binaries) :
+    $ make mrproper
+
+
+
+Running the program
+-------------------
+
+Run the server with :
+    $ ./server PORT
+
+Run the client with :
+    $ ./client HOST PORT
+
+You can then, from the client, write the messages you want to send to the server.
+
+
+Here is an example of session :
+
+    ----------------------
+    server point of view :
+    ----------------------
+    
+    $ ./server 2048
+    ========> Client 1 connected
+    Client 1: hello
+    Client 1: it's me
+    ========> Client 2 connected
+    Client 2: hey
+    Client 2: i'm here too !
+    Client 1: great
+
+    ------------------------
+    client 1 point of view :
+    ------------------------
+    
+    $ ./client 127.0.0.1 2048
+    Connecting to 127.0.0.1:2048...
+    hello
+    it's me
+    great
+
+    ------------------------
+    client 2 point of view :
+    ------------------------
+    
+    $ ./client 127.0.0.1 2048
+    Connecting to 127.0.0.1:2048...
+    hey
+    i'm here too !
+
