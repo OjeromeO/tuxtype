@@ -231,7 +231,7 @@ int main(int argc, char ** argv)
         
         if (ret > 0 && SDLNet_SocketReady(sock))
         {
-            switch (RecvMessage(&sock, &msg))
+            switch (RecvMessage(sock, &msg))
             {
                 case 0:     fprintf(stderr, "=> %s\n", msg);
                             free(msg);

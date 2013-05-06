@@ -91,7 +91,7 @@ int CreateSocketSet(SDLNet_SocketSet * set, TCPsocket tcpsockets[], int tcpcount
     return 0;
 }
 
-int RecvMessage(TCPsocket * sock, char ** buf)
+int RecvMessage(TCPsocket sock, char ** buf)
 {
     Uint32 len = -1;
     Uint32 buflen = -1;
@@ -103,7 +103,7 @@ int RecvMessage(TCPsocket * sock, char ** buf)
         return -1;
     }
     
-    ret = SDLNet_TCP_Recv(*sock, &buflen, sizeof(buflen));
+    ret = SDLNet_TCP_Recv(sock, &buflen, sizeof(buflen));
     if (ret <= 0)
     {
         if (SDLNet_GetError() != NULL && strlen(SDLNet_GetError()) != 0)
@@ -114,7 +114,7 @@ int RecvMessage(TCPsocket * sock, char ** buf)
         }
         else
         {
-            fprintf(stderr, "Connexion closed by the other side.\n");
+            fprintf(stderr, "RecvMessage: Connexion closed by the other side.\n");
             *buf = NULL;
             return -2;
         }
@@ -135,7 +135,7 @@ int RecvMessage(TCPsocket * sock, char ** buf)
         return -1;
     }
     
-    ret = SDLNet_TCP_Recv(*sock, *buf, len);
+    ret = SDLNet_TCP_Recv(sock, *buf, len);
     if (ret <= 0)
     {
         if (SDLNet_GetError() != NULL && strlen(SDLNet_GetError()) != 0)
@@ -147,7 +147,7 @@ int RecvMessage(TCPsocket * sock, char ** buf)
         }
         else
         {
-            fprintf(stderr, "Connexion closed by the other side.\n");
+            fprintf(stderr, "RecvMessage: Connexion closed by the other side.\n");
             free(*buf);
             *buf = NULL;
             return -2;

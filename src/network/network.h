@@ -11,7 +11,7 @@
 #define SERVER_DATA "TuxMaths server"
 #define MSG_MAXLEN 1024
 
-
+// contains general-purpose, generic network functions
 
 //TODO: client/server main will become RunServer and RunClient
 
@@ -26,9 +26,10 @@
 //    it's a server-specific function (send_questions, end_game, ...) or a
 //    client-specific function
 // => client and server modules functions will probably be all lowercase except
-//    RunServer/Client (and maybe some others ?) ; even if tux maths uses
+//    RunServer/Client (and maybe some others like DetectServer?) ; even if tux maths uses
 //    several functions for client instead of one RunClient() (LAN_xxx(),
 //    Connecttoservers, Pregame, ...), or maybe it needs more explicit function names ?
+//    => because of the menu and UI part... so it's OK
 /*
 examples:
 RecvMessage in network
@@ -37,7 +38,7 @@ one create_socket_set in client and one in server, each wrapper calling CreateSo
 */
 
 extern int CreateSocketSet(SDLNet_SocketSet * set, TCPsocket tcpsockets[], int tcpcount, UDPsocket udpsockets[], int udpcount);
-extern int RecvMessage(TCPsocket * sock, char ** buf);
+extern int RecvMessage(TCPsocket sock, char ** buf);
 //int AddClient(TCPsocket * socket, int * num_clients, TCPsocket clients[], SDLNet_SocketSet socketset);
 
 

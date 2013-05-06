@@ -12,6 +12,8 @@ int num_clients = 0;
 
 static int setup_server(int argc, char ** argv);
 static int create_socketset(void);
+static int add_client(TCPsocket tmpsock);
+static int remove_client(TCPsocket sock);
 static void cleanup_server(void);
 
 
@@ -153,20 +155,25 @@ int main(int argc, char ** argv)
         if (ret > 0 && SDLNet_SocketReady(listeningtcpsock))
         {
             tmpsock = SDLNet_TCP_Accept(listeningtcpsock);
-            //TODO: need an addclient(socket, clients[], num_clients, socketset) function
-            if (tmpsock != NULL)
+            if (tmpsock == NULL)
             {
-                if (num_clients < MAX_CLIENTS)
-                {
-                    clients[num_clients] = tmpsock;
-                    num_clients++;
-                    fprintf(stderr, "New client !\n");
-                }
-                else
-                {
-                    fprintf(stderr, "Can't add a new client, max count of clients reached.\n");
-                    SDLNet_TCP_Close(tmpsock);
-                }
+                fprintf(stderr, "SDLNet_TCP_Accept: %s\n", SDLNet_GetError());
+                cleanup_server();
+                return EXIT_FAILURE;
+            }
+            
+            switch (add_client(tmpsock))
+            {
+                case 0:     fprintf(stderr, "========> Client %d connected\n", num_clients);
+                            break;
+                            
+                case -1:    SDLNet_TCP_Close(tmpsock);
+                            cleanup_server();
+                            return EXIT_FAILURE;
+                            break;
+                            
+                case -2:    SDLNet_TCP_Close(tmpsock);
+                            break;
             }
         }
         
@@ -176,9 +183,9 @@ int main(int argc, char ** argv)
         {
             if (ret > 0 && SDLNet_SocketReady(clients[i]))
             {
-                switch (RecvMessage(&clients[i], &msg))
+                switch (RecvMessage(clients[i], &msg))
                 {
-                    case 0:     fprintf(stderr, "=> %s\n", msg);
+                    case 0:     fprintf(stderr, "Client %d: %s\n", i+1, msg);
                                 break;
                                 
                     case -1:    cleanup_server();
@@ -271,6 +278,44 @@ int create_socketset(void)
         return -1;
     }
     
+    return 0;
+}
+
+int add_client(TCPsocket sock)
+{
+    int ret = 0;
+    
+    if (sock == NULL)
+    {
+        fprintf(stderr, "add_client: Bad argument(s)\n");
+        return -1;
+    }
+    
+    if (num_clients >= MAX_CLIENTS)
+    {
+        fprintf(stderr, "add_client: Can't add a new client, max count of clients reached.\n");
+        return -2;
+    }
+    
+    clients[num_clients] = sock;
+    num_clients++;
+    
+    ret = SDLNet_TCP_AddSocket(set, sock);
+    if (ret == -1)
+    {
+        fprintf(stderr, "add_client: SDLNet_TCP_AddSocket: %s\n", SDLNet_GetError());
+        return -1;
+    }
+    
+    return 0;
+}
+
+int remove_client(int index)
+{
+    //TODO delsocket(client[index])
+    
+    //TODO delete from client[], move other sockets of the array to the right, or just the socket at the end (if it's not it), num--
+     
     return 0;
 }
 
