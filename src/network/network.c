@@ -1,3 +1,26 @@
+/*******************************************************************************
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details at
+ * http://www.gnu.org/copyleft/gpl.html
+ *
+ ******************************************************************************/
+
+/**
+ * @file    network.c
+ * @author  Jerome Portal
+ * @version 0.2
+ *
+ * @brief   General-purpose generic network functions.
+ */
+
 #include "network.h"
 
 
@@ -47,11 +70,12 @@ int CreateSocketSet(SDLNet_SocketSet * set, TCPsocket tcpsockets[], int tcpcount
      || ((tcpsockets == NULL || tcpcount <= 0) && (udpsockets == NULL || udpcount <= 0)))
     {
         fprintf(stderr, "create_socketset: Bad argument(s)\n");
-        return EXIT_FAILURE;
+        return -1;
     }
     
-    if (*set != NULL)
-        SDLNet_FreeSocketSet(*set);
+    //TODO: it's not this function's problem if set was already allocated or not
+    //if (*set != NULL)
+    //    SDLNet_FreeSocketSet(*set);
     
     *set = SDLNet_AllocSocketSet(tcpcount+udpcount);
     if (*set == NULL)

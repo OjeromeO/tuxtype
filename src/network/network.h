@@ -1,3 +1,26 @@
+/*******************************************************************************
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details at
+ * http://www.gnu.org/copyleft/gpl.html
+ *
+ ******************************************************************************/
+
+/**
+ * @file    network.h
+ * @author  Jerome Portal
+ * @version 0.2
+ *
+ * @brief   General-purpose and generic network functions.
+ */
+
 #ifndef _NETWORK_H_
 #define _NETWORK_H_
 
@@ -11,11 +34,7 @@
 #define SERVER_DATA "TuxMaths server"
 #define MSG_MAXLEN 1024
 
-// contains general-purpose, generic network functions
 
-//TODO: client/server main will become RunServer and RunClient
-
-//TODO: write the doxygen documentation
 
 //TODO: improve the structure => compare with network.c/h and server.c/h
 // => a module for the client (with internal variables, ...), an other for the
@@ -30,6 +49,7 @@
 //    several functions for client instead of one RunClient() (LAN_xxx(),
 //    Connecttoservers, Pregame, ...), or maybe it needs more explicit function names ?
 //    => because of the menu and UI part... so it's OK
+// => client/server main will become RunServer and RunClient
 /*
 examples:
 RecvMessage in network
@@ -37,7 +57,41 @@ CreateSocketSet in network
 one create_socket_set in client and one in server, each wrapper calling CreateSocketSet
 */
 
+
+//TODO: move "set" to be the return value ?
+/**
+ * @brief   Allocate and initialize a new socket set.
+ * 
+ * @param set           - Socket set that will be filled.
+ * @param tcpsockets    - Array of TCP sockets to add to the new socket set.
+ * @param tcpcount      - Count of TCP sockets to add to the new socket set.
+ * @param udpsockets    - Array of UDP sockets to add to the new socket set.
+ * @param udpcount      - Count of UDP sockets to add to the new socket set.
+ * 
+ * @return
+ *      0 on success,
+ *      -1 if an error occured.
+ */
 extern int CreateSocketSet(SDLNet_SocketSet * set, TCPsocket tcpsockets[], int tcpcount, UDPsocket udpsockets[], int udpcount);
+
+//TODO: create a tcp_recv_msg() and a udp_recv_msg() and then a wrapper RecvMessage(, , flags) with UDP_MSG|TCP_MSG ?
+/**
+ * @brief   Receive a message from a remote host in a buffer it allocates.
+ *
+ * @details
+ *      Messages transmission is done with 2 steps :
+ *       - transmission of the message size
+ *       - transmission of the real message
+ *
+ * @param sock  - TCP socket that will receive the message.
+ * @param buf   - Buffer where the message will be stored.
+ * 
+ * @return
+ *      0 on success,
+ *      -1 if an error occured,
+ *      -2 if the remote host closed the connexion.
+ *
+ */
 extern int RecvMessage(TCPsocket sock, char ** buf);
 
 
