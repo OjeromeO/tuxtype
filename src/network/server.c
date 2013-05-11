@@ -36,6 +36,7 @@ int num_clients = 0;
 static int setup_server(int argc, char ** argv);
 static int add_client(TCPsocket tmpsock);
 static int remove_client(int i);
+static int handle_client_msg(char * msg);
 static void cleanup_server(void);
 
 //TODO: add commands mangement (quit, connected clients, setname, ...) and response from the server
@@ -159,56 +160,77 @@ int main(int argc, char ** argv)
             return EXIT_FAILURE;
         }
         
-        // accept incoming TCP connections
-        
-        if (ret > 0 && SDLNet_SocketReady(listeningtcpsock))
+        if (ret > 0)
         {
-            tmpsock = SDLNet_TCP_Accept(listeningtcpsock);
-            if (tmpsock == NULL)
-            {
-                fprintf(stderr, "SDLNet_TCP_Accept: %s\n", SDLNet_GetError());
-                cleanup_server();
-                return EXIT_FAILURE;
-            }
+            // accept incoming TCP connections
             
-            switch (add_client(tmpsock))
+            if (SDLNet_SocketReady(listeningtcpsock))
             {
-                case 0:     fprintf(stderr, "========> Client %d connected\n", num_clients);
-                            break;
-                            
-                case -1:    SDLNet_TCP_Close(tmpsock);
-                            cleanup_server();
-                            return EXIT_FAILURE;
-                            break;
-                            
-                case -2:    SDLNet_TCP_Close(tmpsock);
-                            break;
-            }
-        }
-        
-        // receive clients messages
-        
-        for (i=0;i<num_clients;i++)
-        {
-            if (ret > 0 && SDLNet_SocketReady(clients[i]))
-            {
-                switch (RecvMessage(clients[i], &msg))
+                tmpsock = SDLNet_TCP_Accept(listeningtcpsock);
+                if (tmpsock == NULL)
                 {
-                    case 0:     fprintf(stderr, "Client %d: %s\n", i+1, msg);
+                    fprintf(stderr, "SDLNet_TCP_Accept: %s\n", SDLNet_GetError());
+                    cleanup_server();
+                    return EXIT_FAILURE;
+                }
+                
+                switch (add_client(tmpsock))
+                {
+                    case 0:     fprintf(stderr, "========> Client %d connected\n", num_clients);
                                 break;
                                 
-                    case -1:    cleanup_server();
+                    case -1:    SDLNet_TCP_Close(tmpsock);
+                                cleanup_server();
                                 return EXIT_FAILURE;
                                 break;
                                 
-                    case -2:    ret = remove_client(i);
-                                fprintf(stderr, "========> Client %d disconnected\n", i+1);
-                                if (ret != 0)
-                                {
-                                    cleanup_server();
-                                    return EXIT_FAILURE;
-                                }
+                    case -2:    SDLNet_TCP_Close(tmpsock);
                                 break;
+                }
+            }
+            
+            // receive clients messages
+            
+            for (i=0;i<num_clients;i++)
+            {
+                if (SDLNet_SocketReady(clients[i]))
+                {
+                    switch (RecvMessage(clients[i], &msg))
+                    {
+                        case 0:     fprintf(stderr, "Client %d: %s\n", i+1, msg);
+                                    //TODO: manage clients commands here
+                                    ret = handle_client_msg(msg);
+                                    if (ret == -1)
+                                    {
+                                        free(msg);
+                                        cleanup_server();
+                                        return EXIT_FAILURE;
+                                    }
+                                    
+                                    if (ret == -2)
+                                    {
+                                        fprintf(stderr, "Server shutdown.\n");
+                                        free(msg);
+                                        cleanup_server();
+                                        return EXIT_SUCCESS;
+                                    }
+                                    
+                                    free(msg);
+                                    break;
+                                    
+                        case -1:    cleanup_server();
+                                    return EXIT_FAILURE;
+                                    break;
+                                    
+                        case -2:    fprintf(stderr, "========> Client %d disconnected\n", i+1);
+                                    ret = remove_client(i);
+                                    if (ret != 0)
+                                    {
+                                        cleanup_server();
+                                        return EXIT_FAILURE;
+                                    }
+                                    break;
+                    }
                 }
             }
         }
@@ -298,7 +320,7 @@ int add_client(TCPsocket sock)
     
     if (sock == NULL)
     {
-        fprintf(stderr, "add_client: Bad argument(s)\n");
+        fprintf(stderr, "add_client: Invalid argument(s)\n");
         return -1;
     }
     
@@ -345,6 +367,38 @@ int remove_client(int i)
     
     num_clients--;
      
+    return 0;
+}
+
+//TODO: use macros for commands size and value
+int handle_client_msg(char * msg)
+{
+    int i = 0;
+    
+    if (msg == NULL)
+    {
+        fprintf(stderr, "handle_client_msg: Invalid argument(s)\n");
+        return -1;
+    }
+    
+    //TODO: check with valgrind if there is no memory leaks in the server nor in the client after that
+    if (strlen(msg) == 8 && strncmp(msg, "shutdown", 8) == 0)
+    {
+        fprintf(stderr, "\"shutdown\" command received.\n");
+        return -2;
+    }
+    
+    if (strlen(msg) == 3 && strncmp(msg, "who", 3) == 0)
+    {
+        fprintf(stderr, "\"who\" command received.\n");
+        
+        //TODO: LOL
+        for(i=0;i<num_clients;i++)
+        {
+            fprintf(stderr, "Client %d\n", i+1);
+        }
+    }
+    
     return 0;
 }
 
