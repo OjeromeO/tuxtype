@@ -260,9 +260,11 @@ int main(int argc, char ** argv)
                             free(msg);
                             break;
                             
-                case -1:    // fall through
+                case -1:    cleanup_client();
+                            return EXIT_FAILURE;
+                            break;
                             
-                case -2:    
+                case -2:    fprintf(stderr, "Disconnected from the server.\n");
                             cleanup_client();
                             return EXIT_FAILURE;
                             break;
@@ -272,7 +274,7 @@ int main(int argc, char ** argv)
         // send to server messages from stdin
         
         int maxlen = 1024;
-        int len = -1;
+        //int len = -1;
         char message[maxlen];
         memset(message, '\0', maxlen);
         fd_set fdset;
@@ -301,7 +303,7 @@ int main(int argc, char ** argv)
 
 			if(strlen(message))
 			{
-			    len = strlen(message)+1;
+			    /*len = strlen(message)+1;
 			    len = SDLNet_Write32(len, &len);
 				
 				if (SDLNet_TCP_Send(sock,&len,sizeof(len)) < (int)sizeof(len))
@@ -315,6 +317,12 @@ int main(int argc, char ** argv)
 				{
 				    fprintf(stderr, "SDLNet_TCP_Send: %s\n", SDLNet_GetError());
                     cleanup_client();
+                    return EXIT_FAILURE;
+				}*/
+				ret = SendMessage(sock, message);
+				if (ret == -1)
+				{
+				    cleanup_client();
                     return EXIT_FAILURE;
 				}
 			}

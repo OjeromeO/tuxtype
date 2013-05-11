@@ -40,7 +40,7 @@
 // => a module for the client (with internal variables, ...), an other for the
 //    server (with internal variables, ...), and shared functions in a
 //    network.c/h module (its functions are uppercase because generic)
-// => look at how it is done in tuxmaths and discuss this idea with members of tux4kids on the mailing-list
+// => look at how it is done in tuxmaths and discuss this idea on the mailing-list
 // => whenever possible, use/create a function of network.c/h ; not possible if
 //    it's a server-specific function (send_questions, end_game, ...) or a
 //    client-specific function
@@ -73,6 +73,25 @@ one create_socket_set in client and one in server, each wrapper calling CreateSo
  *      -1 if an error occured.
  */
 extern int CreateSocketSet(SDLNet_SocketSet * set, TCPsocket tcpsockets[], int tcpcount, UDPsocket udpsockets[], int udpcount);
+
+/**
+ * @brief   Send a message to a remote host.
+ *
+ * @details
+ *      Messages transmission is done with 2 steps :
+ *       - transmission of the message size
+ *       - transmission of the real message
+ *
+ * @param sock  - TCP socket that will send the message.
+ * @param buf   - Null-terminated message to send.
+ * 
+ * @return
+ *      0 on success,
+ *      -1 if an error occured,
+ *      -2 if the remote host closed the connexion.
+ *
+ */
+extern int SendMessage(TCPsocket sock, char * buf);
 
 //TODO: create a tcp_recv_msg() and a udp_recv_msg() and then a wrapper RecvMessage(, , flags) with UDP_MSG|TCP_MSG ?
 /**

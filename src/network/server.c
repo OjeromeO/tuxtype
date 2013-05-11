@@ -36,7 +36,7 @@ int num_clients = 0;
 static int setup_server(int argc, char ** argv);
 static int add_client(TCPsocket tmpsock);
 static int remove_client(int i);
-static int handle_client_msg(char * msg);
+static int handle_client_msg(int client, char * msg);
 static void cleanup_server(void);
 
 //TODO: add commands mangement (quit, connected clients, setname, ...) and response from the server
@@ -197,9 +197,7 @@ int main(int argc, char ** argv)
                 {
                     switch (RecvMessage(clients[i], &msg))
                     {
-                        case 0:     fprintf(stderr, "Client %d: %s\n", i+1, msg);
-                                    //TODO: manage clients commands here
-                                    ret = handle_client_msg(msg);
+                        case 0:     ret = handle_client_msg(i, msg);
                                     if (ret == -1)
                                     {
                                         free(msg);
@@ -222,7 +220,7 @@ int main(int argc, char ** argv)
                                     return EXIT_FAILURE;
                                     break;
                                     
-                        case -2:    fprintf(stderr, "========> Client %d disconnected\n", i+1);
+                        case -2:    fprintf(stderr, "========> Client %d disconnected from the server\n", i+1);
                                     ret = remove_client(i);
                                     if (ret != 0)
                                     {
@@ -371,7 +369,11 @@ int remove_client(int i)
 }
 
 //TODO: use macros for commands size and value
-int handle_client_msg(char * msg)
+// create a messages.h:
+// MSG_QUIT
+// MSG_QUIT_SIZE => can be > strlen(MSG_QUIT) if parameters needed
+// ...
+int handle_client_msg(int client, char * msg)
 {
     int i = 0;
     
@@ -381,23 +383,41 @@ int handle_client_msg(char * msg)
         return -1;
     }
     
-    //TODO: check with valgrind if there is no memory leaks in the server nor in the client after that
     if (strlen(msg) == 8 && strncmp(msg, "shutdown", 8) == 0)
     {
-        fprintf(stderr, "\"shutdown\" command received.\n");
+        fprintf(stderr, "  \"shutdown\" command received.\n");
         return -2;
     }
     
+    if (strlen(msg) == 4 && strncmp(msg, "quit", 4) == 0)
+    {
+        fprintf(stderr, "  \"quit\" command received.\n");
+        return remove_client(client);
+    }
+    
+    /*if (strlen(msg) == 5 && strncmp(msg, "count", 5) == 0)
+    {
+        fprintf(stderr, "  \"count\" command received.\n");
+        //sprintf, atoi, ...
+        return SendMessage(clients[i], char * buf);
+    }*/
+    
+    //TODO: make the server send the list
     if (strlen(msg) == 3 && strncmp(msg, "who", 3) == 0)
     {
-        fprintf(stderr, "\"who\" command received.\n");
+        fprintf(stderr, "  \"who\" command received.\n");
         
         //TODO: LOL
         for(i=0;i<num_clients;i++)
         {
-            fprintf(stderr, "Client %d\n", i+1);
+            fprintf(stderr, "  Client %d\n", i+1);
         }
+        
+        return 0;
     }
+    
+    //could use a "send blablabla..." command
+    fprintf(stderr, "Client %d: %s\n", client+1, msg);
     
     return 0;
 }

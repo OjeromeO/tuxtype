@@ -25,42 +25,6 @@
 
 
 
-/*
-int create_socketset(void)
-{
-    int i = 0;
-    int ret = 0;
-    
-    if (serverset != NULL)
-        SDLNet_FreeSocketSet(serverset);
-    
-    serverset = SDLNet_AllocSocketSet(MAX_CLIENTS+2);
-    if (serverset == NULL)
-    {
-        fprintf(stderr, "create_socketset: SDLNet_AllocSocketSet: %s\n", SDLNet_GetError());
-        return -1;
-    }
-    
-    ret = SDLNet_TCP_AddSocket(serverset, listeningtcpsock);
-    if (ret == -1)
-    {
-        fprintf(stderr, "create_socketset: SDLNet_TCP_AddSocket: %s\n", SDLNet_GetError());
-        return -1;
-    }
-    
-    for(i=0;i<num_clients;i++)
-    {
-        ret = SDLNet_TCP_AddSocket(serverset, clients[i]);
-        if (ret == -1)
-        {
-            fprintf(stderr, "create_socketset: SDLNet_TCP_AddSocket: %s\n", SDLNet_GetError());
-            return -1;
-        }
-    }
-    
-    return 0;
-}
-*/
 int CreateSocketSet(SDLNet_SocketSet * set, TCPsocket tcpsockets[], int tcpcount, UDPsocket udpsockets[], int udpcount)
 {
     int i = 0;
@@ -117,9 +81,9 @@ int CreateSocketSet(SDLNet_SocketSet * set, TCPsocket tcpsockets[], int tcpcount
 
 int RecvMessage(TCPsocket sock, char ** buf)
 {
-    Uint32 len = -1;
-    Uint32 buflen = -1;
-    int ret = -1;
+    Uint32 len = 0;
+    Uint32 buflen = 0;
+    int ret = 0;
     
     if (buf == NULL || sock == NULL)
     {
@@ -176,6 +140,38 @@ int RecvMessage(TCPsocket sock, char ** buf)
             *buf = NULL;
             return -2;
         }
+    }
+    
+    return 0;
+}
+
+int SendMessage(TCPsocket sock, char * buf)
+{
+    Uint32 len = 0;
+    Uint32 buflen = 0;
+    int ret = 0;
+    
+    if (buf == NULL || sock == NULL)
+    {
+        fprintf(stderr, "SendMessage: Invalid argument(s)\n");
+        return -1;
+    }
+    
+    buflen = strlen(buf)+1;
+    SDLNet_Write32(buflen, &len);
+    
+    ret = SDLNet_TCP_Send(sock, &len, sizeof(len));
+    if (ret < (int)sizeof(len))
+    {
+        fprintf(stderr, "SendMessage: SDLNet_TCP_Send: %s\n", SDLNet_GetError());
+        return -1;
+    }
+    
+    ret = SDLNet_TCP_Send(sock, buf, strlen(buf)+1);
+    if (ret < (int)strlen(buf)+1)
+    {
+        fprintf(stderr, "SendMessage: SDLNet_TCP_Send: %s\n", SDLNet_GetError());
+        return -1;
     }
     
     return 0;
