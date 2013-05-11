@@ -25,7 +25,7 @@
 #include "server.h"
 
 
-
+//TODO: make them static if no other file is going to use them
 SDLNet_SocketSet set = NULL;
 TCPsocket listeningtcpsock = NULL;
 TCPsocket clients[MAX_CLIENTS] = {0};
@@ -40,6 +40,7 @@ static int handle_client_msg(int client, char * msg);
 static void cleanup_server(void);
 
 //TODO: add commands mangement (quit, connected clients, setname, ...) and response from the server
+//      => use a real structure in the message (like "COUNT XXX", "LIST\ntoto\ntata\ntiti", ...), don't just printf the message received
 
 int main(int argc, char ** argv)
 {
@@ -54,6 +55,7 @@ int main(int argc, char ** argv)
     ret = setup_server(argc, argv);
     if (ret != 0)
     {
+        fprintf(stderr, "Can't setup the server.\n");
         cleanup_server();
         return EXIT_FAILURE;
     }
@@ -90,6 +92,8 @@ int main(int argc, char ** argv)
         SDL_Quit();
         return EXIT_FAILURE;
     }*/
+    
+    fprintf(stderr, "Server ready.\n");
     
     while (1)
     {
@@ -179,12 +183,14 @@ int main(int argc, char ** argv)
                     case 0:     fprintf(stderr, "========> Client %d connected\n", num_clients);
                                 break;
                                 
-                    case -1:    SDLNet_TCP_Close(tmpsock);
+                    case -1:    fprintf(stderr, "Can't add a new client.\n");
+                                SDLNet_TCP_Close(tmpsock);
                                 cleanup_server();
                                 return EXIT_FAILURE;
                                 break;
                                 
-                    case -2:    SDLNet_TCP_Close(tmpsock);
+                    case -2:    fprintf(stderr, "Can't add a new client.\n");
+                                SDLNet_TCP_Close(tmpsock);
                                 break;
                 }
             }
@@ -200,6 +206,7 @@ int main(int argc, char ** argv)
                         case 0:     ret = handle_client_msg(i, msg);
                                     if (ret == -1)
                                     {
+                                        fprintf(stderr, "Can't handle the client's message.\n");
                                         free(msg);
                                         cleanup_server();
                                         return EXIT_FAILURE;
@@ -216,7 +223,8 @@ int main(int argc, char ** argv)
                                     free(msg);
                                     break;
                                     
-                        case -1:    cleanup_server();
+                        case -1:    fprintf(stderr, "Can't receive the client's message.\n");
+                                    cleanup_server();
                                     return EXIT_FAILURE;
                                     break;
                                     
@@ -307,7 +315,7 @@ int setup_server(int argc, char ** argv)
         return -1;
     }
     
-    //TODO: add later the UDP listening socket
+    //TODO: add the UDP listening socket
     
     return 0;
 }
@@ -318,13 +326,13 @@ int add_client(TCPsocket sock)
     
     if (sock == NULL)
     {
-        fprintf(stderr, "add_client: Invalid argument(s)\n");
+        fprintf(stderr, "add_client: Invalid argument(s).\n");
         return -1;
     }
     
     if (num_clients >= MAX_CLIENTS)
     {
-        fprintf(stderr, "add_client: Can't add a new client, max count of clients reached.\n");
+        fprintf(stderr, "add_client: Max count of clients reached.\n");
         return -2;
     }
     
@@ -376,10 +384,11 @@ int remove_client(int i)
 int handle_client_msg(int client, char * msg)
 {
     int i = 0;
+    int ret = 0;
     
     if (msg == NULL)
     {
-        fprintf(stderr, "handle_client_msg: Invalid argument(s)\n");
+        fprintf(stderr, "handle_client_msg: Invalid argument(s).\n");
         return -1;
     }
     
@@ -392,27 +401,38 @@ int handle_client_msg(int client, char * msg)
     if (strlen(msg) == 4 && strncmp(msg, "quit", 4) == 0)
     {
         fprintf(stderr, "  \"quit\" command received.\n");
-        return remove_client(client);
+        ret = remove_client(client);
+        if (ret == -1)
+        {
+            fprintf(stderr, "handle_client_msg: Can't remove the client.\n");
+        }
+        return ret;
     }
     
-    /*if (strlen(msg) == 5 && strncmp(msg, "count", 5) == 0)
+    if (strlen(msg) == 5 && strncmp(msg, "count", 5) == 0)
     {
         fprintf(stderr, "  \"count\" command received.\n");
-        //sprintf, atoi, ...
-        return SendMessage(clients[i], char * buf);
-    }*/
+        //TODO: malloc !
+        char buf[32];
+        memset(buf, '\0', 32);
+        sprintf(buf, "%d", num_clients);
+        ret = SendMessage(clients[client], buf);
+        if (ret != 0)
+        {
+            fprintf(stderr, "handle_client_msg: Can't send the message to the client.\n");
+        }
+        return ret;
+    }
     
     //TODO: make the server send the list
     if (strlen(msg) == 3 && strncmp(msg, "who", 3) == 0)
     {
         fprintf(stderr, "  \"who\" command received.\n");
-        
         //TODO: LOL
         for(i=0;i<num_clients;i++)
         {
             fprintf(stderr, "  Client %d\n", i+1);
         }
-        
         return 0;
     }
     

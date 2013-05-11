@@ -41,7 +41,7 @@
 //    server (with internal variables, ...), and shared functions in a
 //    network.c/h module (its functions are uppercase because generic)
 // => look at how it is done in tuxmaths and discuss this idea on the mailing-list
-// => whenever possible, use/create a function of network.c/h ; not possible if
+// => whenever possible, use/create a function of network.c/h, with a wrapper if needed ; not possible if
 //    it's a server-specific function (send_questions, end_game, ...) or a
 //    client-specific function
 // => client and server modules functions will probably be all lowercase except
@@ -50,15 +50,11 @@
 //    Connecttoservers, Pregame, ...), or maybe it needs more explicit function names ?
 //    => because of the menu and UI part... so it's OK
 // => client/server main will become RunServer and RunClient
-/*
-examples:
-RecvMessage in network
-CreateSocketSet in network
-one create_socket_set in client and one in server, each wrapper calling CreateSocketSet
-*/
+
 
 
 //TODO: move "set" to be the return value ?
+//TODO: make the same function with a variable argument list ?
 /**
  * @brief   Allocate and initialize a new socket set.
  * 

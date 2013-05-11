@@ -33,7 +33,7 @@ int CreateSocketSet(SDLNet_SocketSet * set, TCPsocket tcpsockets[], int tcpcount
     if (set == NULL
      || ((tcpsockets == NULL || tcpcount <= 0) && (udpsockets == NULL || udpcount <= 0)))
     {
-        fprintf(stderr, "create_socketset: Invalid argument(s)\n");
+        fprintf(stderr, "create_socketset: Invalid argument(s).\n");
         return -1;
     }
     
@@ -87,7 +87,7 @@ int RecvMessage(TCPsocket sock, char ** buf)
     
     if (buf == NULL || sock == NULL)
     {
-        fprintf(stderr, "RecvMessage: Invalid argument(s)\n");
+        fprintf(stderr, "RecvMessage: Invalid argument(s).\n");
         return -1;
     }
     
@@ -153,7 +153,7 @@ int SendMessage(TCPsocket sock, char * buf)
     
     if (buf == NULL || sock == NULL)
     {
-        fprintf(stderr, "SendMessage: Invalid argument(s)\n");
+        fprintf(stderr, "SendMessage: Invalid argument(s).\n");
         return -1;
     }
     

@@ -25,13 +25,13 @@
 #include "client.h"
 
 
-
+//TODO: make them static if no other file is going to use them
 SDLNet_SocketSet set = NULL;
 TCPsocket sock = NULL;
 
 
 
-static int create_socketset(void);
+static int setup_client(int argc, char ** argv);
 static void cleanup_client(void);
 
 
@@ -182,60 +182,16 @@ int main(int argc, char ** argv)
 {
     int ret = 0;
     char * msg = NULL;
-    IPaddress ip = {0, 0};
-    //TCPsocket tcpsockets[1];
     
-    if (argc != 3)
-    {
-        fprintf(stderr, "%s: Invalid arguments\n", argv[0]);
-        fprintf(stderr, "    Usage: %s host port\n", argv[0]);
-        return EXIT_FAILURE;
-    }
-    
-    // SDL initializations
-    
-    ret = SDL_Init(0);
+    ret = setup_client(argc, argv);
     if (ret != 0)
     {
-        fprintf(stderr, "SDL_Init: %s\n", SDL_GetError());
-        return EXIT_FAILURE;
-    }
-    
-    ret = SDLNet_Init();
-    if (ret != 0)
-    {
-        fprintf(stderr, "SDLNet_Init: %s\n", SDLNet_GetError());
-        return EXIT_FAILURE;
-    }
-    
-    //TODO: detect servers    
-    
-    // creation of the connected socket
-    
-	printf("Connecting to %s:%d...\n", argv[1], atoi(argv[2]));
-	if (SDLNet_ResolveHost(&ip, argv[1], atoi(argv[2])) == -1)
-	{
-		fprintf(stderr, "SDLNet_ResolveHost: %s\n", SDLNet_GetError());
-		cleanup_client();
-		return EXIT_FAILURE;
-	}
-	
-    sock = SDLNet_TCP_Open(&ip);
-    if (sock == NULL)
-    {
-        fprintf(stderr, "SDLNet_TCP_Open: %s\n", SDLNet_GetError());
+        fprintf(stderr, "Can't setup the client.\n");
         cleanup_client();
         return EXIT_FAILURE;
     }
     
-    // creation of the socket set
-    
-    ret = create_socketset();
-    if (ret != 0)
-    {
-        cleanup_client();
-        return EXIT_FAILURE;
-    }
+    fprintf(stderr, "Client ready.\n");
     
     while (1)
     {
@@ -260,7 +216,8 @@ int main(int argc, char ** argv)
                             free(msg);
                             break;
                             
-                case -1:    cleanup_client();
+                case -1:    fprintf(stderr, "Can't receive the server's message.\n");
+                            cleanup_client();
                             return EXIT_FAILURE;
                             break;
                             
@@ -274,7 +231,6 @@ int main(int argc, char ** argv)
         // send to server messages from stdin
         
         int maxlen = 1024;
-        //int len = -1;
         char message[maxlen];
         memset(message, '\0', maxlen);
         fd_set fdset;
@@ -303,25 +259,10 @@ int main(int argc, char ** argv)
 
 			if(strlen(message))
 			{
-			    /*len = strlen(message)+1;
-			    len = SDLNet_Write32(len, &len);
-				
-				if (SDLNet_TCP_Send(sock,&len,sizeof(len)) < (int)sizeof(len))
-				{
-				    fprintf(stderr, "SDLNet_TCP_Send: %s\n", SDLNet_GetError());
-                    cleanup_client();
-                    return EXIT_FAILURE;
-				}
-				
-				if (SDLNet_TCP_Send(sock,message,strlen(message)+1) < (int)strlen(message)+1)
-				{
-				    fprintf(stderr, "SDLNet_TCP_Send: %s\n", SDLNet_GetError());
-                    cleanup_client();
-                    return EXIT_FAILURE;
-				}*/
 				ret = SendMessage(sock, message);
 				if (ret == -1)
 				{
+				    fprintf(stderr, "Can't send the message to the server.\n");
 				    cleanup_client();
                     return EXIT_FAILURE;
 				}
@@ -364,16 +305,66 @@ int read_stdin_nonblock(char* buf, size_t max_length)
     return EXIT_SUCCESS;
 }
 
-int create_socketset(void)
+int setup_client(int argc, char ** argv)
 {
     int ret = 0;
-    TCPsocket tcpsockets[1] = {0};
+    IPaddress ip = {0, 0};
     
-    tcpsockets[0] = sock;
+    // handle arguments
     
-    ret = CreateSocketSet(&set, tcpsockets, 1, NULL, 0);
+    if (argc != 3)
+    {
+        fprintf(stderr, "%s: Invalid arguments\n", argv[0]);
+        fprintf(stderr, "    Usage: %s host port\n", argv[0]);
+        return -1;
+    }
+    
+    // SDL initializations
+    
+    ret = SDL_Init(0);
     if (ret != 0)
     {
+        fprintf(stderr, "setup_server: SDL_Init: %s\n", SDL_GetError());
+        return -1;
+    }
+    
+    ret = SDLNet_Init();
+    if (ret != 0)
+    {
+        fprintf(stderr, "setup_server: SDLNet_Init: %s\n", SDLNet_GetError());
+        return -1;
+    }
+    
+    //TODO: detect servers    
+    
+    // creation of the connected socket
+    
+	if (SDLNet_ResolveHost(&ip, argv[1], atoi(argv[2])) == -1)
+	{
+		fprintf(stderr, "setup_server: SDLNet_ResolveHost: %s\n", SDLNet_GetError());
+		return -1;
+	}
+	
+    sock = SDLNet_TCP_Open(&ip);
+    if (sock == NULL)
+    {
+        fprintf(stderr, "setup_server: SDLNet_TCP_Open: %s\n", SDLNet_GetError());
+        return -1;
+    }
+    
+    // creation of the socket set
+    
+    set = SDLNet_AllocSocketSet(1);
+    if (set == NULL)
+    {
+        fprintf(stderr, "setup_server: SDLNet_AllocSocketSet: %s\n", SDLNet_GetError());
+        return -1;
+    }
+    
+    ret = SDLNet_TCP_AddSocket(set, sock);
+    if (ret == -1)
+    {
+        fprintf(stderr, "setup_server: SDLNet_TCP_AddSocket: %s\n", SDLNet_GetError());
         return -1;
     }
     
