@@ -37,10 +37,6 @@ int CreateSocketSet(SDLNet_SocketSet * set, TCPsocket tcpsockets[], int tcpcount
         return -1;
     }
     
-    //TODO: it's not this function's problem if set was already allocated or not
-    //if (*set != NULL)
-    //    SDLNet_FreeSocketSet(*set);
-    
     *set = SDLNet_AllocSocketSet(tcpcount+udpcount);
     if (*set == NULL)
     {
@@ -85,7 +81,7 @@ int RecvMessage(TCPsocket sock, char ** buf)
     Uint32 buflen = 0;
     int ret = 0;
     
-    if (buf == NULL || sock == NULL)
+    if (sock == NULL || buf == NULL)
     {
         fprintf(stderr, "RecvMessage: Invalid argument(s).\n");
         return -1;
@@ -151,7 +147,7 @@ int SendMessage(TCPsocket sock, char * buf)
     Uint32 buflen = 0;
     int ret = 0;
     
-    if (buf == NULL || sock == NULL)
+    if (sock == NULL || buf == NULL)
     {
         fprintf(stderr, "SendMessage: Invalid argument(s).\n");
         return -1;

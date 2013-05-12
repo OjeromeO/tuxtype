@@ -84,7 +84,6 @@ extern int CreateSocketSet(SDLNet_SocketSet * set, TCPsocket tcpsockets[], int t
  * @return
  *      0 on success,
  *      -1 if an error occured,
- *      -2 if the remote host closed the connexion.
  *
  */
 extern int SendMessage(TCPsocket sock, char * buf);

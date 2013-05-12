@@ -23,6 +23,7 @@
 
 #include "network.h"
 #include "server.h"
+#include <math.h>
 
 
 //TODO: make them static if no other file is going to use them
@@ -353,6 +354,12 @@ int remove_client(int i)
 {
     int ret = 0;
     
+    if (i < 0 || i >= num_clients)
+    {
+        fprintf(stderr, "remove_client: Invalid argument(s).\n");
+        return -1;
+    }
+    
     ret = SDLNet_TCP_DelSocket(set, clients[i]);
     if (ret == -1)
     {
@@ -385,8 +392,10 @@ int handle_client_msg(int client, char * msg)
 {
     int i = 0;
     int ret = 0;
+    int countlength = 0;
+    char * buf = NULL;
     
-    if (msg == NULL)
+    if (client < 0 || client >= num_clients || msg == NULL)
     {
         fprintf(stderr, "handle_client_msg: Invalid argument(s).\n");
         return -1;
@@ -405,30 +414,41 @@ int handle_client_msg(int client, char * msg)
         if (ret == -1)
         {
             fprintf(stderr, "handle_client_msg: Can't remove the client.\n");
+            return -1;
         }
-        return ret;
+        return 0;
     }
     
     if (strlen(msg) == 5 && strncmp(msg, "count", 5) == 0)
     {
         fprintf(stderr, "  \"count\" command received.\n");
-        //TODO: malloc !
-        char buf[32];
-        memset(buf, '\0', 32);
-        sprintf(buf, "%d", num_clients);
+        countlength = floor(log10(num_clients))+1;
+        buf = malloc((5+1+countlength+1) * sizeof(char));
+        if (buf == NULL)
+        {
+            fprintf(stderr, "handle_client_msg: malloc: Can't allocate memory for a message.\n");
+            return -1;
+        }
+        ret = snprintf(buf, 5+1+countlength+1, "COUNT %d", num_clients);
+        if (ret != 5+1+countlength)
+        {
+            fprintf(stderr, "handle_client_msg: snprintf: Can't write the message for the client.\n");
+            return -1;
+        }
         ret = SendMessage(clients[client], buf);
         if (ret != 0)
         {
             fprintf(stderr, "handle_client_msg: Can't send the message to the client.\n");
+            return -1;
         }
-        return ret;
+        return 0;
     }
     
     //TODO: make the server send the list
     if (strlen(msg) == 3 && strncmp(msg, "who", 3) == 0)
     {
         fprintf(stderr, "  \"who\" command received.\n");
-        //TODO: LOL
+        //TODO: LOL... need to change that when SET command will be supported
         for(i=0;i<num_clients;i++)
         {
             fprintf(stderr, "  Client %d\n", i+1);
@@ -436,7 +456,6 @@ int handle_client_msg(int client, char * msg)
         return 0;
     }
     
-    //could use a "send blablabla..." command
     fprintf(stderr, "Client %d: %s\n", client+1, msg);
     
     return 0;

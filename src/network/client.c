@@ -32,6 +32,7 @@ TCPsocket sock = NULL;
 
 
 static int setup_client(int argc, char ** argv);
+static int handle_server_msg(char * msg);
 static void cleanup_client(void);
 
 
@@ -212,7 +213,14 @@ int main(int argc, char ** argv)
         {
             switch (RecvMessage(sock, &msg))
             {
-                case 0:     fprintf(stderr, "=> %s\n", msg);
+                case 0:     ret = handle_server_msg(msg);
+                            if (ret == -1)
+                            {
+                                fprintf(stderr, "Can't handle the server's message.\n");
+                                free(msg);
+                                cleanup_client();
+                                return EXIT_FAILURE;
+                            }
                             free(msg);
                             break;
                             
@@ -367,6 +375,36 @@ int setup_client(int argc, char ** argv)
         fprintf(stderr, "setup_server: SDLNet_TCP_AddSocket: %s\n", SDLNet_GetError());
         return -1;
     }
+    
+    return 0;
+}
+
+//TODO: use macros for commands size and value
+int handle_server_msg(char * msg)
+{
+    int ret = 0;
+    int count = 0;
+    
+    if (msg == NULL)
+    {
+        fprintf(stderr, "handle_server_msg: Invalid argument(s).\n");
+        return -1;
+    }
+    
+    if (strlen(msg) >= 5+2 && strncmp(msg, "COUNT", 5) == 0)
+    {
+        fprintf(stderr, "  \"COUNT\" response received.\n");
+        ret = sscanf(msg, "COUNT %d", &count);
+        if (ret != 1 || count <= 0)
+        {
+            fprintf(stderr, "handle_server_msg: Invalid COUNT response.\n");
+            return -1;
+        }
+        fprintf(stderr, "  %d client(s) connected\n", count);
+        return 0;
+    }
+    
+    fprintf(stderr, "=> %s\n", msg);
     
     return 0;
 }
