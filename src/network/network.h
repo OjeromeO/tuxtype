@@ -34,6 +34,8 @@
 #define SERVER_DATA "TuxMaths server"
 #define MSG_MAXLEN 1024
 
+//TODO: check all the return to see if sometimes it's possible to return a succes for non-critical errors (malloc not working for the temporary name, ...)
+
 //TODO: improve error handling with global error variable, while(!shutdownserver), while(run), ... ?
 
 //TODO: instead of sending strings in messages, use a real structure for requests/responses ? with different fields (message type using an enum(), length, ...)

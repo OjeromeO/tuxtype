@@ -29,6 +29,14 @@
 
 
 
+typedef struct Client
+{
+    char * name;
+    TCPsocket sock;
+} Client;
+
+
+
 /**
  * Socket set the server has to watch.
  */
@@ -40,12 +48,12 @@ extern SDLNet_SocketSet set;
 extern TCPsocket listeningtcpsock;
 
 /**
- * TCP sockets binded to clients.
+ * Array holding informations about connected clients.
  */
-extern TCPsocket clients[];
+extern Client clients[];
 
 /**
- * Count of clients.
+ * Count of connected clients.
  */
 extern int num_clients;
 

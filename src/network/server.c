@@ -27,13 +27,16 @@
 #include <math.h>
 
 
+
 //TODO: make them static if no other file is going to use them
 SDLNet_SocketSet set = NULL;
 TCPsocket listeningtcpsock = NULL;
-TCPsocket clients[MAX_CLIENTS] = {0};
+//TCPsocket clients[MAX_CLIENTS] = {0};
+Client clients[MAX_CLIENTS];
 int num_clients = 0;
 
-
+//TODO: create a function for the "//TODO: if NULL, then client %d"
+//      => for example with a client_name(int i); that return the .name if != NULL, and "Client %d", i+1 otherwise
 
 static int setup_server(int argc, char ** argv);
 static int add_client(TCPsocket tmpsock);
@@ -181,7 +184,8 @@ int main(int argc, char ** argv)
                 
                 switch (add_client(tmpsock))
                 {
-                    case 0:     fprintf(stderr, "========> Client %d connected\n", num_clients);
+                    case 0:     //fprintf(stderr, "========> Client %d connected\n", num_clients);
+                                fprintf(stderr, "========> %s connected\n", clients[i].name);//TODO: if NULL, then client %d
                                 break;
                                 
                     case -1:    fprintf(stderr, "Can't add a new client.\n");
@@ -200,9 +204,9 @@ int main(int argc, char ** argv)
             
             for (i=0;i<num_clients;i++)
             {
-                if (SDLNet_SocketReady(clients[i]))
+                if (SDLNet_SocketReady(clients[i].sock))
                 {
-                    switch (RecvMessage(clients[i], &msg))
+                    switch (RecvMessage(clients[i].sock, &msg))
                     {
                         case 0:     ret = handle_client_msg(i, msg);
                                     if (ret == -1)
@@ -229,7 +233,8 @@ int main(int argc, char ** argv)
                                     return EXIT_FAILURE;
                                     break;
                                     
-                        case -2:    fprintf(stderr, "========> Client %d disconnected from the server\n", i+1);
+                        case -2:    //fprintf(stderr, "========> Client %d disconnected from the server\n", i+1);
+                                    fprintf(stderr, "========> %s disconnected from the server\n", clients[i].name);//TODO: if NULL, then client %d
                                     ret = remove_client(i);
                                     if (ret != 0)
                                     {
@@ -324,6 +329,8 @@ int setup_server(int argc, char ** argv)
 int add_client(TCPsocket sock)
 {
     int ret = 0;
+    char * tmpname = NULL;
+    int numlength = 0;
     
     if (sock == NULL)
     {
@@ -337,7 +344,22 @@ int add_client(TCPsocket sock)
         return -2;
     }
     
-    clients[num_clients] = sock;
+    numlength = floor(log10(num_clients+1))+1;
+    tmpname = malloc((strlen("Client ")+numlength+1) * sizeof(char));
+    if (tmpname == NULL)
+    {
+        fprintf(stderr, "add_client: malloc: Can't allocate memory for the client temporary name.\n");
+        return -1;
+    }
+    ret = snprintf(tmpname, strlen("Client ")+numlength+1, "Client %d", num_clients+1);
+    if (ret != (int)strlen("Client ")+numlength)
+    {
+        fprintf(stderr, "add_client: snprintf: Can't write the client temporary name.\n");
+        return -1;
+    }
+    clients[num_clients].name = tmpname;
+    clients[num_clients].sock = sock;
+    
     num_clients++;
     
     ret = SDLNet_TCP_AddSocket(set, sock);
@@ -360,22 +382,30 @@ int remove_client(int i)
         return -1;
     }
     
-    ret = SDLNet_TCP_DelSocket(set, clients[i]);
-    if (ret == -1)
+    if (clients[i].sock != NULL)
     {
-        fprintf(stderr, "remove_client: SDLNet_TCP_DelSocket: %s\n", SDLNet_GetError());
-        return -1;
+        ret = SDLNet_TCP_DelSocket(set, clients[i].sock);
+        if (ret == -1)
+        {
+            fprintf(stderr, "remove_client: SDLNet_TCP_DelSocket: %s\n", SDLNet_GetError());
+            return -1;
+        }
+        SDLNet_TCP_Close(clients[i].sock);
+        clients[i].sock = NULL;
+    }
+    if (clients[i].name != NULL)
+    {
+        free(clients[i].name);
     }
     
-    SDLNet_TCP_Close(clients[i]);
-    clients[i] = NULL;
-    
-    // replace the free place with the last client socket
+    // replace the free place with the last client
     
     if (num_clients > 1 && i != num_clients-1)
     {
-        clients[i] = clients[num_clients-1];
-        clients[num_clients-1] = NULL;
+        clients[i].name = clients[num_clients-1].name;
+        clients[i].sock = clients[num_clients-1].sock;
+        clients[num_clients-1].sock = NULL;
+        clients[num_clients-1].name = NULL;
     }
     
     num_clients--;
@@ -424,7 +454,7 @@ int handle_client_msg(int client, char * msg)
         buf = malloc((CMD_COUNT_SIZE+1+countlength+1) * sizeof(char));
         if (buf == NULL)
         {
-            fprintf(stderr, "handle_client_msg: malloc: Can't allocate memory for a message.\n");
+            fprintf(stderr, "handle_client_msg: malloc: Can't allocate memory for the message.\n");
             return -1;
         }
         ret = snprintf(buf, CMD_COUNT_SIZE+1+countlength+1, "%s %d", CMD_COUNT, num_clients);
@@ -433,7 +463,7 @@ int handle_client_msg(int client, char * msg)
             fprintf(stderr, "handle_client_msg: snprintf: Can't write the message for the client.\n");
             return -1;
         }
-        ret = SendMessage(clients[client], buf);
+        ret = SendMessage(clients[client].sock, buf);
         if (ret != 0)
         {
             fprintf(stderr, "handle_client_msg: Can't send the message to the client.\n");
@@ -446,24 +476,46 @@ int handle_client_msg(int client, char * msg)
      && strncmp(msg, CMD_WHO, CMD_WHO_SIZE) == 0)
     {
         //TODO: make the server send the list
+        /*
+        memcp
+        for() memcpy
+        */
         //malloc (using num_clients, ceil(log()), ...)
         //msg[0] = ; // or memcpy
-        //sprintf(&msg[i*X])
-        //for(){snprintf(); msg[nextclient] = ; ...}
+        //sprintf(&msg[i*X]) //or memcpy ?
+        //for(){snprintf(); msg[nextclient] = ; ...// or memcpy ?}
         /*
         */
         fprintf(stderr, "  %s command received.\n", CMD_WHO);
-        //TODO: change that when SET command will be supported
         for(i=0;i<num_clients;i++)
         {
-            fprintf(stderr, "  Client %d\n", i+1);
+            //fprintf(stderr, "  Client %d\n", i+1);
+            fprintf(stderr, "  %s\n", clients[i].name);//TODO: if NULL, then client %d
         }
         return 0;
     }
     
-    //TODO: add the SET command
+    if (strlen(msg) >= CMD_NICKNAME_SIZE+2
+     && strncmp(msg, CMD_NICKNAME, CMD_NICKNAME_SIZE) == 0)
+    {
+        fprintf(stderr, "  %s command received.\n", CMD_NICKNAME);
+        buf = malloc((strlen(msg)-CMD_NICKNAME_SIZE-1) * sizeof(char));
+        if (buf == NULL)
+        {
+            fprintf(stderr, "handle_client_msg: malloc: Can't allocate memory for the nickname.\n");
+            return -1;
+        }
+        memcpy(buf, &msg[CMD_NICKNAME_SIZE+1], strlen(msg)-CMD_NICKNAME_SIZE-1);
+        if (clients[client].name != NULL)
+        {
+            free(clients[client].name);
+        }
+        clients[client].name = buf;
+        return 0;
+    }
     
-    fprintf(stderr, "Client %d: %s\n", client+1, msg);
+    //fprintf(stderr, "Client %d: %s\n", client+1, msg);
+    fprintf(stderr, "%s: %s\n", clients[client].name, msg);//TODO: if NULL, then client %d
     
     return 0;
 }
@@ -473,11 +525,24 @@ void cleanup_server(void)
     int i = 0;
     
     if (set != NULL)
+    {
         SDLNet_FreeSocketSet(set);
+    }
     if (listeningtcpsock != NULL)
+    {
         SDLNet_TCP_Close(listeningtcpsock);
+    }
     for (i=0;i<num_clients;i++)
-        SDLNet_TCP_Close(clients[i]);
+    {
+        if (clients[i].sock != NULL)
+        {
+            SDLNet_TCP_Close(clients[i].sock);
+        }
+        if (clients[i].name != NULL)
+        {
+            free(clients[i].name);
+        }
+    }
     SDLNet_Quit();
     SDL_Quit();
 }

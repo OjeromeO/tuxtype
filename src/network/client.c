@@ -394,7 +394,8 @@ int handle_server_msg(char * msg)
         return -1;
     }
     
-    if (strlen(msg) >= 5+2 && strncmp(msg, CMD_COUNT, 5) == 0)
+    if (strlen(msg) >= CMD_COUNT_SIZE+2
+     && strncmp(msg, CMD_COUNT, CMD_COUNT_SIZE) == 0)
     {
         fprintf(stderr, "  %s response received.\n", CMD_COUNT);
         ret = sscanf(msg, CMD_COUNT " %d", &count);
@@ -415,9 +416,13 @@ int handle_server_msg(char * msg)
 void cleanup_client(void)
 {
     if (set != NULL)
+    {
         SDLNet_FreeSocketSet(set);
+    }
     if (sock != NULL)
+    {
         SDLNet_TCP_Close(sock);
+    }
     SDLNet_Quit();
     SDL_Quit();
 }

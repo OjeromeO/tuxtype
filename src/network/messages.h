@@ -30,11 +30,13 @@
 #define CMD_QUIT        "QUIT"
 #define CMD_COUNT       "COUNT"
 #define CMD_WHO         "WHO"
+#define CMD_NICKNAME    "NICKNAME"
 
 #define CMD_SHUTDOWN_SIZE   strlen(CMD_SHUTDOWN)
 #define CMD_QUIT_SIZE       strlen(CMD_QUIT)
 #define CMD_COUNT_SIZE      strlen(CMD_COUNT)
 #define CMD_WHO_SIZE        strlen(CMD_WHO)
+#define CMD_NICKNAME_SIZE   strlen(CMD_NICKNAME)
 
 
 
