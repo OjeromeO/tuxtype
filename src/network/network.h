@@ -34,7 +34,9 @@
 #define SERVER_DATA "TuxMaths server"
 #define MSG_MAXLEN 1024
 
-//TODO: improve error handling (assert, global error variable, while(!shutdownserver), while(run), ...)
+//TODO: improve error handling with global error variable, while(!shutdownserver), while(run), ... ?
+
+//TODO: instead of sending strings in messages, use a real structure for requests/responses ? with different fields (message type using an enum(), length, ...)
 
 //TODO: improve the structure => compare with network.c/h and server.c/h
 // => a module for the client (with internal variables, ...), an other for the

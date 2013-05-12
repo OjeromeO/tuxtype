@@ -23,6 +23,7 @@
 
 #include "network.h"
 #include "client.h"
+#include "messages.h"
 
 
 //TODO: make them static if no other file is going to use them
@@ -267,6 +268,9 @@ int main(int argc, char ** argv)
 
 			if(strlen(message))
 			{
+			    //XXX: intercept data here if needed ?
+			    //      => maybe useful now when the user write his name,
+			    //         but useless later with tuxtype
 				ret = SendMessage(sock, message);
 				if (ret == -1)
 				{
@@ -277,7 +281,7 @@ int main(int argc, char ** argv)
 			}
 		}
 /*
-//XXX: Tux Maths read stdin in a different way :
+//XXX: Tux Maths reads stdin in a different way :
 
 // we must first set stdin to O_NONBLOCK with:
 // fcntl(0, F_SETFL, fcntl(0, F_GETFL, 0) | O_NONBLOCK);
@@ -379,7 +383,6 @@ int setup_client(int argc, char ** argv)
     return 0;
 }
 
-//TODO: use macros for commands size and value
 int handle_server_msg(char * msg)
 {
     int ret = 0;
@@ -391,13 +394,13 @@ int handle_server_msg(char * msg)
         return -1;
     }
     
-    if (strlen(msg) >= 5+2 && strncmp(msg, "COUNT", 5) == 0)
+    if (strlen(msg) >= 5+2 && strncmp(msg, CMD_COUNT, 5) == 0)
     {
-        fprintf(stderr, "  \"COUNT\" response received.\n");
-        ret = sscanf(msg, "COUNT %d", &count);
+        fprintf(stderr, "  %s response received.\n", CMD_COUNT);
+        ret = sscanf(msg, CMD_COUNT " %d", &count);
         if (ret != 1 || count <= 0)
         {
-            fprintf(stderr, "handle_server_msg: Invalid COUNT response.\n");
+            fprintf(stderr, "handle_server_msg: Invalid %s response.\n", CMD_COUNT);
             return -1;
         }
         fprintf(stderr, "  %d client(s) connected\n", count);

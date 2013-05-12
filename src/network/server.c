@@ -23,6 +23,7 @@
 
 #include "network.h"
 #include "server.h"
+#include "messages.h"
 #include <math.h>
 
 
@@ -40,8 +41,7 @@ static int remove_client(int i);
 static int handle_client_msg(int client, char * msg);
 static void cleanup_server(void);
 
-//TODO: add commands mangement (quit, connected clients, setname, ...) and response from the server
-//      => use a real structure in the message (like "COUNT XXX", "LIST\ntoto\ntata\ntiti", ...), don't just printf the message received
+
 
 int main(int argc, char ** argv)
 {
@@ -383,11 +383,6 @@ int remove_client(int i)
     return 0;
 }
 
-//TODO: use macros for commands size and value
-// create a messages.h:
-// MSG_QUIT
-// MSG_QUIT_SIZE => can be > strlen(MSG_QUIT) if parameters needed
-// ...
 int handle_client_msg(int client, char * msg)
 {
     int i = 0;
@@ -401,15 +396,17 @@ int handle_client_msg(int client, char * msg)
         return -1;
     }
     
-    if (strlen(msg) == 8 && strncmp(msg, "shutdown", 8) == 0)
+    if (strlen(msg) == CMD_SHUTDOWN_SIZE
+     && strncmp(msg, CMD_SHUTDOWN, CMD_SHUTDOWN_SIZE) == 0)
     {
-        fprintf(stderr, "  \"shutdown\" command received.\n");
+        fprintf(stderr, "  %s command received.\n", CMD_SHUTDOWN);
         return -2;
     }
     
-    if (strlen(msg) == 4 && strncmp(msg, "quit", 4) == 0)
+    if (strlen(msg) == CMD_QUIT_SIZE
+     && strncmp(msg, CMD_QUIT, CMD_QUIT_SIZE) == 0)
     {
-        fprintf(stderr, "  \"quit\" command received.\n");
+        fprintf(stderr, "  %s command received.\n", CMD_QUIT);
         ret = remove_client(client);
         if (ret == -1)
         {
@@ -419,18 +416,19 @@ int handle_client_msg(int client, char * msg)
         return 0;
     }
     
-    if (strlen(msg) == 5 && strncmp(msg, "count", 5) == 0)
+    if (strlen(msg) == CMD_COUNT_SIZE
+     && strncmp(msg, CMD_COUNT, CMD_COUNT_SIZE) == 0)
     {
-        fprintf(stderr, "  \"count\" command received.\n");
+        fprintf(stderr, "  %s command received.\n", CMD_COUNT);
         countlength = floor(log10(num_clients))+1;
-        buf = malloc((5+1+countlength+1) * sizeof(char));
+        buf = malloc((CMD_COUNT_SIZE+1+countlength+1) * sizeof(char));
         if (buf == NULL)
         {
             fprintf(stderr, "handle_client_msg: malloc: Can't allocate memory for a message.\n");
             return -1;
         }
-        ret = snprintf(buf, 5+1+countlength+1, "COUNT %d", num_clients);
-        if (ret != 5+1+countlength)
+        ret = snprintf(buf, CMD_COUNT_SIZE+1+countlength+1, "%s %d", CMD_COUNT, num_clients);
+        if (ret != (int)CMD_COUNT_SIZE+1+countlength)
         {
             fprintf(stderr, "handle_client_msg: snprintf: Can't write the message for the client.\n");
             return -1;
@@ -444,17 +442,26 @@ int handle_client_msg(int client, char * msg)
         return 0;
     }
     
-    //TODO: make the server send the list
-    if (strlen(msg) == 3 && strncmp(msg, "who", 3) == 0)
+    if (strlen(msg) == CMD_WHO_SIZE
+     && strncmp(msg, CMD_WHO, CMD_WHO_SIZE) == 0)
     {
-        fprintf(stderr, "  \"who\" command received.\n");
-        //TODO: LOL... need to change that when SET command will be supported
+        //TODO: make the server send the list
+        //malloc (using num_clients, ceil(log()), ...)
+        //msg[0] = ; // or memcpy
+        //sprintf(&msg[i*X])
+        //for(){snprintf(); msg[nextclient] = ; ...}
+        /*
+        */
+        fprintf(stderr, "  %s command received.\n", CMD_WHO);
+        //TODO: change that when SET command will be supported
         for(i=0;i<num_clients;i++)
         {
             fprintf(stderr, "  Client %d\n", i+1);
         }
         return 0;
     }
+    
+    //TODO: add the SET command
     
     fprintf(stderr, "Client %d: %s\n", client+1, msg);
     

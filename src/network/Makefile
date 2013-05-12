@@ -16,9 +16,9 @@ server : server.o network.o
 client : client.o network.o
 	$(CC) -o $@ $^ $(LIBS) $(LFLAGS)
 
-server.o : server.c network.h
+server.o : server.c network.h messages.h
 	$(CC) $(INCS) $(CFLAGS) -c $<
-client.o : client.c network.h
+client.o : client.c network.h messages.h
 	$(CC) $(INCS) $(CFLAGS) -c $<
 network.o : network.c network.h
 	$(CC) $(INCS) $(CFLAGS) -c $<
