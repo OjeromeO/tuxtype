@@ -57,19 +57,20 @@ is a valid index, and if not, we still wouldn't have a name for the client.
 network messages :
 ------------------
 request   =>  COMMAND\0
+
 response  =>  COMMAND\n
               info1\n
               info2\n
               ...
-              infon\0
+              infoN\0
 
 */
+
+//TODO: don't forget to check frequently with valgrind if there are no memory leaks
 
 //TODO: show on the proposal the tuxmath equivalents for my functions, and the differences
 
 //TODO: no limit for MAX_SERVERS, MAX_CLIENTS, CLIENT_NAME, SERVER_NAME (realloc() if needed)
-
-//TODO: now that all malloc are memset to '\0', don't write the last '\0' with the strcpy, ...
 
 //TODO: check all the return to see if sometimes it's possible to return a succes for non-critical errors (malloc not working for the temporary name, ...)
 
@@ -114,7 +115,7 @@ response  =>  COMMAND\n
 extern int CreateSocketSet(SDLNet_SocketSet * set, TCPsocket tcpsockets[], int tcpcount, UDPsocket udpsockets[], int udpcount);
 
 /**
- * @brief   Send a message to a remote host.
+ * @brief   Send a string to a remote host.
  *
  * @details
  *      Messages transmission is done with 2 steps :
@@ -122,7 +123,7 @@ extern int CreateSocketSet(SDLNet_SocketSet * set, TCPsocket tcpsockets[], int t
  *       - transmission of the real message
  *
  * @param sock  - TCP socket that will send the message.
- * @param buf   - Null-terminated message to send.
+ * @param buf   - Null-terminated string to send.
  * 
  * @return
  *      0 on success,

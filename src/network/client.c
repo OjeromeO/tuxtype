@@ -387,6 +387,8 @@ int handle_server_msg(char * msg)
 {
     int ret = 0;
     int count = 0;
+    int next = 0;
+    int i = 0;
     
     if (msg == NULL)
     {
@@ -413,9 +415,7 @@ int handle_server_msg(char * msg)
      && strncmp(msg, CMD_WHO, CMD_WHO_SIZE) == 0)
     {
         fprintf(stderr, "  %s response received.\n", CMD_WHO);
-        int next = 0;
-        int i = CMD_WHO_SIZE+1;
-        
+        i = CMD_WHO_SIZE+1;
         while (msg[i] != '\0')
         {
             if (msg[i] == '\n')

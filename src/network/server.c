@@ -400,6 +400,8 @@ int handle_client_msg(int client, char * msg)
     int i = 0;
     int ret = 0;
     int countlength = 0;
+    int listlen = 0;
+    int next = 0;
     char * buf = NULL;
     
     if (client < 0 || client >= num_clients || msg == NULL)
@@ -437,19 +439,19 @@ int handle_client_msg(int client, char * msg)
         memset(buf, '\0', CMD_COUNT_SIZE+1+countlength+1);
         if (buf == NULL)
         {
-            fprintf(stderr, "handle_client_msg: malloc: Can't allocate memory for the message.\n");
+            fprintf(stderr, "handle_client_msg: malloc: Can't allocate memory for the COUNT response.\n");
             return -1;
         }
         ret = snprintf(buf, CMD_COUNT_SIZE+1+countlength+1, "%s\n%d", CMD_COUNT, num_clients);
         if (ret != (int)CMD_COUNT_SIZE+1+countlength)
         {
-            fprintf(stderr, "handle_client_msg: snprintf: Can't write the message for the client.\n");
+            fprintf(stderr, "handle_client_msg: snprintf: Can't write the COUNT response.\n");
             return -1;
         }
         ret = SendMessage(clients[client].sock, buf);
         if (ret != 0)
         {
-            fprintf(stderr, "handle_client_msg: Can't send the message to the client.\n");
+            fprintf(stderr, "handle_client_msg: Can't send the COUNT response to the client.\n");
             return -1;
         }
         return 0;
@@ -458,13 +460,6 @@ int handle_client_msg(int client, char * msg)
     if (strlen(msg) == CMD_WHO_SIZE
      && strncmp(msg, CMD_WHO, CMD_WHO_SIZE) == 0)
     {
-        //TODO: make the server send the list
-        //msg[0] = ; // or memcpy
-        //sprintf(&msg[i*X]) //or memcpy ?
-        //for(){snprintf(); msg[nextclient] = ; ...// or memcpy ?}
-        
-        int listlen = 0;
-        int next = 0;
         listlen += CMD_WHO_SIZE;
         for(i=0;i<num_clients;i++)
         {
@@ -490,25 +485,14 @@ int handle_client_msg(int client, char * msg)
                    strlen((clients[i].name == NULL)?client_default_name:clients[i].name));
             next += strlen((clients[i].name == NULL)?client_default_name:clients[i].name);
         }
-        
-        //fprintf(stderr, "===> %s\n", buf);
-        
         fprintf(stderr, "  %s command received.\n", CMD_WHO);
         ret = SendMessage(clients[client].sock, buf);
         if (ret != 0)
         {
-            fprintf(stderr, "handle_client_msg: Can't send the message to the client.\n");
+            fprintf(stderr, "handle_client_msg: Can't send the WHO response to the client.\n");
             return -1;
         }
         return 0;
-        
-        
-        /*fprintf(stderr, "  %s command received.\n", CMD_WHO);
-        for(i=0;i<num_clients;i++)
-        {
-            fprintf(stderr, "  %s\n", (clients[i].name == NULL)?client_default_name:clients[i].name);
-        }
-        return 0;*/
     }
     
     if (strlen(msg) >= CMD_NICKNAME_SIZE+2

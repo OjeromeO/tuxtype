@@ -1,11 +1,13 @@
---------------------------------------------
- Little SDLNet client/server for Tux Typing 
---------------------------------------------
+--------------------------------------------------------------------------------
+                   Little SDLNet client/server for Tux Typing                   
+--------------------------------------------------------------------------------
 
 Contents
 --------
-    Compilation
-    Running the program
+    - Compilation
+    - Running the program
+    - Supported commands
+    - Session example
 
 
 
@@ -32,40 +34,84 @@ Run the server with :
 Run the client with :
     $ ./client HOST PORT
 
-You can then, from the client, write the messages you want to send to the server.
-For now, the only way to leave the server is a Ctrl+C.
+You can then, from the client, write the commands and messages you want to send
+to the server.
 
-Here is an example of session :
+
+
+Supported commands
+------------------
+
+NICKNAME <nickname>     => tells the server the new client name
+COUNT                   => asks the server the count of connected clients
+WHO                     => asks the server the list of connected clients
+QUIT                    => gracefully quit the server
+SHUTDOWN                => gracefully shutdown the server
+                        (the server can also be shutdown with a Ctrl+C on the server-side)
+
+
+
+Session example
+---------------
 
     ----------------------
     server point of view :
     ----------------------
     
     $ ./server 2048
-    ========> Client 1 connected
-    Client 1: hello
-    Client 1: it's me
-    ========> Client 2 connected
-    Client 2: hey
-    Client 2: i'm here too !
-    Client 1: great
+    Server ready.
+    ========> Nameless client connected
+    Nameless client: hello
+      COUNT command received.
+      NICKNAME command received.
+      WHO command received.
+    ========> Nameless client connected
+    Nameless client: hey i'm here too
+      COUNT command received.
+      WHO command received.
+    jerome: blablah
+    Nameless client: oh blablabla...
+    Nameless client: bye bye
+      QUIT command received.
+      SHUTDOWN command received.
+    Server shutdown.
 
     ------------------------
     client 1 point of view :
     ------------------------
     
     $ ./client 127.0.0.1 2048
-    Connecting to 127.0.0.1:2048...
+    Client ready.
     hello
-    it's me
-    great
+    COUNT
+      COUNT response received.
+      => 1 client(s) connected
+    NICKNAME jerome
+    WHO
+      WHO response received.
+      => jerome
+    blablah
+    SHUTDOWN
+    RecvMessage: Connexion closed by the other side.
+    Disconnected from the server.
 
     ------------------------
     client 2 point of view :
     ------------------------
     
     $ ./client 127.0.0.1 2048
-    Connecting to 127.0.0.1:2048...
-    hey
-    i'm here too !
+    Client ready.
+    hey i'm here too
+    COUNT
+      COUNT response received.
+      => 2 client(s) connected
+    WHO
+      WHO response received.
+      => jerome
+      => Nameless client
+    oh blablabla...
+    bye bye
+    QUIT
+    RecvMessage: Connexion closed by the other side.
+    Disconnected from the server.
 
