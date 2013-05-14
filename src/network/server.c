@@ -31,12 +31,9 @@
 //TODO: make them static if no other file is going to use them
 SDLNet_SocketSet set = NULL;
 TCPsocket listeningtcpsock = NULL;
-//TCPsocket clients[MAX_CLIENTS] = {0};
 Client clients[MAX_CLIENTS];
 int num_clients = 0;
-
-//TODO: create a function for the "//TODO: if NULL, then client %d"
-//      => for example with a client_name(int i); that return the .name if != NULL, and "Client %d", i+1 otherwise
+char client_default_name[] = CLIENT_DEFAULT_NAME;
 
 static int setup_server(int argc, char ** argv);
 static int add_client(TCPsocket tmpsock);
@@ -184,8 +181,7 @@ int main(int argc, char ** argv)
                 
                 switch (add_client(tmpsock))
                 {
-                    case 0:     //fprintf(stderr, "========> Client %d connected\n", num_clients);
-                                fprintf(stderr, "========> %s connected\n", clients[i].name);//TODO: if NULL, then client %d
+                    case 0:     fprintf(stderr, "========> %s connected\n", (clients[num_clients-1].name == NULL)?client_default_name:clients[num_clients-1].name);
                                 break;
                                 
                     case -1:    fprintf(stderr, "Can't add a new client.\n");
@@ -233,8 +229,7 @@ int main(int argc, char ** argv)
                                     return EXIT_FAILURE;
                                     break;
                                     
-                        case -2:    //fprintf(stderr, "========> Client %d disconnected from the server\n", i+1);
-                                    fprintf(stderr, "========> %s disconnected from the server\n", clients[i].name);//TODO: if NULL, then client %d
+                        case -2:    fprintf(stderr, "========> %s disconnected from the server\n", (clients[i].name == NULL)?client_default_name:clients[i].name);
                                     ret = remove_client(i);
                                     if (ret != 0)
                                     {
@@ -329,8 +324,6 @@ int setup_server(int argc, char ** argv)
 int add_client(TCPsocket sock)
 {
     int ret = 0;
-    char * tmpname = NULL;
-    int numlength = 0;
     
     if (sock == NULL)
     {
@@ -344,20 +337,9 @@ int add_client(TCPsocket sock)
         return -2;
     }
     
-    numlength = floor(log10(num_clients+1))+1;
-    tmpname = malloc((strlen("Client ")+numlength+1) * sizeof(char));
-    if (tmpname == NULL)
-    {
-        fprintf(stderr, "add_client: malloc: Can't allocate memory for the client temporary name.\n");
-        return -1;
-    }
-    ret = snprintf(tmpname, strlen("Client ")+numlength+1, "Client %d", num_clients+1);
-    if (ret != (int)strlen("Client ")+numlength)
-    {
-        fprintf(stderr, "add_client: snprintf: Can't write the client temporary name.\n");
-        return -1;
-    }
-    clients[num_clients].name = tmpname;
+    // initialize the client
+    
+    clients[num_clients].name = NULL;
     clients[num_clients].sock = sock;
     
     num_clients++;
@@ -452,12 +434,13 @@ int handle_client_msg(int client, char * msg)
         fprintf(stderr, "  %s command received.\n", CMD_COUNT);
         countlength = floor(log10(num_clients))+1;
         buf = malloc((CMD_COUNT_SIZE+1+countlength+1) * sizeof(char));
+        memset(buf, '\0', CMD_COUNT_SIZE+1+countlength+1);
         if (buf == NULL)
         {
             fprintf(stderr, "handle_client_msg: malloc: Can't allocate memory for the message.\n");
             return -1;
         }
-        ret = snprintf(buf, CMD_COUNT_SIZE+1+countlength+1, "%s %d", CMD_COUNT, num_clients);
+        ret = snprintf(buf, CMD_COUNT_SIZE+1+countlength+1, "%s\n%d", CMD_COUNT, num_clients);
         if (ret != (int)CMD_COUNT_SIZE+1+countlength)
         {
             fprintf(stderr, "handle_client_msg: snprintf: Can't write the message for the client.\n");
@@ -476,36 +459,70 @@ int handle_client_msg(int client, char * msg)
      && strncmp(msg, CMD_WHO, CMD_WHO_SIZE) == 0)
     {
         //TODO: make the server send the list
-        /*
-        memcp
-        for() memcpy
-        */
-        //malloc (using num_clients, ceil(log()), ...)
         //msg[0] = ; // or memcpy
         //sprintf(&msg[i*X]) //or memcpy ?
         //for(){snprintf(); msg[nextclient] = ; ...// or memcpy ?}
-        /*
-        */
-        fprintf(stderr, "  %s command received.\n", CMD_WHO);
+        
+        int listlen = 0;
+        int next = 0;
+        listlen += CMD_WHO_SIZE;
         for(i=0;i<num_clients;i++)
         {
-            //fprintf(stderr, "  Client %d\n", i+1);
-            fprintf(stderr, "  %s\n", clients[i].name);//TODO: if NULL, then client %d
+            if (clients[i].name != NULL)
+            {
+                listlen += 1+strlen(clients[i].name);
+            }
+            else
+            {
+                listlen += 1+CLIENT_DEFAULT_NAME_SIZE;
+            }
+        }
+        buf = malloc((listlen+1) * sizeof(char));
+        memset(buf, '\0', listlen+1);
+        memcpy(buf, CMD_WHO, strlen(CMD_WHO));
+        next += CMD_WHO_SIZE;
+        for(i=0;i<num_clients;i++)
+        {
+            memcpy(&buf[next], "\n", strlen("\n"));
+            next += 1;
+            memcpy(&buf[next],
+                   (clients[i].name == NULL)?client_default_name:clients[i].name,
+                   strlen((clients[i].name == NULL)?client_default_name:clients[i].name));
+            next += strlen((clients[i].name == NULL)?client_default_name:clients[i].name);
+        }
+        
+        //fprintf(stderr, "===> %s\n", buf);
+        
+        fprintf(stderr, "  %s command received.\n", CMD_WHO);
+        ret = SendMessage(clients[client].sock, buf);
+        if (ret != 0)
+        {
+            fprintf(stderr, "handle_client_msg: Can't send the message to the client.\n");
+            return -1;
         }
         return 0;
+        
+        
+        /*fprintf(stderr, "  %s command received.\n", CMD_WHO);
+        for(i=0;i<num_clients;i++)
+        {
+            fprintf(stderr, "  %s\n", (clients[i].name == NULL)?client_default_name:clients[i].name);
+        }
+        return 0;*/
     }
     
     if (strlen(msg) >= CMD_NICKNAME_SIZE+2
      && strncmp(msg, CMD_NICKNAME, CMD_NICKNAME_SIZE) == 0)
     {
         fprintf(stderr, "  %s command received.\n", CMD_NICKNAME);
-        buf = malloc((strlen(msg)-CMD_NICKNAME_SIZE-1) * sizeof(char));
+        buf = malloc((strlen(msg)+1-CMD_NICKNAME_SIZE-1) * sizeof(char));
+        memset(buf, '\0', strlen(msg)+1-CMD_NICKNAME_SIZE-1);
         if (buf == NULL)
         {
             fprintf(stderr, "handle_client_msg: malloc: Can't allocate memory for the nickname.\n");
             return -1;
         }
-        memcpy(buf, &msg[CMD_NICKNAME_SIZE+1], strlen(msg)-CMD_NICKNAME_SIZE-1);
+        memcpy(buf, &msg[CMD_NICKNAME_SIZE+1], strlen(msg)+1-CMD_NICKNAME_SIZE-1);
         if (clients[client].name != NULL)
         {
             free(clients[client].name);
@@ -514,8 +531,7 @@ int handle_client_msg(int client, char * msg)
         return 0;
     }
     
-    //fprintf(stderr, "Client %d: %s\n", client+1, msg);
-    fprintf(stderr, "%s: %s\n", clients[client].name, msg);//TODO: if NULL, then client %d
+    fprintf(stderr, "%s: %s\n", (clients[client].name == NULL)?client_default_name:clients[client].name, msg);
     
     return 0;
 }

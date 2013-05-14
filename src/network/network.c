@@ -113,6 +113,7 @@ int RecvMessage(TCPsocket sock, char ** buf)
     }
     
     *buf = malloc(len * sizeof(char));
+    memset(*buf, '\0', len);
     if (*buf == NULL)
     {
         fprintf(stderr, "RecvMessage: malloc: Can't allocate memory for a message\n");

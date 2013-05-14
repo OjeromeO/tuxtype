@@ -398,13 +398,39 @@ int handle_server_msg(char * msg)
      && strncmp(msg, CMD_COUNT, CMD_COUNT_SIZE) == 0)
     {
         fprintf(stderr, "  %s response received.\n", CMD_COUNT);
-        ret = sscanf(msg, CMD_COUNT " %d", &count);
+        ret = sscanf(msg, CMD_COUNT "\n%d", &count);
         if (ret != 1 || count <= 0)
         {
             fprintf(stderr, "handle_server_msg: Invalid %s response.\n", CMD_COUNT);
             return -1;
         }
-        fprintf(stderr, "  %d client(s) connected\n", count);
+        fprintf(stderr, "  => %d client(s) connected\n", count);
+        return 0;
+    }
+    
+    //XXX: this modify the message buffer ; find a better solution ?
+    if (strlen(msg) >= CMD_WHO_SIZE+2
+     && strncmp(msg, CMD_WHO, CMD_WHO_SIZE) == 0)
+    {
+        fprintf(stderr, "  %s response received.\n", CMD_WHO);
+        int next = 0;
+        int i = CMD_WHO_SIZE+1;
+        
+        while (msg[i] != '\0')
+        {
+            if (msg[i] == '\n')
+            {
+                msg[i] = '\0';
+                fprintf(stderr, "  => %s\n", &msg[i-next]);
+                next = 0;
+            }
+            else
+            {
+                next++;
+            }
+            i++;
+        }
+        fprintf(stderr, "  => %s\n", &msg[i-next]);
         return 0;
     }
     

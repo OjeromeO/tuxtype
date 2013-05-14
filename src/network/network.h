@@ -34,7 +34,46 @@
 #define SERVER_DATA "TuxMaths server"
 #define MSG_MAXLEN 1024
 
+/*
+NOTES:
+------
+
+client names :
+--------------
+At first it could seem a good idea to put a default name like "Client <number>",
+but if the dynamic allocation fails, what to do ? Its name would be NULL, and we
+would have to check each time we want ot use it, if the name is != NULL,
+displaying an other default name, maybe trying again to use a "Client <number>"
+(with dynamic allocation, and it wouldn't solve the problem) ? Or something
+else ? The client still wouldn't have a valid name... This mecanism wouldn't
+prevent from always checking the client's name.
+Then the solution is simple : the client's name remain NULL unless he chooses an
+other one. And when we need a name for it, we use a get_client_name(int client)
+that return the client name if != NULL, and a predefined name if == NULL. This
+way, we are able to have a name for the client without failing.
+=> Not a good idea to use a function : it would have to check if "client"
+is a valid index, and if not, we still wouldn't have a name for the client.
+
+network messages :
+------------------
+request   =>  COMMAND\0
+response  =>  COMMAND\n
+              info1\n
+              info2\n
+              ...
+              infon\0
+
+*/
+
+//TODO: show on the proposal the tuxmath equivalents for my functions, and the differences
+
+//TODO: no limit for MAX_SERVERS, MAX_CLIENTS, CLIENT_NAME, SERVER_NAME (realloc() if needed)
+
+//TODO: now that all malloc are memset to '\0', don't write the last '\0' with the strcpy, ...
+
 //TODO: check all the return to see if sometimes it's possible to return a succes for non-critical errors (malloc not working for the temporary name, ...)
+
+//TODO: create a function for floor(log10(client+1))+1, like a numlen(int x) ?
 
 //TODO: improve error handling with global error variable, while(!shutdownserver), while(run), ... ?
 

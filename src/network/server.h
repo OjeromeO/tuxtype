@@ -29,6 +29,11 @@
 
 
 
+#define CLIENT_DEFAULT_NAME         "Nameless client"
+#define CLIENT_DEFAULT_NAME_SIZE    strlen(CLIENT_DEFAULT_NAME)
+
+
+
 typedef struct Client
 {
     char * name;
