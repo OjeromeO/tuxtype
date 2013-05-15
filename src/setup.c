@@ -689,7 +689,16 @@ void handle_command_args(int argc, char* argv[])
         fprintf(stderr, "\n\t\tSpeed up gameplay (for use on slower");
         fprintf(stderr, "\n\t\tmachines)");
         fprintf(stderr, "\n\n\t-d, --debug");
-        fprintf(stderr, "\n\t\tEnable debug mode (output)\n");
+        fprintf(stderr, "\n\t\tEnable debug mode (output)");
+        fprintf(stderr, "\n\n\t--debug-{X}");
+        fprintf(stderr, "\n\t\tEnable specific debug mode (output)");
+        fprintf(stderr, "\n\t\t{X} may be one of the following:");
+        fprintf(stderr, "\n\t\t\tloaders: loading of multimedia (images and sounds)");
+        fprintf(stderr, "\n\t\t\tmenu: most operations dealing with menus");
+        fprintf(stderr, "\n\t\t\tmenu-parser: subset of operations dealing with menus");
+        fprintf(stderr, "\n\t\t\tsdl: the general graphical system");
+        fprintf(stderr, "\n\t\t\tlinewrap");
+        fprintf(stderr, "\n\t\t\ti18n");
         fprintf(stderr, "\n\n\t-v, --version");
         fprintf(stderr, "\n\t\tDisplay version number and exit\n");
         exit(0);
