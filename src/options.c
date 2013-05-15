@@ -31,6 +31,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "globals.h"
 #include "funcs.h"
 
+/* bitmasks for debugging options */
+#define dstart  (1 << (START_CUSTOM_DEBUG))
+const int debug_setup          = dstart << 0;
+
 /* Local function prototypes: */
 
 /* Global (for now) settings struct: */

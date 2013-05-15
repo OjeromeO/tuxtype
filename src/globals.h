@@ -72,6 +72,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define TUXLOCALE LOCALEDIR
 #endif
 
+/* bitmasks for debugging options (declared in options.c) */
+extern const int debug_setup;
+
 // FIXME if we really need these, make them into functions rather than
 // "evil" macros
 #define to_upper(c) (((c) >= 'a' && (c) <= 'z') ? (c) -32 : (c))
