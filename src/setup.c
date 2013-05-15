@@ -659,6 +659,49 @@ void Cleanup(void)
   SDL_Quit();
 }
 
+/* Handle debugging arguments passed from command line */
+/* NOTE - moved into separate, earlier pass so we can  */
+/* get output for earlier setup events - DSB           */
+void handle_debug_args(int argc, char* argv[])
+{
+    int i;
+
+    for (i = 1; i < argc; i++)
+    {
+        if (strcmp(argv[i], "-d") == 0
+         || strcmp(argv[i], "--debug-all") == 0)
+        {
+            debug_status |= debug_all;
+        }
+        else if (strcmp(argv[i], "--debug-loaders") == 0)
+        {
+            debug_status |= debug_loaders;
+        }
+        else if (strcmp(argv[i], "--debug-menu") == 0)
+        {
+            debug_status |= debug_menu;
+        }
+        else if (strcmp(argv[i], "--debug-menu-parser") == 0)
+        {
+            debug_status |= debug_menu_parser;
+        }
+        else if (strcmp(argv[i], "--debug-sdl") == 0)
+        {
+            debug_status |= debug_sdl;
+        }
+        else if (strcmp(argv[i], "--debug-linewrap") == 0)
+        {
+            debug_status |= debug_linewrap;
+        }
+        else if (strcmp(argv[i], "--debug-i18n") == 0)
+        {
+            debug_status |= debug_i18n;
+        }
+    }/* end of command-line args */
+
+    DEBUGMSG(debug_setup,"debug_status: %x", debug_status);
+}
+
 /* Handle any arguments passed from command line */
 void handle_command_args(int argc, char* argv[])
 {
@@ -688,7 +731,7 @@ void handle_command_args(int argc, char* argv[])
         fprintf(stderr, "\n\n\t-sp, --speed");
         fprintf(stderr, "\n\t\tSpeed up gameplay (for use on slower");
         fprintf(stderr, "\n\t\tmachines)");
-        fprintf(stderr, "\n\n\t-d, --debug");
+        fprintf(stderr, "\n\n\t-d, --debug-all");
         fprintf(stderr, "\n\t\tEnable debug mode (output)");
         fprintf(stderr, "\n\n\t--debug-{X}");
         fprintf(stderr, "\n\t\tEnable specific debug mode (output)");
@@ -728,11 +771,17 @@ void handle_command_args(int argc, char* argv[])
         settings.speed_up = 1;
 
       if (  (strcmp(argv[i], "-d") == 0)
-         || (strcmp(argv[i], "--debug") == 0))
-        {
+         || (strcmp(argv[i], "--debug-all") == 0)
+         || (strcmp(argv[i], "--debug-loaders") == 0)
+         || (strcmp(argv[i], "--debug-menu") == 0)
+         || (strcmp(argv[i], "--debug-menu-parser") == 0)
+         || (strcmp(argv[i], "--debug-sdl") == 0)
+         || (strcmp(argv[i], "--debug-linewrap") == 0)
+         || (strcmp(argv[i], "--debug-i18n") == 0))
+      {
         settings.debug_on = 1;
-        debug_status |= debug_all;
-        }
+        handle_debug_args(argc, argv);
+      }
 
       if (  (strcmp(argv[i], "-s") == 0)
          || (strcmp(argv[i], "--sound") == 0))
