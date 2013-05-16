@@ -62,10 +62,7 @@ int main(int argc, char *argv[])
   // Third, check command line args as these should override saved settings
   handle_command_args(argc, argv);
 
-  DEBUGCODE(debug_all)
-  {
-    fprintf(stderr, "\n%s, version %s BEGIN\n", PACKAGE, VERSION);
-  }
+  DEBUGMSG(debug_all, "\n%s, version %s BEGIN\n", PACKAGE, VERSION);
 
   //Now initialize locale/gettext system.
   //This is done after reading settings just so we can print
@@ -78,19 +75,14 @@ int main(int argc, char *argv[])
     s3 = bind_textdomain_codeset(PACKAGE, "UTF-8");
     s4 = textdomain(PACKAGE);
 
-    DEBUGCODE(debug_all)
-    {
-      fprintf(stderr, "PACKAGE = %s\n", PACKAGE);
-      fprintf(stderr, "TUXLOCALE = %s\n", TUXLOCALE);
-      fprintf(stderr, "setlocale(LC_ALL, \"\") returned: %s\n", s1);
-      fprintf(stderr, "bindtextdomain(PACKAGE, TUXLOCALE) returned: %s\n", s2);
-      fprintf(stderr, "bind_textdomain_codeset(PACKAGE, \"UTF-8\") returned: %s\n", s3);
-      fprintf(stderr, "textdomain(PACKAGE) returned: %s\n", s4);
-      fprintf(stderr, "gettext(\"Fish\"): %s\n\n", gettext("Fish"));
-      fprintf(stderr, "After gettext() call\n");
-    }
-  }
-
+    DEBUGMSG(debug_all, "PACKAGE = %s\n", PACKAGE);
+    DEBUGMSG(debug_all, "TUXLOCALE = %s\n", TUXLOCALE);
+    DEBUGMSG(debug_all, "setlocale(LC_ALL, \"\") returned: %s\n", s1);
+    DEBUGMSG(debug_all, "bindtextdomain(PACKAGE, TUXLOCALE) returned: %s\n", s2);
+    DEBUGMSG(debug_all, "bind_textdomain_codeset(PACKAGE, \"UTF-8\") returned: %s\n", s3);
+    DEBUGMSG(debug_all, "textdomain(PACKAGE) returned: %s\n", s4);
+    DEBUGMSG(debug_all, "gettext(\"Fish\"): %s\n\n", gettext("Fish"));
+    DEBUGMSG(debug_all, "After gettext() call\n");
 
   lib_flags = SDL_INIT_VIDEO;
 
