@@ -50,12 +50,12 @@ int CheckFile(const char* file)
     return -1;
   }
 
-  DEBUGMSG(debug_all, "CheckFile() - checking: %s\n", file);
+  DEBUGMSG(debug_loaders, "CheckFile() - checking: %s\n", file);
 
   dp = opendir(file);
   if (dp)
   {
-    DEBUGMSG(debug_all, "Opened successfully as DIR\n");
+    DEBUGMSG(debug_loaders, "Opened successfully as DIR\n");
 
     closedir(dp);
     return 2;
@@ -64,12 +64,12 @@ int CheckFile(const char* file)
   fp = fopen(file, "r");
   if (fp)
   {
-    DEBUGMSG(debug_all, "Opened successfully as FILE\n");
+    DEBUGMSG(debug_loaders, "Opened successfully as FILE\n");
     fclose(fp);
     return 1;
   }
 
-  DEBUGMSG(debug_all, "Unable to open as either FILE or DIR\n");
+  DEBUGMSG(debug_loaders, "Unable to open as either FILE or DIR\n");
   return 0;
 }
 
@@ -86,20 +86,20 @@ void LoadLang(void)
   s3 = bind_textdomain_codeset(PACKAGE, "UTF-8");
   s4 = textdomain(PACKAGE);
 
-  DEBUGMSG(debug_all, "PACKAGE = %s\n", PACKAGE);
-  DEBUGMSG(debug_all, "TUXLOCALE = %s\n", TUXLOCALE);
-  DEBUGMSG(debug_all, "setlocale(LC_ALL, %s) returned: %s\n", settings.theme_locale_name, s1);
-  DEBUGMSG(debug_all, "bindtextdomain(PACKAGE, TUXLOCALE) returned: %s\n", s2);
-  DEBUGMSG(debug_all, "bind_textdomain_codeset(PACKAGE, \"UTF-8\") returned: %s\n", s3);
-  DEBUGMSG(debug_all, "textdomain(PACKAGE) returned: %s\n", s4);
-  DEBUGMSG(debug_all, "gettext(\"Fish\"): %s\n\n", gettext("Fish"));
-  // DEBUGMSG(debug_all, "After gettext() call\n");
+  DEBUGMSG(debug_loaders, "PACKAGE = %s\n", PACKAGE);
+  DEBUGMSG(debug_loaders, "TUXLOCALE = %s\n", TUXLOCALE);
+  DEBUGMSG(debug_loaders, "setlocale(LC_ALL, %s) returned: %s\n", settings.theme_locale_name, s1);
+  DEBUGMSG(debug_loaders, "bindtextdomain(PACKAGE, TUXLOCALE) returned: %s\n", s2);
+  DEBUGMSG(debug_loaders, "bind_textdomain_codeset(PACKAGE, \"UTF-8\") returned: %s\n", s3);
+  DEBUGMSG(debug_loaders, "textdomain(PACKAGE) returned: %s\n", s4);
+  DEBUGMSG(debug_loaders, "gettext(\"Fish\"): %s\n\n", gettext("Fish"));
+  // DEBUGMSG(debug_loaders, "After gettext() call\n");
 
   /* Also set LANG and LANGUAGE as fallbacks because setlocale() unreliable */
   /* on some Windows versions, AFAICT                                       */
   snprintf(buf, 30, "%s", settings.theme_locale_name);
   buf[5] = '\0';  //en_US" rather than "en_US.utf8"
-  DEBUGMSG(debug_all, "buf is: %s\n", buf);
+  DEBUGMSG(debug_loaders, "buf is: %s\n", buf);
 
   if (my_setenv("LANG", buf) == -1)
   {
@@ -137,20 +137,20 @@ SDL_Surface* LoadSVGOfDimensions(char* filename, int width, int height)
   int bpp = 32;
   Uint32 Rmask, Gmask, Bmask, Amask;
 
-  DEBUGMSG(debug_all, "LoadSVGOfDimensions(): looking for %s\n", filename);
+  DEBUGMSG(debug_loaders, "LoadSVGOfDimensions(): looking for %s\n", filename);
 
   rsvg_init();
 
   file_handle = rsvg_handle_new_from_file(filename, NULL);
   if(file_handle == NULL)
   {
-    DEBUGMSG(debug_all, "LoadSVGOfDimensions(): file %s not found\n", filename);
+    DEBUGMSG(debug_loaders, "LoadSVGOfDimensions(): file %s not found\n", filename);
     rsvg_term();
     return NULL;
   }
 
   rsvg_handle_get_dimensions(file_handle, &dimensions);
-  DEBUGMSG(debug_all, "SVG is %d x %d\n", dimensions.width, dimensions.height);
+  DEBUGMSG(debug_loaders, "SVG is %d x %d\n", dimensions.width, dimensions.height);
 
   if(width <= 0 || height <= 0)
   {
@@ -184,7 +184,7 @@ SDL_Surface* LoadSVGOfDimensions(char* filename, int width, int height)
   context = cairo_create(temp_surf);
   if(cairo_status(context) != CAIRO_STATUS_SUCCESS)
   {
-    DEBUGMSG(debug_all, "LoadSVGOfDimensions(): error rendering SVG from %s\n", filename);
+    DEBUGMSG(debug_loaders, "LoadSVGOfDimensions(): error rendering SVG from %s\n", filename);
     g_object_unref(file_handle);
     cairo_surface_destroy(temp_surf);
     rsvg_term();
@@ -218,7 +218,7 @@ SDL_Surface* LoadImageFromFile(char *datafile)
   char svgfn[PATH_MAX];
 #endif
 
-  DEBUGMSG(debug_all, "LoadImageFromFile(): looking in %s\n", datafile);
+  DEBUGMSG(debug_loaders, "LoadImageFromFile(): looking in %s\n", datafile);
 
 #ifdef HAVE_RSVG
   /* This is just an ugly workaround to test SVG
@@ -261,7 +261,7 @@ SDL_Surface* LoadImage(const char* datafile, int mode)
     if (tmp_pic != NULL)
       {}
     else
-      DEBUGMSG(debug_all, "Warning: graphics file %s could not be loaded\n", fn);
+      DEBUGMSG(debug_loaders, "Warning: graphics file %s could not be loaded\n", fn);
   }
 
   /* If we don't have a valid image yet, try the default path: */
@@ -273,7 +273,7 @@ SDL_Surface* LoadImage(const char* datafile, int mode)
     if (tmp_pic != NULL)
       {}
     else
-      DEBUGMSG(debug_all, "Warning: graphics file %s could not be loaded\n", fn);
+      DEBUGMSG(debug_loaders, "Warning: graphics file %s could not be loaded\n", fn);
   }
 
   /* NOTE changed this so we just return NULL instead of exiting - DSB   */
@@ -281,7 +281,7 @@ SDL_Surface* LoadImage(const char* datafile, int mode)
   if (!tmp_pic)
   {
     { 
-      DEBUGMSG(debug_all, "Warning - could not load graphics file %s\n", datafile);
+      DEBUGMSG(debug_loaders, "Warning - could not load graphics file %s\n", datafile);
       return NULL;
     }
   }
@@ -318,11 +318,11 @@ SDL_Surface* LoadImage(const char* datafile, int mode)
 
     default:
     {
-      DEBUGMSG(debug_all, "Image mode not recognized\n");
+      DEBUGMSG(debug_loaders, "Image mode not recognized\n");
     }
   }
 
-//  DEBUGMSG(debug_all,  "LoadImage(): Done\n" );
+//  DEBUGMSG(debug_loaders,  "LoadImage(): Done\n" );
 
   return (final_pic);
 }
@@ -342,11 +342,11 @@ int LoadBothBkgds(const char* datafile)
   //Avoid memory leak in case something else already loaded:
   FreeBothBkgds();
 
-  DEBUGMSG(debug_all, "Entering LoadBothBkgds()\n");
+  DEBUGMSG(debug_loaders, "Entering LoadBothBkgds()\n");
 
   orig = LoadImage(datafile, IMG_REGULAR);
 
-  DEBUGMSG(debug_all, "Scaling %dx%d to: %dx%d, %dx%d\n",
+  DEBUGMSG(debug_loaders, "Scaling %dx%d to: %dx%d, %dx%d\n",
            orig->w, orig->h, RES_X, RES_Y, fs_res_x, fs_res_y);
 
   if (orig->w == RES_X && orig->h == RES_Y)
@@ -372,7 +372,7 @@ int LoadBothBkgds(const char* datafile)
   if (ret == 2) //orig won't be used at all
     SDL_FreeSurface(orig);
     
-  DEBUGMSG(debug_all, "%d images scaled\nLeaving LoadBothBkgds()\n", ret);
+  DEBUGMSG(debug_loaders, "%d images scaled\nLeaving LoadBothBkgds()\n", ret);
   return ret;
 }
 
@@ -435,7 +435,7 @@ sprite* LoadSprite(const char* name, int MODE ) {
 		}
 	}
 
-	DEBUGMSG(debug_all, "loading sprite %s - contains %d frames\n",
+	DEBUGMSG(debug_loaders, "loading sprite %s - contains %d frames\n",
 		      name, new_sprite->num_frames);
 
 	return new_sprite;
