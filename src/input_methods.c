@@ -958,10 +958,7 @@ static int im_event_zh_tw(IM_DATA* im, SDL_keysym ks)
 
       im_fullreset(im);
 
-      DEBUGCODE(debug_all)
-      {
-        fprintf(stderr, "IM: Loaded '%s'\n", lang_file);
-      }
+      DEBUGMSG(debug_all, "IM: Loaded '%s'\n", lang_file);
       break;
   }
   if(im->request != IM_REQ_TRANSLATE) return 0;
@@ -1144,10 +1141,7 @@ static int im_event_th(IM_DATA* im, SDL_keysym ks)
 
       im_fullreset(im);
 
-      DEBUGCODE(debug_all)
-      {
-        fprintf(stderr, "IM: Loaded '%s'\n", lang_file);
-      }
+      DEBUGMSG(debug_all, "IM: Loaded '%s'\n", lang_file);
       break;
   }
   if(im->request != IM_REQ_TRANSLATE) return 0;
@@ -1331,10 +1325,7 @@ static int im_event_ja(IM_DATA* im, SDL_keysym ks)
 
       im_fullreset(im);
 
-      DEBUGCODE(debug_all)
-      {
-        fprintf(stderr, "IM: Loaded '%s'\n", lang_file);
-      }
+      DEBUGMSG(debug_all, "IM: Loaded '%s'\n", lang_file);
       break;
   }
   if(im->request != IM_REQ_TRANSLATE) return 0;
@@ -1543,10 +1534,7 @@ static int im_event_ko(IM_DATA* im, SDL_keysym ks)
 
       im_fullreset(im);
 
-      DEBUGCODE(debug_all)
-      {
-        fprintf(stderr, "IM: Loaded '%s'\n", lang_file);
-      }
+      DEBUGMSG(debug_all, "IM: Loaded '%s'\n", lang_file);
       break;
   }
   if(im->request != IM_REQ_TRANSLATE) return 0;
