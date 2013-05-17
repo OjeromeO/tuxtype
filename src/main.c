@@ -83,7 +83,8 @@ int main(int argc, char *argv[])
     DEBUGMSG(debug_all, "textdomain(PACKAGE) returned: %s\n", s4);
     DEBUGMSG(debug_all, "gettext(\"Fish\"): %s\n\n", gettext("Fish"));
     DEBUGMSG(debug_all, "After gettext() call\n");
-
+  }
+  
   lib_flags = SDL_INIT_VIDEO;
 
   lib_flags |= SDL_INIT_AUDIO;
