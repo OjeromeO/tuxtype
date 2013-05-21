@@ -126,7 +126,7 @@ int LoadKeyboard(void)
   }
   
   /* fn should now contain valid path to keyboard.lst: */
-  DEBUGCODE(debug_all){fprintf(stderr, "fn = %s\n", fn);}
+  DEBUGMSG(debug_all, "fn = %s\n", fn);
 
   {
     char str[255];
@@ -168,11 +168,8 @@ int LoadKeyboard(void)
        && (k < MAX_UNICODES)
        && !unicode_in_key_list(wide_str[2])) /* Make sure char not already added */
       {
-        DEBUGCODE(debug_all)
-        {
-          fprintf(stderr, "Adding key: Unicode char = '%C'\tUnicode value = %d\tfinger = %ld\n",
-                  wide_str[2], wide_str[2], wcstol(&wide_str[0], NULL, 0)); 
-        }
+        DEBUGMSG(debug_all, "Adding key: Unicode char = '%C'\tUnicode value = %d\tfinger = %ld\n",
+                            wide_str[2], wide_str[2], wcstol(&wide_str[0], NULL, 0));
 
         /* Just plug values into array: */
         keyboard_list[k].unicode_value = wide_str[2];
@@ -488,7 +485,7 @@ wchar_t* GetWord(void)
   last_choice = choice;
 
   /* NOTE need %S rather than %s because of wide characters */
-  DEBUGCODE(debug_all) { fprintf(stderr, "Selected word is: %S\n", word_list[choice]); }
+  DEBUGMSG(debug_all, "Selected word is: %S\n", word_list[choice]);
 
   return word_list[choice];
 }
@@ -512,7 +509,7 @@ int GenerateWordList(const char* wordFn)
 
   FILE* wordFile = NULL;
 
-  DEBUGCODE(debug_all) { fprintf(stderr, "Entering GenerateWordList() for file: %s\n", wordFn); }
+  DEBUGMSG(debug_all, "Entering GenerateWordList() for file: %s\n", wordFn);
 
   num_words = 0;
 
@@ -525,7 +522,7 @@ int GenerateWordList(const char* wordFn)
   }
 
   /* --- load words from file named as argument: */
-  DEBUGCODE(debug_all) { fprintf(stderr, "Loading words from file: %s\n", wordFn); }
+  DEBUGMSG(debug_all, "Loading words from file: %s\n", wordFn);
 
   /* ignore the title (i.e. first line) */
   /* (compiler complains unless we inspect return value) */
@@ -534,7 +531,7 @@ int GenerateWordList(const char* wordFn)
   while (!feof(wordFile) && (num_words < MAX_NUM_WORDS))
   {
     ret = fscanf( wordFile, "%[^\n]\n", temp_word);
-    DEBUGCODE(debug_all) {fprintf(stderr, "temp_word = %s\n", temp_word);}
+    DEBUGMSG(debug_all, "temp_word = %s\n", temp_word);
 
     /* Ignore comment lines - starting with '#' */
     if (temp_word[0] == '#')
@@ -590,10 +587,7 @@ int GenerateWordList(const char* wordFn)
     /* If we make it to here, OK to add word: */
     /* NOTE we have to add one to the length argument */
     /* to include the terminating null.  */
-    DEBUGCODE(debug_all)
-    {
-      fprintf(stderr, "Adding word: %ls\n", temp_wide_word);
-    }
+    DEBUGMSG(debug_all, "Adding word: %ls\n", temp_wide_word);
 
     wcsncpy(word_list[num_words], temp_wide_word, strlen(temp_word) + 1);
     num_words++;
@@ -635,10 +629,7 @@ int RenderLetters(int font_size)
 
     if (t[0] != 0)
     {
-      DEBUGCODE(debug_all)
-      {
-        fprintf(stderr, "Creating SDL_Surface for list element %d, char = '%lc', Unicode value = %d\n", i, *t, *t);
-      }
+      DEBUGMSG(debug_all, "Creating SDL_Surface for list element %d, char = '%lc', Unicode value = %d\n", i, *t, *t);
 
       char_glyphs[j].unicode_value = t[0];
       char_glyphs[j].white_glyph = BlackOutline_w(t, font_size, &white, 1);
@@ -1190,18 +1181,18 @@ void GenerateKeyboard(SDL_Surface* keyboard)
   char buf[8];
 //  TTF_Font* smallfont = NULL;
 
-  DEBUGCODE(debug_all) { fprintf(stderr, "Entering GenerateKeyboard\n"); }
+  DEBUGMSG(debug_all, "Entering GenerateKeyboard\n");
 
   if(!keyboard)
   {
-    DEBUGCODE(debug_all) { fprintf(stderr, "Error - keyboard SDL_Surface ptr null\n"); }
+    DEBUGMSG(debug_all, "Error - keyboard SDL_Surface ptr null\n");
     return;
   }
 
 //   smallfont = LoadFont(settings.theme_font_name, 15);
 //   if(!smallfont)
 //   {
-//     DEBUGCODE(debug_all) { fprintf(stderr, "Error loading font\n"); }
+//     DEBUGMSG(debug_all, "Error loading font\n");
 //     return;
 //   }
 
@@ -1247,7 +1238,7 @@ void GenerateKeyboard(SDL_Surface* keyboard)
         new.y -= 9;
     }
 
-    DEBUGCODE(debug_all) { fprintf(stderr, "Making %d : %C\n",i,keyboard_list[i].unicode_value); }
+    DEBUGMSG(debug_all, "Making %d : %C\n",i,keyboard_list[i].unicode_value);
     T4K_ConvertToUTF8(t, buf, 8);
     tmp = SimpleText(buf, 15, &black);
 //    tmp = TTF_RenderUNICODE_Blended((TTF_Font*)smallfont, t, black);
@@ -1261,7 +1252,7 @@ void GenerateKeyboard(SDL_Surface* keyboard)
   //Know this is safe - if NULL would have returned above:
 //  TTF_CloseFont(smallfont);
 
-  DEBUGCODE(debug_all) { fprintf(stderr, "Leaving GenerateKeyboard\n"); }
+  DEBUGMSG(debug_all, "Leaving GenerateKeyboard\n");
 }
 
 
@@ -1351,10 +1342,7 @@ static void gen_char_list(void)
     i++;
   }
 
-  DEBUGCODE(debug_all)
-  {
-    fprintf(stderr, "char_list = %S\n", char_list);
-  }
+  DEBUGMSG(debug_all, "char_list = %S\n", char_list);
 }
 
 
@@ -1388,10 +1376,7 @@ void GenCharListFromString(const char* UTF8_str)
     i++;
   }
 
-  DEBUGCODE(debug_all)
-  {
-    fprintf(stderr, "char_list = %S\n", char_list);
-  }
+  DEBUGMSG(debug_all, "char_list = %S\n", char_list);
 }
 
 
@@ -1413,15 +1398,14 @@ static int add_char(wchar_t uc)
   /* unicode already in list: */
   if (char_list[i] == uc)
   {
-    DEBUGCODE(debug_all){ fprintf(stderr,
-                       "Unicode value: %d\tcharacter %lc already in list\n",
-                        uc, uc);}
+    DEBUGMSG(debug_all, "Unicode value: %d\tcharacter %lc already in list\n",
+                        uc, uc);
     return 0;
   }
 
   if (char_list[i] == '\0')
   {
-    DEBUGCODE(debug_all){ fprintf(stderr, "Adding unicode value: %d\tcharacter %lc\n", uc, uc);}
+    DEBUGMSG(debug_all, "Adding unicode value: %d\tcharacter %lc\n", uc, uc);
     char_list[i] = uc;
     char_list[i + 1] = '\0';
     return 1;
