@@ -989,14 +989,11 @@ void UpdateScreen(int* frame)
   {
     if (blits[i].type == 'E') 
     {
-//       DEBUGCODE(debug_all)
-//       {
-//         fprintf(stderr, "Erasing blits[%d]\n", i);
-//         fprintf(stderr, "srcrect->x = %d\t srcrect->y = %d\t srcrect->w = %d\t srcrect->h = %d\n",
-//               blits[i].srcrect->x, blits[i].srcrect->y, blits[i].srcrect->w, blits[i].srcrect->h);
-//         fprintf(stderr, "dstrect->x = %d\t dstrect->y = %d\t dstrect->w = %d\t dstrect->h = %d\n",
-//               blits[i].dstrect->x, blits[i].dstrect->y, blits[i].dstrect->w, blits[i].dstrect->h);
-//       }
+//       DEBUGMSG(debug_all, "Erasing blits[%d]\n", i);
+//       DEBUGMSG(debug_all, "srcrect->x = %d\t srcrect->y = %d\t srcrect->w = %d\t srcrect->h = %d\n",
+//                           blits[i].srcrect->x, blits[i].srcrect->y, blits[i].srcrect->w, blits[i].srcrect->h);
+//       DEBUGMSG(debug_all, "dstrect->x = %d\t dstrect->y = %d\t dstrect->w = %d\t dstrect->h = %d\n",
+//                           blits[i].dstrect->x, blits[i].dstrect->y, blits[i].dstrect->w, blits[i].dstrect->h);
 
       SDL_LowerBlit(blits[i].src, blits[i].srcrect, screen, blits[i].dstrect);
     }
@@ -1011,14 +1008,11 @@ void UpdateScreen(int* frame)
   {
     if (blits[i].type == 'D') 
     {
-//       DEBUGCODE(debug_all)
-//       {
-//         fprintf(stderr, "drawing blits[%d]\n", i);
-//         fprintf(stderr, "srcrect->x = %d\t srcrect->y = %d\t srcrect->w = %d\t srcrect->h = %d\n",
-//               blits[i].srcrect->x, blits[i].srcrect->y, blits[i].srcrect->w, blits[i].srcrect->h);
-//         fprintf(stderr, "dstrect->x = %d\t dstrect->y = %d\t dstrect->w = %d\t dstrect->h = %d\n",
-//               blits[i].dstrect->x, blits[i].dstrect->y, blits[i].dstrect->w, blits[i].dstrect->h);
-//       } 
+//       DEBUGMSG(debug_all, "drawing blits[%d]\n", i);
+//       DEBUGMSG(debug_all, "srcrect->x = %d\t srcrect->y = %d\t srcrect->w = %d\t srcrect->h = %d\n",
+//                           blits[i].srcrect->x, blits[i].srcrect->y, blits[i].srcrect->w, blits[i].srcrect->h);
+//       DEBUGMSG(debug_all, "dstrect->x = %d\t dstrect->y = %d\t dstrect->w = %d\t dstrect->h = %d\n",
+//                           blits[i].dstrect->x, blits[i].dstrect->y, blits[i].dstrect->w, blits[i].dstrect->h);
 
       SDL_BlitSurface(blits[i].src, blits[i].srcrect, screen, blits[i].dstrect);
     } 
@@ -1281,11 +1275,8 @@ SDL_Surface* BlackOutline(const char* t, int font_size, const SDL_Color* c)
     return NULL;
   }
 
-DEBUGCODE(debug_all)
-{
-  fprintf( stderr, "\nEntering BlackOutline(): \n");
-  fprintf( stderr, "BlackOutline of \"%s\"\n", t );
-}
+DEBUGMSG(debug_all, "\nEntering BlackOutline(): \n");
+DEBUGMSG(debug_all, "BlackOutline of \"%s\"\n", t);
 
 #ifdef HAVE_LIBSDL_PANGO
   Set_SDL_Pango_Font_Size(font_size);
@@ -1358,8 +1349,7 @@ DEBUGCODE(debug_all)
   out = SDL_DisplayFormatAlpha(bg);
   SDL_FreeSurface(bg);
 
-DEBUGCODE(debug_all)
-  { fprintf( stderr, "\nLeaving BlackOutline(): \n"); }
+DEBUGMSG(debug_all, "\nLeaving BlackOutline(): \n");
 
 
   return out;
@@ -1389,10 +1379,7 @@ SDL_Surface* BlackOutline_w(const wchar_t* t, int font_size, const SDL_Color* c,
   wcsncpy(wchar_tmp, t, length);
   wchar_tmp[length] = '\0';
 
-  DEBUGCODE(debug_all)
-  {
-    fprintf(stderr, "In BlackOutline_w() - input wchar_t string is: %S\n", wchar_tmp);
-  }
+  DEBUGMSG(debug_all, "In BlackOutline_w() - input wchar_t string is: %S\n", wchar_tmp);
 
   i = T4K_ConvertToUTF8(wchar_tmp, tmp, 1024);
   
@@ -1404,10 +1391,7 @@ SDL_Surface* BlackOutline_w(const wchar_t* t, int font_size, const SDL_Color* c,
   
   //tmp[i] = 0;
 
-  DEBUGCODE(debug_all)
-  {
-    fprintf(stderr, "In BlackOutline_w() - converted UTF8 string is: %s\n", tmp);
-  }
+  DEBUGMSG(debug_all, "In BlackOutline_w() - converted UTF8 string is: %s\n", tmp);
 
   return BlackOutline(tmp, font_size, c);
 }
@@ -1482,7 +1466,7 @@ static int Set_SDL_Pango_Font_Size(int size)
   else
   {
     char buf[64];
-    DEBUGCODE(debug_all) { fprintf(stderr, "Setting font size to %d\n", size); }
+    DEBUGMSG(debug_all, "Setting font size to %d\n", size);
     if(context != NULL)
       SDLPango_FreeContext(context);
     context = NULL;
@@ -1595,13 +1579,13 @@ static TTF_Font* load_font(const char* font_name, int font_size)
   /* try to find font in default data dir: */
   sprintf(fn, "%s/fonts/%s", settings.default_data_path, font_name);
 
-  DEBUGCODE(debug_all) { fprintf(stderr, "load_font(): looking for %s using bundled data paths\n", fn); }
+  DEBUGMSG(debug_all, "load_font(): looking for %s using bundled data paths\n", fn);
 
   /* try to load the font, if successful, return font*/
   loaded_font = TTF_OpenFont(fn, font_size);
   if (loaded_font != NULL)
   {
-    DEBUGCODE(debug_all) { fprintf(stderr, "load_font(): found bundled font: %s\n", fn); }
+    DEBUGMSG(debug_all, "load_font(): found bundled font: %s\n", fn);
     return loaded_font;
   }
 
@@ -1634,13 +1618,13 @@ static TTF_Font* load_font(const char* font_name, int font_size)
 
 
 
-  DEBUGCODE(debug_all) { fprintf(stderr, "load_font(): looking for %s\n in OS' font path\n", fn); }
+  DEBUGMSG(debug_all, "load_font(): looking for %s\n in OS' font path\n", fn);
 
   /* try to load the font, if successful, return font*/
   loaded_font = TTF_OpenFont(fn, font_size);
   if (loaded_font != NULL)
   {
-    DEBUGCODE(debug_all) { fprintf(stderr, "load_font(): found font in OS' location: %s\n", fn); }
+    DEBUGMSG(debug_all, "load_font(): found font in OS' location: %s\n", fn);
     return loaded_font;
   }
   /* We could not find desired font. If we were looking for something other  */
