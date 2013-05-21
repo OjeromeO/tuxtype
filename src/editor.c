@@ -90,11 +90,11 @@ void ChooseListToEdit(void)
   sprintf(wordsDir, "%s/words", settings.user_settings_path);
   if (CheckFile(wordsDir))
   {
-    DEBUGCODE(debug_all) { fprintf(stderr, "User specific wordlist path found: %s\n", wordsDir); }
+    DEBUGMSG(debug_all, "User specific wordlist path found: %s\n", wordsDir);
   }
   else
   {
-    DEBUGCODE(debug_all) { fprintf(stderr , "Editor: checking directory: %s/words", settings.var_data_path); }
+    DEBUGMSG(debug_all, "Editor: checking directory: %s/words", settings.var_data_path);
     sprintf(wordsDir , "%s/words" , settings.var_data_path);
   }
   lists_dir = opendir(wordsDir);
@@ -524,11 +524,11 @@ void EditWordList(char* words_file)
   sprintf(wordsDir, "%s/words", settings.user_settings_path);
   if (CheckFile(wordsDir))
   {
-    DEBUGCODE(debug_all) { fprintf(stderr, "User specific wordlist path found: %s\n", wordsDir); }
+    DEBUGMSG(debug_all, "User specific wordlist path found: %s\n", wordsDir);
   }
   else
   {
-    DEBUGCODE(debug_all) { fprintf(stderr , "Editor: checking directory: %s/words", settings.var_data_path); }
+    DEBUGMSG(debug_all, "Editor: checking directory: %s/words", settings.var_data_path);
     sprintf(wordsDir , "%s/words" , settings.var_data_path);
   }
 
@@ -557,8 +557,8 @@ void EditWordList(char* words_file)
 
       number_of_words++;
 
-      DEBUGCODE(debug_all){ fprintf(stderr, "Read word \"%s\" from file, number_of_words = %d\n",
-                 words_in_list[number_of_words - 1], number_of_words); }
+      DEBUGMSG(debug_all, "Read word \"%s\" from file, number_of_words = %d\n",
+                          words_in_list[number_of_words - 1], number_of_words);
     }
   }
   fclose(fp);
@@ -689,19 +689,15 @@ void EditWordList(char* words_file)
             else
             {
               // we have to remove the word from the list //
-              DEBUGCODE(debug_all)
-              {
-                fprintf(stderr, "The number of words is %i\n", number_of_words);
-                fprintf(stderr, "The length is %i \n", len);
-              }
+              DEBUGMSG(debug_all, "The number of words is %i\n", number_of_words);
+              DEBUGMSG(debug_all, "The length is %i \n", len);
 
               if (number_of_words > 1)
               {
                 int x = 0;
                 number_of_words --;
 
-                DEBUGCODE(debug_all)
-                { fprintf(stderr, "There are current: %i words\n", number_of_words); }
+                DEBUGMSG(debug_all, "There are current: %i words\n", number_of_words);
 
                 for(x = loc; x <= number_of_words-1; x++)
                 {
@@ -709,17 +705,13 @@ void EditWordList(char* words_file)
                   {
                     len = T4K_ConvertFromUTF8(temp, words_in_list[x+2], MAX_WORD_SIZE);
 
-                    DEBUGCODE(debug_all)
-                    {
-                      fprintf(stderr, "X = %i\n", x);
-                      fprintf(stderr, "loc = %i\n", loc);
-                      fprintf(stderr, "word in list = %s\n", words_in_list[x+2]);
-                    }
+                    DEBUGMSG(debug_all, "X = %i\n", x);
+                    DEBUGMSG(debug_all, "loc = %i\n", loc);
+                    DEBUGMSG(debug_all, "word in list = %s\n", words_in_list[x+2]);
 
                     len = T4K_ConvertToUTF8(temp, words_in_list[x+1], MAX_WORD_SIZE);
 
-                    DEBUGCODE(debug_all)
-                    { fprintf(stderr, "word in list = %s\n", words_in_list[x+1]); }
+                    DEBUGMSG(debug_all, "word in list = %s\n", words_in_list[x+1]);
 
                     white_words[x] = BlackOutline(words_in_list[x+1],
                                                   DEFAULT_MENU_FONT_SIZE, &white ); 
@@ -737,8 +729,7 @@ void EditWordList(char* words_file)
                 if (loc == number_of_words)
                   loc --;
 
-                DEBUGCODE(debug_all)
-                { fprintf(stderr, "There are current: %i words\n", number_of_words); }
+                DEBUGMSG(debug_all, "There are current: %i words\n", number_of_words);
               }
 
               white_words[loc] = BlackOutline(words_in_list[loc+1],
@@ -762,8 +753,7 @@ void EditWordList(char* words_file)
           {
             if (loc - (loc % 8) - 8 >= 0)
               loc = loc - (loc % 8) - 8;
-            DEBUGCODE(debug_all)
-            { fprintf(stderr, "loc  = %i\n", loc); }
+            DEBUGMSG(debug_all, "loc  = %i\n", loc);
             break;
           }
 
@@ -772,8 +762,7 @@ void EditWordList(char* words_file)
           {
             if (loc - (loc % 8) + 8 < number_of_words-1)
               loc = (loc - (loc % 8) + 8);
-            DEBUGCODE(debug_all)
-            { fprintf(stderr, "loc  = %i\n", loc); }
+            DEBUGMSG(debug_all, "loc  = %i\n", loc);
             break;
           }
 
@@ -781,8 +770,7 @@ void EditWordList(char* words_file)
           {
             if (loc > 0)
               loc--;
-            DEBUGCODE(debug_all)
-            { fprintf(stderr, "loc  = %i\n", loc); }
+            DEBUGMSG(debug_all, "loc  = %i\n", loc);
             break;
           }
 
@@ -790,8 +778,7 @@ void EditWordList(char* words_file)
           {
             if (loc + 1 < number_of_words - 1)
               loc++;
-            DEBUGCODE(debug_all)
-            { fprintf(stderr, "loc  = %i\n", loc); }
+            DEBUGMSG(debug_all, "loc  = %i\n", loc);
             break;
           }
 
@@ -799,8 +786,7 @@ void EditWordList(char* words_file)
           switch (event.key.keysym.sym)
           {
             case SDLK_RETURN:
-              DEBUGCODE(debug_all)
-              { fprintf(stderr, "number of words: %i", number_of_words); }
+              DEBUGMSG(debug_all, "number of words: %i", number_of_words);
 
               if (number_of_words < MAX_WORD_LISTS)
                 listening_for_new_word = 1;
@@ -821,11 +807,8 @@ void EditWordList(char* words_file)
 
           if(i)  //FIXME what is i?
           {
-            DEBUGCODE(debug_all)
-            {
-              fprintf(stderr, "loc  = %i\n", loc);
-              fprintf(stderr, "number of words  = %i\n", number_of_words);	
-            }
+            DEBUGMSG(debug_all, "loc  = %i\n", loc);
+            DEBUGMSG(debug_all, "number of words  = %i\n", number_of_words);
 
             // If it's listening for a new word, from having last 
             // pressed enter, create a whole new word with a length 
@@ -913,7 +896,7 @@ void EditWordList(char* words_file)
     while(i < number_of_words) 
     {
       fprintf(fp, "%s\n", words_in_list[i]);
-      DEBUGCODE(debug_all){ fprintf(stderr, "Writing \"%s\" to file\n", words_in_list[i]); }
+      DEBUGMSG(debug_all, "Writing \"%s\" to file\n", words_in_list[i]);
       i++;
     }
 
@@ -923,8 +906,7 @@ void EditWordList(char* words_file)
   }
   else
   {
-    DEBUGCODE(debug_all)
-    { fprintf(stderr, "In EditWordList(), unable to open %s for writing\n", fn); }
+    DEBUGMSG(debug_all, "In EditWordList(), unable to open %s for writing\n", fn);
   }
 
   /* --- clear graphics before quitting --- */ 
@@ -989,11 +971,11 @@ int CreateNewWordList(void)
   sprintf(wordsDir, "%s/words", settings.user_settings_path);
   if (CheckFile(wordsDir))
   {
-    DEBUGCODE(debug_all) { fprintf(stderr, "User specific wordlist path found: %s\n", wordsDir); }
+    DEBUGMSG(debug_all, "User specific wordlist path found: %s\n", wordsDir);
   }
   else
   {
-    DEBUGCODE(debug_all) { fprintf(stderr , "Editor: checking directory: %s/words", settings.var_data_path); }
+    DEBUGMSG(debug_all, "Editor: checking directory: %s/words", settings.var_data_path);
     sprintf(wordsDir , "%s/words" , settings.var_data_path);
   }
 
@@ -1088,7 +1070,7 @@ int CreateNewWordList(void)
                 temp[len - 1] = temp[len];
                 len = T4K_ConvertToUTF8(temp, wordlist, MAX_WORD_SIZE);
                 NewWordlist = BlackOutline(wordlist, DEFAULT_MENU_FONT_SIZE, &yellow);
-                DEBUGCODE(debug_all){ fprintf(stderr, "Word: %s\n", wordlist); }
+                DEBUGMSG(debug_all, "Word: %s\n", wordlist);
               }
               i = 0;
               break;
@@ -1119,7 +1101,7 @@ int CreateNewWordList(void)
           //FIXME some of this block looks fishy...
           if (i) //if it is typing time
           {
-            DEBUGCODE(debug_all) { fprintf(stderr, "TEMP 1: %s\n", wordlist); }
+            DEBUGMSG(debug_all, "TEMP 1: %s\n", wordlist);
 
             len = T4K_ConvertFromUTF8(temp, wordlist, MAX_WORD_SIZE);
             if (len < MAX_WORD_SIZE)
@@ -1130,7 +1112,7 @@ int CreateNewWordList(void)
             }
             len = T4K_ConvertToUTF8(temp, wordlist, MAX_WORD_SIZE);
 
-            DEBUGCODE(debug_all) { fprintf(stderr, "TEMP 2: %s\n", wordlist); }
+            DEBUGMSG(debug_all, "TEMP 2: %s\n", wordlist);
 
             //Copy back into onscreen
             NewWordlist = BlackOutline(wordlist, DEFAULT_MENU_FONT_SIZE, &yellow);
@@ -1186,16 +1168,16 @@ int CreateNewWordList(void)
   if (save == 1)
   {
     sprintf(fn, "%s/%s.txt", wordsDir, wordlist);
-    DEBUGCODE(debug_all){ fprintf(stderr, "File to be saved: %s\n", fn); }
+    DEBUGMSG(debug_all, "File to be saved: %s\n", fn);
 
     fp = fopen(fn, "w");
     if(fp)
     {
-      DEBUGCODE(debug_all){ fprintf(stderr, "Opened File\n"); }
+      DEBUGMSG(debug_all, "Opened File\n");
       fprintf(fp,"%s", wordlist);
-      DEBUGCODE(debug_all){ fprintf(stderr, "Wrote file\n"); }
+      DEBUGMSG(debug_all, "Wrote file\n");
       fclose(fp);	
-      DEBUGCODE(debug_all) { fprintf(stderr, "Closed file\n"); }
+      DEBUGMSG(debug_all, "Closed file\n");
     }
     else
     {
@@ -1324,17 +1306,17 @@ int RemoveList(char* words_file)
   sprintf(wordsDir, "%s/words", settings.user_settings_path);
   if (CheckFile(wordsDir))
   {
-    DEBUGCODE(debug_all) { fprintf(stderr, "User specific wordlist path found: %s\n", wordsDir); }
+    DEBUGMSG(debug_all, "User specific wordlist path found: %s\n", wordsDir);
   }
   else
   {
-    DEBUGCODE(debug_all) { fprintf(stderr , "Editor: checking directory: %s/words", settings.var_data_path); }
+    DEBUGMSG(debug_all, "Editor: checking directory: %s/words", settings.var_data_path);
     sprintf(wordsDir , "%s/words" , settings.var_data_path);
   }
 
   sprintf(fn , "%s/%s" , wordsDir, words_file);
 
-  DEBUGCODE(debug_all){ fprintf(stderr, "Remove file %s\n", fn); }
+  DEBUGMSG(debug_all, "Remove file %s\n", fn);
 
   if (remove(fn) != 0 )
   {
@@ -1342,6 +1324,6 @@ int RemoveList(char* words_file)
     return 0; //no change
   }
 
-  DEBUGCODE(debug_all){ fprintf(stderr, "File %s successfully deleted\n", fn); }
+  DEBUGMSG(debug_all, "File %s successfully deleted\n", fn);
   return 1; //change made
 }
