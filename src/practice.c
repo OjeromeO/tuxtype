@@ -861,7 +861,7 @@ static int practice_load_media(void)
   int load_failed = 0;
   int labels_ok = 0;
 
-  DEBUGCODE(debug_all) { fprintf(stderr, "Entering practice_load_media\n"); }
+  DEBUGMSG(debug_all, "Entering practice_load_media\n");
 
 
   /* load needed SDL_Surfaces: */
@@ -916,7 +916,7 @@ static int practice_load_media(void)
   GenerateKeyboard(keyboard);
 
   DEBUGMSG(debug_all, "DONE - Loading practice media\n");
-  DEBUGCODE(debug_all) { fprintf(stderr, "Leaving practice_load_media\n"); }
+  DEBUGMSG(debug_all, "Leaving practice_load_media\n");
   return 1;
 }
 
@@ -966,10 +966,7 @@ static void recalc_positions(void)
   calc_font_sizes();
   text_height = fontsize * 1.5;
 
-  DEBUGCODE(debug_all)
-  {
-    fprintf(stderr, "Entering recalc_positions(), screen is %d x %d\n", screen->w, screen->h); 
-  }
+  DEBUGMSG(debug_all, "Entering recalc_positions(), screen is %d x %d\n", screen->w, screen->h);
 
   if (!keyboard
     ||!tux_win
@@ -1237,7 +1234,7 @@ static int load_phrases(const char* phrase_file)
     return 0;
   }
 
-  DEBUGCODE(debug_all) { fprintf(stderr, "load_phrases(): phrases file is '%s'\n", fn ); }
+  DEBUGMSG(debug_all, "load_phrases(): phrases file is '%s'\n", fn);
 
   /* We know it will open OK because we already ran CheckFile() on it */ 
   fp = fopen(fn, "r");
@@ -1251,7 +1248,7 @@ static int load_phrases(const char* phrase_file)
     if (EOF != fscanf(fp, "%[^\n]\n", buf))
     {
       T4K_ConvertFromUTF8(phrases[num_phrases], buf, MAX_PHRASE_LENGTH);
-      DEBUGCODE(debug_all) { fprintf(stderr, "phrase %d:\t%S\n", num_phrases, phrases[num_phrases]);}
+      DEBUGMSG(debug_all, "phrase %d:\t%S\n", num_phrases, phrases[num_phrases]);
       num_phrases++;
     }
   }
@@ -1296,7 +1293,7 @@ static int find_next_wrap(const wchar_t* wstr, int font_size, int width)
   }
 
   DOUT(width);
-  DEBUGCODE(debug_all){ fprintf(stderr, "wstr = %S\n", wstr);}
+  DEBUGMSG(debug_all, "wstr = %S\n", wstr);
   
   phr_length = wcslen(wstr);
 
@@ -1330,7 +1327,7 @@ static int find_next_wrap(const wchar_t* wstr, int font_size, int width)
     /* Copy string into buf and null terminate after point to be checked: */
     wcsncpy(buf, wstr, MAX_PHRASE_LENGTH);
     buf[word_end + 1] = '\0';
-    DEBUGCODE(debug_all){ fprintf(stderr, "buf = %S\n", buf);}
+    DEBUGMSG(debug_all, "buf = %S\n", buf);
 
     /* Need to convert to UTF8 because couldn't get UNICODE version to work: */
     T4K_ConvertToUTF8(buf, UTF8buf, MAX_PHRASE_LENGTH);
@@ -1352,23 +1349,17 @@ static int find_next_wrap(const wchar_t* wstr, int font_size, int width)
     /* whether or not we are at the end of the string:                      */
     if (test_w > width)
     {
-      DEBUGCODE(debug_all)
-      {
-        fprintf(stderr, "width exceeded, returning end of previous word as wrap point\n");
-        fprintf(stderr, "prev_word_end is %d\n", prev_word_end); 
-        fprintf(stderr, "leaving find_next_wrap()\n");
-      }
+      DEBUGMSG(debug_all, "width exceeded, returning end of previous word as wrap point\n");
+      DEBUGMSG(debug_all, "prev_word_end is %d\n", prev_word_end); 
+      DEBUGMSG(debug_all, "leaving find_next_wrap()\n");
       return prev_word_end; 
     }
     else
     {
       if (i >= phr_length)
       {
-        DEBUGCODE(debug_all)
-        {
-          fprintf(stderr, "width not exceeded, returning because end of string reached\n");
-          fprintf(stderr, "word_end is %d\n", word_end); 
-        }
+        DEBUGMSG(debug_all, "width not exceeded, returning because end of string reached\n");
+        DEBUGMSG(debug_all, "word_end is %d\n", word_end);
         /* We reached the end of the phrase without exceeding the width, */
         /* so just return our current position: */ 
         return word_end;
