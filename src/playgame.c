@@ -129,10 +129,7 @@ int PlayCascade(int diflevel)
   Uint16 key_unicode;
   Uint32 last_time, now_time;
 
-  DEBUGCODE(debug_all)
-  {
-    fprintf(stderr, "->Entering PlayCascade(): level=%i\n", diflevel);
-  }
+  DEBUGMSG(debug_all, "->Entering PlayCascade(): level=%i\n", diflevel);
 
 //  SDL_ShowCursor(0); //don't really need this and it causes a bug on windows
 
@@ -223,10 +220,8 @@ int PlayCascade(int diflevel)
       if (settings.hidden && curlevel == 3)
         sprintf(filename, "hidden.jpg");
 
-      DEBUGCODE(debug_all)
-      {
-        fprintf(stderr, "->>Loading background: %s\n", filename);
-      }
+      DEBUGMSG(debug_all, "->>Loading background: %s\n", filename);
+      
         LoadBothBkgds(filename);
 //			SNOW_setBkg( background );
 
@@ -340,8 +335,7 @@ int PlayCascade(int diflevel)
                 /* See what Unicode value was typed: */
                 key_unicode = event.key.keysym.unicode;
 
-                DEBUGCODE(debug_all)
-                {fprintf(stderr, "\nkey_unicode = %d\twchar_t = %lc\t\n", key_unicode, key_unicode);}
+                DEBUGMSG(debug_all, "\nkey_unicode = %d\twchar_t = %lc\t\n", key_unicode, key_unicode);
 
                 /* For now, the cascade game is case-insensitive for input, */
                 /* with only uppercase for answers:                         */
@@ -351,8 +345,7 @@ int PlayCascade(int diflevel)
                   key_unicode -= 32; //same for non-US Western European chars
 
                 DEBUGMSG(debug_all, "After checking for lower case:\n");
-                DEBUGCODE(debug_all)
-                {fprintf(stderr, "key_unicode = %d\twchar_t = %lc\\n\n", key_unicode, key_unicode);}
+                DEBUGMSG(debug_all, "key_unicode = %d\twchar_t = %lc\\n\n", key_unicode, key_unicode);
 
                 /* Now update with case-folded value: */
                 UpdateTux(key_unicode, fishies, frame);
@@ -411,11 +404,8 @@ int PlayCascade(int diflevel)
       /* Pause (keep frame-rate event) */
       now_time = SDL_GetTicks();
 
-      DEBUGCODE(debug_all)
-      {
-        fprintf(stderr, "now_time = %d\tlast_time = %d, elapsed time = %d\n",
-                now_time, last_time, now_time - last_time);
-      }
+      DEBUGMSG(debug_all, "now_time = %d\tlast_time = %d, elapsed time = %d\n",
+                           now_time, last_time, now_time - last_time);
 
       if (now_time < last_time + 1000/FRAMES_PER_SEC)
       {
@@ -640,11 +630,8 @@ static void LoadOthers(void)
 	char filename[FNLEN];
 
 	DEBUGMSG(debug_all,  "=LoadOthers()\n" );
-	DEBUGCODE(debug_all)
-	{
-	  fprintf(stderr, "settings.theme_font_name is %s\n",
-                  settings.theme_font_name);
-	}
+	DEBUGMSG(debug_all, "settings.theme_font_name is %s\n",
+                         settings.theme_font_name);
 
         RenderLetters(FISHY_FONT_SIZE);
         DEBUGMSG(debug_all,  " Done rendering letters \n ");
@@ -1085,13 +1072,9 @@ static void SpawnFishies(int diflevel, int* fishies, int* frame)
            /
            (fish_object[*fishies].dy);
 
-  DEBUGCODE(debug_all) 
-  {
-    /* NOTE need %S rather than %s because of wide characters */
-    fprintf(stderr, "Spawn fishy with word '%S'\n", fish_object[*fishies].word);
-    fprintf(stderr, "Byte length is: %d\n", (int)wcslen(fish_object[*fishies].word));
-    fprintf(stderr, "UTF-8 char length is: %d\n", (int)fish_object[*fishies].len);
-  }
+  DEBUGMSG(debug_all, "Spawn fishy with word '%S'\n", fish_object[*fishies].word);
+  DEBUGMSG(debug_all, "Byte length is: %d\n", (int)wcslen(fish_object[*fishies].word));
+  DEBUGMSG(debug_all, "UTF-8 char length is: %d\n", (int)fish_object[*fishies].len);
 
   *fishies = *fishies + 1;
 
